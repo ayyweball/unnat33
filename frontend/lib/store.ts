@@ -41,26 +41,67 @@ export interface BusinessProfileState {
 }
 
 interface AppStoreState {
+  // Existing contributor state
   user: UserProfileState | any | null;
   business: BusinessProfileState | any | null;
   selectedBusinessId: string | null;
+
   setUser: (user: any) => void;
   setBusiness: (business: any) => void;
   setProfile: (user: any, business: any) => void;
   setSelectedBusinessId: (id: string | null) => void;
   clearProfile: () => void;
   logout: () => void;
+
+  // UI state required by the polished sidebar
+  sidebarCollapsed: boolean;
+  toggleSidebar: () => void;
+  setSidebarCollapsed: (collapsed: boolean) => void;
+  mobileSidebarOpen: boolean;
+  setMobileSidebarOpen: (open: boolean) => void;
 }
 
 export const useAppStore = create<AppStoreState>((set) => ({
+  // Existing contributor state
   user: null,
   business: null,
   selectedBusinessId: null,
+
   setUser: (user) => set({ user }),
   setBusiness: (business) => set({ business }),
-  setProfile: (user, business) => set({ user, business, selectedBusinessId: business?.id || null }),
+  setProfile: (user, business) =>
+    set({
+      user,
+      business,
+      selectedBusinessId: business?.id || null,
+    }),
   setSelectedBusinessId: (id) => set({ selectedBusinessId: id }),
-  clearProfile: () => set({ user: null, business: null, selectedBusinessId: null }),
-  logout: () => set({ user: null, business: null, selectedBusinessId: null }),
-}));
+  clearProfile: () =>
+    set({
+      user: null,
+      business: null,
+      selectedBusinessId: null,
+    }),
+  logout: () =>
+    set({
+      user: null,
+      business: null,
+      selectedBusinessId: null,
+    }),
 
+  // UI state
+  sidebarCollapsed: true,
+  toggleSidebar: () =>
+    set((state) => ({
+      sidebarCollapsed: !state.sidebarCollapsed,
+    })),
+  setSidebarCollapsed: (collapsed) =>
+    set({
+      sidebarCollapsed: collapsed,
+    }),
+  mobileSidebarOpen: false,
+  setMobileSidebarOpen: (open) =>
+    set({
+      mobileSidebarOpen: open,
+    }),
+}));

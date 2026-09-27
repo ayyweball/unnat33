@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
@@ -23,18 +24,12 @@ import {
   Calendar,
   CloudSun,
   IndianRupee,
-  Cpu,
   Database,
   ExternalLink,
-  BookOpen,
-  Info,
+  ChevronRight,
+  Check,
 } from 'lucide-react';
-import {
-  DPRResponse,
-  ComparableDistrictItem,
-  DistrictResearchContextResponse,
-  ConsumerMarketEvidence,
-} from '@/lib/api-client';
+import { DPRResponse } from '@/lib/api-client';
 
 const PROVENANCE_STYLES: Record<string, string> = {
   'USER PROVIDED': 'bg-blue-50 text-blue-700 border-blue-200',
@@ -44,64 +39,36 @@ const PROVENANCE_STYLES: Record<string, string> = {
   'ILLUSTRATIVE ASSUMPTION': 'bg-orange-50 text-orange-700 border-orange-200',
   'BACKEND DETERMINISTIC CALCULATION': 'bg-indigo-50 text-indigo-700 border-indigo-200',
   'USER EDITED': 'bg-cyan-50 text-cyan-700 border-cyan-200',
-  'INDUSTRY SURVEY EVIDENCE': 'bg-teal-50 text-teal-700 border-teal-200',
 };
 
 function ProvenanceBadge({ tag }: { tag: string }) {
   const style = PROVENANCE_STYLES[tag] || 'bg-slate-100 text-slate-700 border-slate-200';
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold border ${style}`}>
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded text-[10px] font-semibold border ${style}`}>
       {tag}
     </span>
   );
 }
 
-// 6 Top-Level Workflow Stages
-const PRIMARY_STAGES = [
-  { id: 1, name: 'Project Overview', shortName: 'Overview', desc: 'Promoter, Location & Basic Enterprise Details' },
-  { id: 2, name: 'Market & Competitiveness', shortName: 'Market & Comp', desc: 'Customer, Business Model, Operations & Marketing' },
-  { id: 3, name: 'Financial Plan', shortName: 'Financial Plan', desc: 'Capital Structure, Costs & Loan EMI Schedule' },
-  { id: 4, name: 'Government Support', shortName: 'Govt Support', desc: 'Statutory Schemes, Subsidies & Eligibility' },
-  { id: 5, name: 'Risk & Implementation', shortName: 'Risk & Roadmap', desc: 'Climate Signals, Mitigation & Rollout Milestones' },
-  { id: 6, name: 'Review & Generate', shortName: 'Review & DPR', desc: 'Executive Summary, Provenance & DPR Export' },
+const STEPS = [
+  { id: 1, name: 'Overview', fullName: 'Business & Promoter Overview', icon: Building2, desc: 'Auto-prefilled from your verified entrepreneur profile.' },
+  { id: 2, name: 'Market', fullName: 'District Market Intelligence & Nearest Neighbors', icon: Database, desc: 'Official PostgreSQL Udyam census & scikit-learn NearestNeighbors.' },
+  { id: 3, name: 'Customers', fullName: 'Target Customers & Competitive Structure', icon: Users, desc: 'AI market synthesis grounded strictly in local census metrics.' },
+  { id: 4, name: 'Business', fullName: 'Business Model & Value Proposition', icon: Briefcase, desc: 'Value delivery, core revenue streams, and key commercial partners.' },
+  { id: 5, name: 'Operations', fullName: 'Operational Workflow & Capital Equipment', icon: Layers, desc: 'Production lifecycle, machinery breakdown, and labor requirements.' },
+  { id: 6, name: 'Marketing', fullName: 'Go-To-Market Strategy & Pricing Architecture', icon: TrendingUp, desc: 'Distribution channels, promotional tactics, and unit pricing structure.' },
+  { id: 7, name: 'Government', fullName: 'Statutory Scheme Matching & Subsidy Structuring', icon: ShieldCheck, desc: 'Deterministic qualification gates, margin money subsidy, and CGTMSE coverage.' },
+  { id: 8, name: 'Financial', fullName: 'Financial Projections & Debt Serviceability', icon: IndianRupee, desc: 'Capital outlay, monthly debt serviceability, and statutory FOIR/DSCR evaluation.' },
+  { id: 9, name: 'Risk & Mitigation', fullName: 'Microclimate & Commercial Risk Management', icon: CloudSun, desc: 'Atmospheric risk signals, supply chain vulnerabilities, and actionable mitigations.' },
+  { id: 10, name: 'Milestones', fullName: 'Implementation Roadmap & Stabilization Milestones', icon: Calendar, desc: 'Sequential month 1-6 operational rollout targets and stabilization metrics.' },
+  { id: 11, name: 'Review & Finalize', fullName: 'Review & Complete Detailed Project Report', icon: FileText, desc: 'Audit trail, provenance verification, and final document generation.' },
 ];
-
-// Secondary Sub-Categories under Stage 2: Market & Competitiveness
-type MarketSubCategory = 'customer' | 'business_model' | 'operations' | 'marketing';
-
-const MARKET_SUB_TABS: { id: MarketSubCategory; name: string; desc: string }[] = [
-  { id: 'customer', name: 'Customer', desc: 'Target Segments, Demand & Research Evidence' },
-  { id: 'business_model', name: 'Business Model', desc: 'Value Proposition & Commercial Partners' },
-  { id: 'operations', name: 'Operations', desc: 'Workflow & Machinery Plan' },
-  { id: 'marketing', name: 'Marketing', desc: 'Channels & Pricing Framework' },
-];
-
-// Official MoSPI HCES 2022-23 State MPCE Reference Baselines (Rural & Urban)
-const HCES_STATE_BENCHMARKS: Record<string, { rural: number; urban: number }> = {
-  'UTTAR PRADESH': { rural: 3191, urban: 5040 },
-  'MAHARASHTRA': { rural: 4010, urban: 6657 },
-  'KARNATAKA': { rural: 4397, urban: 7666 },
-  'RAJASTHAN': { rural: 4263, urban: 5913 },
-  'GUJARAT': { rural: 3798, urban: 6621 },
-  'TAMIL NADU': { rural: 4690, urban: 6868 },
-  'WEST BENGAL': { rural: 3239, urban: 5227 },
-  'BIHAR': { rural: 3384, urban: 4768 },
-  'MADHYA PRADESH': { rural: 3131, urban: 5057 },
-  'KERALA': { rural: 5924, urban: 7019 },
-  'DELHI': { rural: 6576, urban: 8217 },
-  'SIKKIM': { rural: 7731, urban: 12105 },
-  'CHHATTISGARH': { rural: 2466, urban: 4483 },
-  'ALL-INDIA': { rural: 3773, urban: 6459 },
-};
 
 export default function RebuiltDPRBuilderPage() {
   const { t } = useLanguage();
   const router = useRouter();
 
-  // Workflow State: 6 Primary Stages + Secondary Sub-tab in Stage 2
-  const [currentStage, setCurrentStage] = useState(1);
-  const [marketSubTab, setMarketSubTab] = useState<MarketSubCategory>('customer');
-
+  const [currentStep, setCurrentStep] = useState(1);
   const [loadingProfile, setLoadingProfile] = useState(true);
   const [generatingDPR, setGeneratingDPR] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -128,11 +95,7 @@ export default function RebuiltDPRBuilderPage() {
   });
 
   // Generated DPR State
-  const [dprResult, setDprResult] = useState<DPRResponse | null>(null);
-
-  // Live Research Context (HCES + PwC)
-  const [researchContext, setResearchContext] = useState<DistrictResearchContextResponse | null>(null);
-  const [loadingResearch, setLoadingResearch] = useState(false);
+  const [dprResult, setDprResult] = useState<any>(null);
 
   // User Qualitative Edits tracking
   const [qualitativeEdits, setQualitativeEdits] = useState<Record<string, string>>({});
@@ -154,7 +117,7 @@ export default function RebuiltDPRBuilderPage() {
               projectName: b.name || `${b.sector || b.type || prev.businessType} Enterprise`,
               promoterName: u.name || prev.promoterName,
               businessType: b.sector || b.type || prev.businessType,
-              subType: b.description || prev.subType,
+              subType: b.description || b.activity || prev.subType,
               districtName: b.district || u.district || prev.districtName,
               stateName: b.state || u.state || prev.stateName,
               locationType: b.isRural ? 'RURAL' : 'URBAN',
@@ -175,33 +138,7 @@ export default function RebuiltDPRBuilderPage() {
     loadSavedProfile();
   }, []);
 
-  // 2. Fetch Live Research Context (HCES 2022-23 + PwC Voice of the Consumer 2025)
-  useEffect(() => {
-    async function loadResearchContext() {
-      if (!form.districtName || !form.stateName) return;
-      setLoadingResearch(true);
-      try {
-        const params = new URLSearchParams({
-          district_name: form.districtName,
-          state_name: form.stateName,
-          business_type: form.businessType,
-          sector: form.subType,
-        });
-        const res = await fetch(`/api/research/district-market-context?${params.toString()}`);
-        if (res.ok) {
-          const data = await res.json();
-          setResearchContext(data);
-        }
-      } catch (err) {
-        console.warn('Could not load research context in DPR builder:', err);
-      } finally {
-        setLoadingResearch(false);
-      }
-    }
-    loadResearchContext();
-  }, [form.districtName, form.stateName, form.businessType, form.subType]);
-
-  // 3. Fetch or trigger DPR synthesis
+  // Fetch or trigger DPR synthesis
   const fetchDPR = async () => {
     setGeneratingDPR(true);
     setError(null);
@@ -247,12 +184,12 @@ export default function RebuiltDPRBuilderPage() {
     }
   };
 
-  // Trigger initial DPR synthesis when entering Stage 2 or above
+  // Trigger initial DPR synthesis when entering review or step >= 2
   useEffect(() => {
-    if (!dprResult && !generatingDPR && currentStage >= 2) {
+    if (!dprResult && !generatingDPR && currentStep >= 2) {
       fetchDPR();
     }
-  }, [currentStage]);
+  }, [currentStep]);
 
   const handleQualitativeChange = (field: string, val: string) => {
     setQualitativeEdits((prev) => ({ ...prev, [field]: val }));
@@ -263,1050 +200,922 @@ export default function RebuiltDPRBuilderPage() {
     return editedFields.has(field) ? 'USER EDITED' : defaultTag;
   };
 
-  // Stepper Progression Navigation
-  const handlePrevious = () => {
-    if (currentStage === 1) return;
-    if (currentStage === 2) {
-      if (marketSubTab === 'marketing') {
-        setMarketSubTab('operations');
-      } else if (marketSubTab === 'operations') {
-        setMarketSubTab('business_model');
-      } else if (marketSubTab === 'business_model') {
-        setMarketSubTab('customer');
-      } else {
-        setCurrentStage(1);
-      }
-      return;
-    }
-    if (currentStage === 3) {
-      setCurrentStage(2);
-      setMarketSubTab('marketing');
-      return;
-    }
-    setCurrentStage((prev) => Math.max(1, prev - 1));
-  };
-
-  const handleNext = () => {
-    if (currentStage === 1) {
-      setCurrentStage(2);
-      setMarketSubTab('customer');
-      return;
-    }
-    if (currentStage === 2) {
-      if (marketSubTab === 'customer') {
-        setMarketSubTab('business_model');
-      } else if (marketSubTab === 'business_model') {
-        setMarketSubTab('operations');
-      } else if (marketSubTab === 'operations') {
-        setMarketSubTab('marketing');
-      } else {
-        setCurrentStage(3);
-      }
-      return;
-    }
-    if (currentStage < 6) {
-      setCurrentStage((prev) => Math.min(6, prev + 1));
-      return;
-    }
-    fetchDPR();
-  };
-
-  // Extract HCES Observation / Values
-  const hcesObsString = researchContext?.research_observations?.find((o) => o.includes('HCES 2022-23'));
-  const normState = (form.stateName || 'UTTAR PRADESH').toUpperCase();
-  const stateBenchmarkFallback = HCES_STATE_BENCHMARKS[normState] || HCES_STATE_BENCHMARKS['ALL-INDIA'];
-  const hcesRuralVal = stateBenchmarkFallback?.rural ?? 3191;
-  const hcesUrbanVal = stateBenchmarkFallback?.urban ?? 5040;
-
   return (
-    <div className="min-h-screen bg-[#F7F8F5] flex flex-col font-sans">
+    <div className="min-h-screen bg-[#F7F8F5] text-[#0B1736] flex flex-col font-sans selection:bg-[#159A68] selection:text-white">
       <Navbar />
 
-      <div className="flex-1 flex max-w-7xl w-full mx-auto p-4 md:p-6 gap-6">
+      <div className="flex-1 flex w-full">
         <Sidebar />
 
-        <main className="flex-1 space-y-6">
-          {/* Header Banner */}
-          <div className="bg-white rounded-2xl p-6 border border-[#E2E8F0] shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div className="flex items-center gap-3.5">
-              <div className="w-12 h-12 rounded-xl bg-[#0B1736] text-[#F4A340] flex items-center justify-center shadow-xs">
-                <FileText className="w-6 h-6" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h1 className="text-xl font-bold text-[#0B1736]">DPR & Market Advisory Builder</h1>
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#EAF7F0] text-[#159A68] border border-[#159A68]/20">
-                    6-Stage Workflow Active
-                  </span>
-                </div>
-                <p className="text-xs text-[#64748B] mt-0.5">
-                  Authoritative Consulting Architecture: Census Grounding + MoSPI HCES + PwC Survey + Statutory Structuring.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={fetchDPR}
-                disabled={generatingDPR}
-                className="px-4 py-2 bg-[#0B1736] hover:bg-[#152347] disabled:opacity-50 text-white text-xs font-semibold rounded-xl shadow-xs transition flex items-center gap-2 cursor-pointer"
-              >
-                {generatingDPR ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4 text-[#F4A340]" />}
-                {dprResult ? 'Recalculate DPR' : 'Generate Intelligence'}
-              </button>
-            </div>
+        <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 max-w-[1550px] w-full min-w-0 space-y-6 sm:space-y-7">
+          
+          {/* Breadcrumb Navigation */}
+          <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
+            <Link href="/" className="hover:text-[#159A68] transition-colors">Home</Link>
+            <ChevronRight className="w-3 h-3 text-slate-300" />
+            <span className="text-[#0B1736] font-semibold">DPR Builder</span>
           </div>
 
+          {/* ========================================================================= */}
+          {/* 1. DPR INTRODUCTION BANNER (National Indian Enterprise Artwork)           */}
+          {/* ========================================================================= */}
+          <section className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-6 sm:p-8 lg:p-9 shadow-xs relative overflow-hidden">
+            {/* National India Enterprise Artwork Fading on the Right */}
+            <div className="absolute right-0 top-0 bottom-0 w-full sm:w-3/5 lg:w-1/2 pointer-events-none overflow-hidden rounded-r-2xl sm:rounded-r-3xl z-0">
+              <img
+                src="/dpr-infographic.jpg"
+                alt="Why Does a DPR Matter infographic"
+                className="w-full h-full object-cover object-[78%_center] dpr-hero-mask"
+              />
+              <style dangerouslySetInnerHTML={{ __html: `
+                .dpr-hero-mask {
+                  -webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 68%, rgba(0,0,0,0.15) 80%, rgba(0,0,0,0.9) 90%, rgba(0,0,0,1) 100%);
+                  mask-image: linear-gradient(to right, transparent 0%, transparent 68%, rgba(0,0,0,0.15) 80%, rgba(0,0,0,0.9) 90%, rgba(0,0,0,1) 100%);
+                }
+                @media (min-width: 640px) {
+                  .dpr-hero-mask {
+                    -webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 26%, rgba(0,0,0,0.15) 38%, rgba(0,0,0,0.85) 70%, rgba(0,0,0,1) 100%);
+                    mask-image: linear-gradient(to right, transparent 0%, transparent 26%, rgba(0,0,0,0.15) 38%, rgba(0,0,0,0.85) 70%, rgba(0,0,0,1) 100%);
+                  }
+                }
+                @media (min-width: 1024px) {
+                  .dpr-hero-mask {
+                    -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.12) 15%, rgba(0,0,0,0.85) 60%, rgba(0,0,0,1) 100%);
+                    mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.12) 15%, rgba(0,0,0,0.85) 60%, rgba(0,0,0,1) 100%);
+                  }
+                }
+              `}} />
+            </div>
+
+            <div className="relative z-10 max-w-2xl space-y-3">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#0B1736] tracking-tight font-serif">
+                11-Step DPR &amp; Market Advisory Builder
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-500 font-normal leading-relaxed max-w-xl">
+                Authoritative Consulting Workflow: Real Census + Nearest Neighbors + Statutory Structuring + Bank-Ready DPR.
+              </p>
+
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={fetchDPR}
+                  disabled={generatingDPR}
+                  className="px-4 py-2.5 bg-[#0B1736] hover:bg-[#152347] disabled:opacity-50 text-white text-xs font-semibold rounded-xl shadow-xs transition inline-flex items-center gap-2 cursor-pointer"
+                >
+                  {generatingDPR ? (
+                    <Loader2 className="w-4 h-4 animate-spin text-[#F4A340]" />
+                  ) : (
+                    <Sparkles className="w-4 h-4 text-[#F4A340]" />
+                  )}
+                  <span>{dprResult ? 'Recalculate DPR' : 'Generate Intelligence'}</span>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          {/* ========================================================================= */}
+          {/* 2. ERROR ALERT BAR (Clean subtle red alert when error occurs)             */}
+          {/* ========================================================================= */}
           {error && (
-            <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0" />
-              <span>{error}</span>
+            <div className="p-3.5 sm:p-4 rounded-xl bg-red-50/90 border border-red-200 text-red-700 text-xs font-medium flex items-center justify-between gap-3 shadow-2xs">
+              <div className="flex items-center gap-2.5">
+                <AlertCircle className="w-4 h-4 text-red-500 shrink-0" />
+                <span>{error}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setError(null)}
+                className="text-red-400 hover:text-red-600 font-bold px-1"
+              >
+                ✕
+              </button>
             </div>
           )}
 
-          {/* Clean Stepper Navigation (6 Primary Stages + Subordinate Secondary Navigation) */}
-          <div className="bg-white rounded-2xl border border-[#E2E8F0] p-4 shadow-xs space-y-4">
-            {/* Top Stepper Status & Quick Jump Selector */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#F1F5F9]">
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="px-2.5 py-0.5 rounded-md bg-[#EAF7F0] text-[#159A68] text-xs font-bold">
-                    Stage {currentStage} of 6
-                  </span>
-                  <h2 className="text-sm font-bold text-[#0B1736]">
-                    {PRIMARY_STAGES[currentStage - 1]?.name}
-                  </h2>
-                  <span className="hidden md:inline text-xs text-[#94A3B8]">•</span>
-                  <span className="hidden md:inline text-xs text-[#64748B]">
-                    {PRIMARY_STAGES[currentStage - 1]?.desc}
-                  </span>
-                </div>
-                {/* Progress Bar */}
-                <div className="w-full sm:w-72 bg-[#E2E8F0] rounded-full h-1.5 mt-2.5 overflow-hidden">
+          {/* ========================================================================= */}
+          {/* 3. 11-STEP GUIDED HORIZONTAL WORKFLOW NAVIGATOR                           */}
+          {/* ========================================================================= */}
+          <section className="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-xs space-y-4">
+            
+            {/* Top Status & Jump Dropdown Bar */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-bold text-[#159A68] whitespace-nowrap">
+                  Step {currentStep} of 11
+                </span>
+                {/* Horizontal Progress Bar */}
+                <div className="w-36 sm:w-52 bg-slate-100 rounded-full h-2 overflow-hidden">
                   <div
                     className="bg-[#159A68] h-full rounded-full transition-all duration-300"
-                    style={{ width: `${Math.round((currentStage / 6) * 100)}%` }}
+                    style={{ width: `${Math.round((currentStep / 11) * 100)}%` }}
                   />
                 </div>
               </div>
 
-              {/* Jump to any stage dropdown */}
-              <div className="flex items-center gap-2 shrink-0">
-                <label htmlFor="stage-jump" className="text-xs font-semibold text-[#64748B] hidden sm:inline">
+              {/* Jump to Dropdown */}
+              <div className="flex items-center gap-2">
+                <label htmlFor="step-jump-selector" className="text-xs font-semibold text-slate-500 whitespace-nowrap">
                   Jump to:
                 </label>
                 <select
-                  id="stage-jump"
-                  value={currentStage}
-                  onChange={(e) => {
-                    const stg = Number(e.target.value);
-                    setCurrentStage(stg);
-                    if (stg === 2 && !marketSubTab) setMarketSubTab('customer');
-                  }}
-                  className="px-3 py-1.5 bg-[#F8FAFC] border border-[#DCE3EA] rounded-xl text-xs font-semibold text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] cursor-pointer transition-all"
+                  id="step-jump-selector"
+                  value={currentStep}
+                  onChange={(e) => setCurrentStep(Number(e.target.value))}
+                  className="px-3 py-1.5 rounded-xl border border-slate-200/90 bg-white text-xs font-semibold text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] cursor-pointer transition-all"
                 >
-                  {PRIMARY_STAGES.map((s) => (
+                  {STEPS.map((s) => (
                     <option key={s.id} value={s.id}>
-                      {s.id}. {s.name} {currentStage > s.id ? '✓' : ''}
+                      {s.id}. {s.name} {currentStep > s.id ? '✓' : ''}
                     </option>
                   ))}
                 </select>
               </div>
             </div>
 
-            {/* Primary Navigation Bar (6 Stages) - Clean, document-oriented, professional */}
-            <div className="flex items-center gap-1 sm:gap-2 pb-1 overflow-x-auto no-scrollbar">
-              {PRIMARY_STAGES.map((stage) => {
-                const active = currentStage === stage.id;
-                const completed = currentStage > stage.id;
-                return (
-                  <button
-                    key={stage.id}
-                    type="button"
-                    onClick={() => {
-                      setCurrentStage(stage.id);
-                      if (stage.id === 2 && !marketSubTab) setMarketSubTab('customer');
-                    }}
-                    className={`flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-xl transition-all whitespace-nowrap cursor-pointer border ${
-                      active
-                        ? 'bg-[#0B1736] text-white border-[#0B1736] shadow-xs'
-                        : completed
-                        ? 'bg-[#F8FAFC] text-[#159A68] border-[#CBD5E1] hover:bg-[#F1F5F9]'
-                        : 'bg-white text-[#64748B] border-[#E2E8F0] hover:bg-[#F8FAFC] hover:text-[#0B1736]'
-                    }`}
-                  >
-                    <span
-                      className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                        active
-                          ? 'bg-white/20 text-white'
-                          : completed
-                          ? 'bg-[#159A68] text-white'
-                          : 'bg-[#F1F5F9] text-[#64748B]'
-                      }`}
-                    >
-                      {completed ? '✓' : stage.id}
-                    </span>
-                    <span>{stage.name}</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Secondary Navigation Bar (Only for Stage 2: Market & Competitiveness) */}
-            {currentStage === 2 && (
-              <div className="pt-2 border-t border-[#F1F5F9] flex flex-wrap items-center gap-2">
-                <span className="text-[11px] font-bold text-[#64748B] uppercase tracking-wider mr-1">
-                  Section:
-                </span>
-                {MARKET_SUB_TABS.map((sub) => {
-                  const isSubActive = marketSubTab === sub.id;
+            {/* Continuous Horizontal Stepper Track */}
+            <div className="overflow-x-auto pb-1 scrollbar-none">
+              <div className="flex items-center justify-between min-w-[860px] gap-1 px-1">
+                {STEPS.map((s, idx) => {
+                  const active = currentStep === s.id;
+                  const completed = currentStep > s.id;
                   return (
-                    <button
-                      key={sub.id}
-                      type="button"
-                      onClick={() => setMarketSubTab(sub.id)}
-                      className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors cursor-pointer border ${
-                        isSubActive
-                          ? 'bg-[#EAF7F0] text-[#159A68] border-[#159A68] shadow-xs'
-                          : 'bg-white text-slate-600 border-[#E2E8F0] hover:text-slate-900 hover:bg-[#F8FAFC]'
-                      }`}
-                    >
-                      {sub.name}
-                    </button>
+                    <React.Fragment key={s.id}>
+                      {/* Step Item */}
+                      <button
+                        type="button"
+                        onClick={() => setCurrentStep(s.id)}
+                        className={`flex flex-col items-center justify-center py-2 px-2.5 rounded-xl transition-all cursor-pointer shrink-0 ${
+                          active
+                            ? 'bg-[#EAF7F0] border border-[#159A68]/40 shadow-2xs'
+                            : 'hover:bg-slate-50'
+                        }`}
+                      >
+                        <div
+                          className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
+                            active
+                              ? 'bg-[#159A68] text-white shadow-xs'
+                              : completed
+                              ? 'bg-[#159A68] text-white'
+                              : 'bg-slate-100 text-slate-500'
+                          }`}
+                        >
+                          {completed ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : s.id}
+                        </div>
+                        <span
+                          className={`text-[11px] mt-1.5 whitespace-nowrap transition-colors ${
+                            active
+                              ? 'font-bold text-[#159A68]'
+                              : completed
+                              ? 'font-semibold text-[#0B1736]'
+                              : 'font-medium text-slate-500'
+                          }`}
+                        >
+                          {s.name}
+                        </span>
+                      </button>
+
+                      {/* Connecting Line Between Steps */}
+                      {idx < STEPS.length - 1 && (
+                        <div
+                          className={`h-0.5 flex-1 min-w-[8px] rounded-full transition-colors ${
+                            completed ? 'bg-[#159A68]' : 'bg-slate-200'
+                          }`}
+                        />
+                      )}
+                    </React.Fragment>
                   );
                 })}
               </div>
-            )}
-          </div>
+            </div>
 
-          {/* Stage Contents Container */}
-          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-6">
-            {/* ============================================================= */}
-            {/* Stage 1: Project Overview */}
-            {/* ============================================================= */}
-            {currentStage === 1 && (
-              <div className="space-y-6">
-                <div className="flex items-center justify-between border-b pb-4">
-                  <div>
-                    <h2 className="text-lg font-bold text-slate-900">Stage 1: Project & Promoter Overview</h2>
-                    <p className="text-xs text-slate-500">Auto-prefilled from your verified entrepreneur profile.</p>
+          </section>
+
+          {/* ========================================================================= */}
+          {/* 4. ACTIVE STEP WORKSPACE SECTION (Dominant Form Container)                 */}
+          {/* ========================================================================= */}
+          <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-6">
+            
+            {/* Step Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-[#EAF7F0] text-[#159A68] flex items-center justify-center shrink-0">
+                  <FileText className="w-5 h-5" />
+                </div>
+                <div>
+                  <h2 className="text-base sm:text-lg font-bold text-[#0B1736]">
+                    Step {currentStep}: {STEPS[currentStep - 1]?.fullName || STEPS[currentStep - 1]?.name}
+                  </h2>
+                  <p className="text-xs text-slate-500">
+                    {STEPS[currentStep - 1]?.desc}
+                  </p>
+                </div>
+              </div>
+
+              {/* Provenance Badge */}
+              <div className="self-start sm:self-center">
+                {currentStep === 1 && <ProvenanceBadge tag="USER PROVIDED" />}
+                {currentStep === 2 && (
+                  <div className="flex gap-1.5">
+                    <ProvenanceBadge tag="GOVERNMENT / DATASET DERIVED" />
+                    <ProvenanceBadge tag="MODELLED INDICATOR" />
                   </div>
-                  <ProvenanceBadge tag="USER PROVIDED" />
+                )}
+                {currentStep === 3 && <ProvenanceBadge tag={getFieldProvenance('buying_behaviour_summary', 'AI INTERPRETATION')} />}
+                {currentStep === 4 && <ProvenanceBadge tag={getFieldProvenance('value_proposition', 'AI INTERPRETATION')} />}
+                {currentStep === 5 && <ProvenanceBadge tag="ILLUSTRATIVE ASSUMPTION" />}
+                {currentStep === 6 && <ProvenanceBadge tag={getFieldProvenance('marketing_strategy', 'AI INTERPRETATION')} />}
+                {currentStep === 7 && <ProvenanceBadge tag="BACKEND DETERMINISTIC CALCULATION" />}
+                {currentStep === 8 && <ProvenanceBadge tag="BACKEND DETERMINISTIC CALCULATION" />}
+                {currentStep === 9 && <ProvenanceBadge tag="GOVERNMENT / DATASET DERIVED + AI INTERPRETATION" />}
+                {currentStep === 10 && <ProvenanceBadge tag="AI INTERPRETATION" />}
+                {currentStep === 11 && <ProvenanceBadge tag="BACKEND DETERMINISTIC CALCULATION + AI INTERPRETATION" />}
+              </div>
+            </div>
+
+            {/* ------------------------------------------------------------- */}
+            {/* STEP 1: Business & Promoter Overview                          */}
+            {/* ------------------------------------------------------------- */}
+            {currentStep === 1 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs">
+                <div>
+                  <label className="block font-semibold text-[#0B1736] mb-1.5">Project Name</label>
+                  <input
+                    type="text"
+                    value={form.projectName}
+                    onChange={(e) => setForm({ ...form, projectName: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all bg-white"
+                  />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                  <div>
-                    <label className="block font-semibold text-slate-700 mb-1">Project Name</label>
-                    <input
-                      type="text"
-                      value={form.projectName}
-                      onChange={(e) => setForm({ ...form, projectName: e.target.value })}
-                      className="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-indigo-500"
-                    />
-                  </div>
+                <div>
+                  <label className="block font-semibold text-[#0B1736] mb-1.5">Promoter Name</label>
+                  <input
+                    type="text"
+                    value={form.promoterName}
+                    onChange={(e) => setForm({ ...form, promoterName: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all bg-white"
+                  />
+                </div>
 
-                  <div>
-                    <label className="block font-semibold text-slate-700 mb-1">Promoter Name</label>
-                    <input
-                      type="text"
-                      value={form.promoterName}
-                      onChange={(e) => setForm({ ...form, promoterName: e.target.value })}
-                      className="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-indigo-500"
-                    />
-                  </div>
+                <div>
+                  <label className="block font-semibold text-[#0B1736] mb-1.5">Primary Business Domain</label>
+                  <input
+                    type="text"
+                    value={form.businessType}
+                    onChange={(e) => setForm({ ...form, businessType: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all bg-white"
+                  />
+                </div>
 
-                  <div>
-                    <label className="block font-semibold text-slate-700 mb-1">Primary Business Domain</label>
-                    <input
-                      type="text"
-                      value={form.businessType}
-                      onChange={(e) => setForm({ ...form, businessType: e.target.value })}
-                      className="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-indigo-500"
-                    />
-                  </div>
+                <div>
+                  <label className="block font-semibold text-[#0B1736] mb-1.5">Specific Sub-Type / Trade</label>
+                  <input
+                    type="text"
+                    value={form.subType}
+                    onChange={(e) => setForm({ ...form, subType: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all bg-white"
+                  />
+                </div>
 
-                  <div>
-                    <label className="block font-semibold text-slate-700 mb-1">Specific Sub-Type / Trade</label>
-                    <input
-                      type="text"
-                      value={form.subType}
-                      onChange={(e) => setForm({ ...form, subType: e.target.value })}
-                      className="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-indigo-500"
-                    />
-                  </div>
+                <div>
+                  <label className="block font-semibold text-[#0B1736] mb-1.5">District</label>
+                  <input
+                    type="text"
+                    value={form.districtName}
+                    onChange={(e) => setForm({ ...form, districtName: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all bg-white"
+                  />
+                </div>
 
-                  <div>
-                    <label className="block font-semibold text-slate-700 mb-1">District</label>
-                    <input
-                      type="text"
-                      value={form.districtName}
-                      onChange={(e) => setForm({ ...form, districtName: e.target.value })}
-                      className="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-indigo-500"
-                    />
-                  </div>
+                <div>
+                  <label className="block font-semibold text-[#0B1736] mb-1.5">State</label>
+                  <input
+                    type="text"
+                    value={form.stateName}
+                    onChange={(e) => setForm({ ...form, stateName: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all bg-white"
+                  />
+                </div>
 
-                  <div>
-                    <label className="block font-semibold text-slate-700 mb-1">State</label>
-                    <input
-                      type="text"
-                      value={form.stateName}
-                      onChange={(e) => setForm({ ...form, stateName: e.target.value })}
-                      className="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-indigo-500"
-                    />
-                  </div>
+                <div>
+                  <label className="block font-semibold text-[#0B1736] mb-1.5">Total Project Capital Outlay (₹)</label>
+                  <input
+                    type="number"
+                    value={form.estimatedCapital}
+                    onChange={(e) => setForm({ ...form, estimatedCapital: Number(e.target.value) })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all bg-white"
+                  />
+                </div>
 
-                  <div>
-                    <label className="block font-semibold text-slate-700 mb-1">Total Project Capital Outlay (₹)</label>
-                    <input
-                      type="number"
-                      value={form.estimatedCapital}
-                      onChange={(e) => setForm({ ...form, estimatedCapital: Number(e.target.value) })}
-                      className="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-indigo-500"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block font-semibold text-slate-700 mb-1">Annual Personal/Business Revenue (₹)</label>
-                    <input
-                      type="number"
-                      value={form.currentIncome}
-                      onChange={(e) => setForm({ ...form, currentIncome: Number(e.target.value) })}
-                      className="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-indigo-500"
-                    />
-                  </div>
+                <div>
+                  <label className="block font-semibold text-[#0B1736] mb-1.5">Annual Personal/Business Revenue (₹)</label>
+                  <input
+                    type="number"
+                    value={form.currentIncome}
+                    onChange={(e) => setForm({ ...form, currentIncome: Number(e.target.value) })}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all bg-white"
+                  />
                 </div>
               </div>
             )}
 
-            {/* ============================================================= */}
-            {/* Stage 2: Market & Competitiveness (Sub-Categories) */}
-            {/* ============================================================= */}
-            {currentStage === 2 && (
+            {/* ------------------------------------------------------------- */}
+            {/* STEP 2: Market Intelligence & Nearest Neighbors               */}
+            {/* ------------------------------------------------------------- */}
+            {currentStep === 2 && (
               <div className="space-y-6">
-                {/* 2A: Customer Sub-Category (Research Evidence + MSME Census + Customer Segments) */}
-                {marketSubTab === 'customer' && (
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between border-b pb-4">
-                      <div>
-                        <h2 className="text-lg font-bold text-slate-900">Market & Competitiveness: Customer & Demand</h2>
-                        <p className="text-xs text-slate-500">
-                          Empirical consumption benchmarks, consumer survey evidence, district MSME density, and customer persona segmentation.
-                        </p>
+                {dprResult?.market_analysis ? (
+                  <div className="space-y-5">
+                    {/* District Census Metrics */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
+                      <div className="p-4 bg-slate-50/80 border border-slate-200/70 rounded-xl space-y-1">
+                        <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Total Registered MSMEs</div>
+                        <div className="text-xl font-black text-[#0B1736]">
+                          {dprResult.market_analysis.total_msmes_in_district.toLocaleString()}
+                        </div>
+                        <div className="text-[10px] text-slate-500">PostgreSQL Udyam Census</div>
                       </div>
-                      <div className="flex gap-2">
-                        <ProvenanceBadge tag="GOVERNMENT / DATASET DERIVED" />
-                        <ProvenanceBadge tag="INDUSTRY SURVEY EVIDENCE" />
+
+                      <div className="p-4 bg-slate-50/80 border border-slate-200/70 rounded-xl space-y-1">
+                        <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Micro Share %</div>
+                        <div className="text-xl font-black text-[#0B1736]">
+                          {dprResult.market_analysis.micro_enterprise_share.toFixed(1)}%
+                        </div>
+                        <div className="text-[10px] text-slate-500">Micro enterprise density</div>
+                      </div>
+
+                      <div className="p-4 bg-slate-50/80 border border-slate-200/70 rounded-xl space-y-1">
+                        <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">KMeans Archetype</div>
+                        <div className="text-xs font-bold text-[#159A68] line-clamp-2">
+                          {dprResult.market_analysis.cluster_archetype_label}
+                        </div>
+                        <div className="text-[10px] text-slate-500">scikit-learn (K=4)</div>
+                      </div>
+
+                      <div className="p-4 bg-slate-50/80 border border-slate-200/70 rounded-xl space-y-1">
+                        <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Market Indicator (MRI)</div>
+                        <div className="text-xl font-black text-[#159A68]">
+                          {dprResult.market_analysis.market_research_indicator.toFixed(1)}/100
+                        </div>
+                        <div className="text-[10px] text-slate-500">Multi-factor score</div>
                       </div>
                     </div>
 
-                    {/* DEDICATED RESEARCH & MARKET EVIDENCE CARD (HCES + PwC) */}
-                    <div className="p-5 bg-gradient-to-br from-slate-50 to-emerald-50/20 border border-slate-200 rounded-2xl space-y-4 shadow-xs">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200/80 pb-3">
-                        <div className="flex items-center gap-2">
-                          <BookOpen className="w-4 h-4 text-[#159A68]" />
-                          <h3 className="text-sm font-bold text-[#0B1736]">Research & Market Evidence</h3>
-                        </div>
-                        <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 self-start sm:self-auto">
-                          MoSPI HCES 2022-23 & PwC India 2025 Benchmarks
-                        </span>
-                      </div>
-
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        {/* HCES 2022-23 State Benchmark Panel */}
-                        <div className="p-4 bg-white border border-slate-200 rounded-xl space-y-3 shadow-xs">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold text-[#0B1736]">
-                              Official Household Consumption Benchmark (HCES)
-                            </span>
-                            <ProvenanceBadge tag="GOVERNMENT / DATASET DERIVED" />
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-3 pt-1">
-                            <div className="p-2.5 bg-slate-50 border rounded-lg">
-                              <span className="text-[10px] font-bold text-slate-500 uppercase">Rural Monthly Per Capita</span>
-                              <div className="text-base font-extrabold text-[#0B1736] mt-0.5">
-                                ₹{hcesRuralVal.toLocaleString()}
-                              </div>
-                              <span className="text-[10px] text-slate-500">{form.stateName} Rural</span>
-                            </div>
-
-                            <div className="p-2.5 bg-slate-50 border rounded-lg">
-                              <span className="text-[10px] font-bold text-slate-500 uppercase">Urban Monthly Per Capita</span>
-                              <div className="text-base font-extrabold text-[#159A68] mt-0.5">
-                                ₹{hcesUrbanVal.toLocaleString()}
-                              </div>
-                              <span className="text-[10px] text-slate-500">{form.stateName} Urban</span>
-                            </div>
-                          </div>
-
-                          <div className="text-[11px] text-slate-600 space-y-1 bg-slate-50/80 p-2.5 rounded-lg border border-slate-100">
-                            <div><span className="font-semibold text-slate-700">Source:</span> Government of India / MoSPI NSSO Fact Sheet</div>
-                            <div><span className="font-semibold text-slate-700">Survey Period:</span> 2022-23 (All-India coverage)</div>
-                            <div className="text-[10px] text-slate-500 italic pt-1 border-t border-slate-200/60 mt-1">
-                              * Official State Benchmark; district MPCE is not fabricated. Non-food expenditure reflects essential consumption basket categories, not discretionary surplus.
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* PwC Voice of the Consumer 2025 Panel */}
-                        <div className="p-4 bg-white border border-slate-200 rounded-xl space-y-3 shadow-xs">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold text-[#0B1736]">
-                              Consumer Market Survey (PwC Voice of the Consumer)
-                            </span>
-                            <ProvenanceBadge tag="INDUSTRY SURVEY EVIDENCE" />
-                          </div>
-
-                          {researchContext?.consumer_market_evidence ? (
-                            <div className="space-y-2">
-                              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-600 bg-teal-50/40 p-2 rounded-lg border border-teal-100">
-                                <div><span className="font-semibold text-slate-800">Geography:</span> {researchContext.consumer_market_evidence.geography} (National)</div>
-                                <div><span className="font-semibold text-slate-800">Year:</span> {researchContext.consumer_market_evidence.survey_year}</div>
-                                <div><span className="font-semibold text-slate-800">Sample:</span> {researchContext.consumer_market_evidence.sample_size.toLocaleString()} Adults</div>
-                              </div>
-
-                              <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
-                                {researchContext.consumer_market_evidence.evidence.map((bullet, idx) => (
-                                  <div key={idx} className="flex items-start gap-1.5 text-[11px] text-slate-600 leading-snug">
-                                    <span className="text-teal-600 font-bold shrink-0 mt-0.5">•</span>
-                                    <span>{bullet}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="p-3 bg-slate-50 border rounded-lg text-[11px] text-slate-500 space-y-1">
-                              <div className="font-semibold text-slate-700">Domain Relevance Filtering:</div>
-                              <p>
-                                PwC Voice of the Consumer (2025) survey evidence is exposed strictly for Food, Agriculture, Retail, and FMCG domains.
-                                National grocery survey evidence is not applicable or forced into unrelated sectors ({form.businessType}).
-                              </p>
-                            </div>
-                          )}
-
-                          <div className="text-[10px] text-slate-400 italic pt-1 border-t border-slate-100">
-                            * National consumer sentiment benchmark; does not represent localized headcount or predict business success.
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Zero Score Blending Invariant Notice */}
-                      <div className="flex items-center gap-2 text-[10px] text-slate-500 bg-white/80 p-2 rounded-lg border border-slate-200/60">
-                        <Info className="w-3.5 h-3.5 text-[#159A68] shrink-0" />
-                        <span>
-                          <strong>Zero Score Blending:</strong> HCES economic benchmarks and PwC survey indicators are independent empirical reference points. They are never combined into an arbitrary composite score, nor used to alter statutory scheme eligibility.
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* District MSME Metrics & Nearest Neighbors */}
-                    {dprResult?.market_analysis ? (
-                      <div className="space-y-4">
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                          <div className="p-3 bg-slate-50 border rounded-xl">
-                            <div className="text-[10px] text-slate-500 uppercase font-semibold">Total Registered MSMEs</div>
-                            <div className="text-lg font-bold text-slate-900 mt-1">
-                              {dprResult.market_analysis.total_msmes_in_district.toLocaleString()}
-                            </div>
-                            <div className="text-[10px] text-slate-500 mt-0.5">PostgreSQL Udyam Census</div>
-                          </div>
-
-                          <div className="p-3 bg-slate-50 border rounded-xl">
-                            <div className="text-[10px] text-slate-500 uppercase font-semibold">Micro Share %</div>
-                            <div className="text-lg font-bold text-slate-900 mt-1">
-                              {dprResult.market_analysis.micro_enterprise_share.toFixed(1)}%
-                            </div>
-                            <div className="text-[10px] text-slate-500 mt-0.5">Micro enterprise density</div>
-                          </div>
-
-                          <div className="p-3 bg-slate-50 border rounded-xl">
-                            <div className="text-[10px] text-slate-500 uppercase font-semibold">KMeans Archetype</div>
-                            <div className="text-xs font-bold text-indigo-700 mt-1 line-clamp-2">
-                              {dprResult.market_analysis.cluster_archetype_label}
-                            </div>
-                            <div className="text-[10px] text-slate-500 mt-0.5">scikit-learn (K=4)</div>
-                          </div>
-
-                          <div className="p-3 bg-slate-50 border rounded-xl">
-                            <div className="text-[10px] text-slate-500 uppercase font-semibold">Market Indicator (MRI)</div>
-                            <div className="text-lg font-bold text-emerald-700 mt-1">
-                              {dprResult.market_analysis.market_research_indicator.toFixed(1)}/100
-                            </div>
-                            <div className="text-[10px] text-slate-500 mt-0.5">Multi-factor score</div>
-                          </div>
-                        </div>
-
-                        {/* Nearest Neighbors Comparable Districts */}
-                        <div>
-                          <div className="flex items-center justify-between mb-2">
-                            <h3 className="text-xs font-bold text-slate-900 uppercase">
-                              Nearest Neighbor Comparable Markets (scikit-learn NearestNeighbors)
-                            </h3>
-                            <span className="text-[10px] text-slate-500">Euclidean distance in 6-dimensional feature space</span>
-                          </div>
-
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            {dprResult.market_analysis.comparable_districts?.map((d, i) => (
-                              <div key={i} className="p-3 border border-slate-200 rounded-xl bg-white shadow-xs space-y-1 text-xs">
-                                <div className="flex items-center justify-between">
-                                  <span className="font-bold text-slate-900">
-                                    #{d.similarity_rank} {d.district_name}, {d.state_name}
-                                  </span>
-                                  <span className="font-mono text-[10px] bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded">
-                                    Distance: {d.similarity_distance.toFixed(3)}
-                                  </span>
-                                </div>
-                                <div className="text-[11px] text-slate-600">
-                                  {d.total_msmes.toLocaleString()} MSMEs ({d.micro_share.toFixed(1)}% Micro, {d.small_medium_share.toFixed(1)}% SME)
-                                </div>
-                                <p className="text-[11px] text-slate-500 italic mt-1">{d.qualitative_observation}</p>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="p-6 text-center text-slate-500 text-xs bg-slate-50 rounded-xl">
-                        {generatingDPR ? 'Loading authoritative market intelligence...' : 'Click "Generate Intelligence" to compute market analysis.'}
-                      </div>
-                    )}
-
-                    {/* Customer Segments & Competition Intensity */}
-                    {dprResult ? (
-                      <div className="space-y-4 pt-2 border-t">
-                        <div className="p-4 bg-slate-50 border rounded-xl space-y-2">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold text-slate-900">Local Buying Behavior</span>
-                            <ProvenanceBadge tag={getFieldProvenance('buying_behaviour_summary', 'AI INTERPRETATION')} />
-                          </div>
-                          <textarea
-                            rows={2}
-                            value={qualitativeEdits.buying_behaviour_summary ?? dprResult.customer_segments.buying_behaviour_summary}
-                            onChange={(e) => handleQualitativeChange('buying_behaviour_summary', e.target.value)}
-                            className="w-full text-xs p-2 border rounded bg-white"
-                          />
-                        </div>
-
-                        <div>
-                          <h3 className="text-xs font-bold text-slate-900 uppercase mb-2">Customer Persona Segments</h3>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            {dprResult.customer_segments.customer_segments.map((seg, idx) => (
-                              <div key={idx} className="p-3 border rounded-xl text-xs space-y-1 bg-white">
-                                <div className="font-bold text-slate-900">{seg.segment}</div>
-                                <div className="text-slate-600"><span className="font-medium">Need:</span> {seg.need}</div>
-                                <div className="text-slate-600"><span className="font-medium">Buying Factor:</span> {seg.buying_consideration}</div>
-                                <div className="text-slate-500 text-[11px]"><span className="font-medium">Channel:</span> {seg.recommended_channel}</div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div className="p-4 border rounded-xl bg-slate-50 space-y-2">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold text-slate-900">
-                              Competition Intensity: <span className="text-indigo-700">{dprResult.competition.competition_intensity}</span>
-                            </span>
-                            <ProvenanceBadge tag="MODELLED INDICATOR" />
-                          </div>
-                          <p className="text-xs text-slate-600">{dprResult.competition.competition_rationale}</p>
-                        </div>
-                      </div>
-                    ) : null}
-                  </div>
-                )}
-
-                {/* 2B: Business Model Sub-Category */}
-                {marketSubTab === 'business_model' && (
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between border-b pb-4">
-                      <div>
-                        <h2 className="text-lg font-bold text-slate-900">Market & Competitiveness: Business Model</h2>
-                        <p className="text-xs text-slate-500">Value delivery, core revenue streams, and key commercial partners.</p>
-                      </div>
-                      <ProvenanceBadge tag={getFieldProvenance('value_proposition', 'AI INTERPRETATION')} />
-                    </div>
-
-                    {dprResult ? (
-                      <div className="space-y-4">
-                        <div>
-                          <label className="block text-xs font-bold text-slate-700 mb-1">Core Value Proposition</label>
-                          <textarea
-                            rows={2}
-                            value={qualitativeEdits.value_proposition ?? dprResult.business_model.value_proposition}
-                            onChange={(e) => handleQualitativeChange('value_proposition', e.target.value)}
-                            className="w-full text-xs p-2 border rounded bg-white"
-                          />
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="p-3 border rounded-xl space-y-2">
-                            <span className="text-xs font-bold text-slate-900">Primary Revenue Streams</span>
-                            <ul className="text-xs text-slate-600 space-y-1 list-disc list-inside">
-                              {dprResult.business_model.revenue_streams.map((r, i) => (
-                                <li key={i}>{r}</li>
-                              ))}
-                            </ul>
-                          </div>
-
-                          <div className="p-3 border rounded-xl space-y-2">
-                            <span className="text-xs font-bold text-slate-900">Key Commercial Partners</span>
-                            <ul className="text-xs text-slate-600 space-y-1 list-disc list-inside">
-                              {dprResult.business_model.key_partners.map((p, i) => (
-                                <li key={i}>{p}</li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="p-8 text-center text-slate-500 text-xs">Computing business model...</div>
-                    )}
-                  </div>
-                )}
-
-                {/* 2C: Operations Sub-Category */}
-                {marketSubTab === 'operations' && (
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between border-b pb-4">
-                      <div>
-                        <h2 className="text-lg font-bold text-slate-900">Market & Competitiveness: Operations Plan</h2>
-                        <p className="text-xs text-slate-500">Domain-tailored workflow, equipment requirements, and workforce plan.</p>
-                      </div>
-                      <ProvenanceBadge tag="AI INTERPRETATION" />
-                    </div>
-
-                    {dprResult ? (
-                      <div className="space-y-4">
-                        <div className="p-4 border rounded-xl bg-slate-50">
-                          <h3 className="text-xs font-bold text-slate-900 mb-2">5-Stage Operational Workflow</h3>
-                          <div className="space-y-2">
-                            {dprResult.operations_plan.workflow_steps.map((w, i) => (
-                              <div key={i} className="flex items-start gap-2 text-xs text-slate-700">
-                                <span className="font-bold text-indigo-600">Stage {i + 1}:</span>
-                                <span>{w}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="p-3 border rounded-xl space-y-2">
-                            <span className="text-xs font-bold text-slate-900">Machinery & Equipment</span>
-                            <ul className="text-xs text-slate-600 space-y-1 list-disc list-inside">
-                              {dprResult.operations_plan.key_machinery_equipment.map((m, i) => (
-                                <li key={i}>{m}</li>
-                              ))}
-                            </ul>
-                          </div>
-
-                          <div className="p-3 border rounded-xl space-y-2">
-                            <span className="text-xs font-bold text-slate-900">Workforce Organization</span>
-                            <ul className="text-xs text-slate-600 space-y-1 list-disc list-inside">
-                              {dprResult.operations_plan.workforce_roles.map((r, i) => (
-                                <li key={i}>{r}</li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="p-8 text-center text-slate-500 text-xs">Computing operations plan...</div>
-                    )}
-                  </div>
-                )}
-
-                {/* 2D: Marketing Sub-Category */}
-                {marketSubTab === 'marketing' && (
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between border-b pb-4">
-                      <div>
-                        <h2 className="text-lg font-bold text-slate-900">Market & Competitiveness: Marketing Strategy</h2>
-                        <p className="text-xs text-slate-500">Positioning, structured channels, and defensible pricing model.</p>
-                      </div>
-                      <ProvenanceBadge tag="AI INTERPRETATION" />
-                    </div>
-
-                    {dprResult ? (
-                      <div className="space-y-4">
-                        <div className="p-4 border rounded-xl bg-slate-50 space-y-2">
-                          <span className="text-xs font-bold text-slate-900">Strategic Positioning</span>
-                          <textarea
-                            rows={2}
-                            value={qualitativeEdits.positioning_statement ?? dprResult.marketing_strategy.positioning_statement}
-                            onChange={(e) => handleQualitativeChange('positioning_statement', e.target.value)}
-                            className="w-full text-xs p-2 border rounded bg-white"
-                          />
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="p-3 border rounded-xl space-y-2">
-                            <span className="text-xs font-bold text-slate-900">Sales Channels</span>
-                            <ul className="text-xs text-slate-600 space-y-1 list-disc list-inside">
-                              {dprResult.marketing_strategy.sales_channels.map((c, i) => (
-                                <li key={i}>{c}</li>
-                              ))}
-                            </ul>
-                          </div>
-
-                          <div className="p-3 border rounded-xl space-y-2">
-                            <span className="text-xs font-bold text-slate-900">Pricing Framework</span>
-                            <p className="text-xs text-slate-600">{dprResult.marketing_strategy.pricing_framework}</p>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="p-8 text-center text-slate-500 text-xs">Computing marketing strategy...</div>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* ============================================================= */}
-            {/* Stage 3: Financial Plan */}
-            {/* ============================================================= */}
-            {currentStage === 3 && (
-              <div className="space-y-6">
-                <div className="flex items-center justify-between border-b pb-4">
-                  <div>
-                    <h2 className="text-lg font-bold text-slate-900">Stage 3: Capital Structure & Financial Projections</h2>
-                    <p className="text-xs text-slate-500">Calculated directly by backend financial structuring engine.</p>
-                  </div>
-                  <ProvenanceBadge tag="BACKEND DETERMINISTIC CALCULATION" />
-                </div>
-
-                {dprResult ? (
-                  <div className="space-y-4">
-                    {/* Capital Breakdown Cards */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                      <div className="p-3 bg-slate-50 border rounded-xl">
-                        <div className="text-[10px] text-slate-500 uppercase font-semibold">Total Project Cost</div>
-                        <div className="text-lg font-bold text-slate-900 mt-1">
-                          ₹{dprResult.capital_structure.total_project_cost.toLocaleString()}
-                        </div>
-                      </div>
-
-                      <div className="p-3 bg-slate-50 border rounded-xl">
-                        <div className="text-[10px] text-slate-500 uppercase font-semibold">Promoter Contribution</div>
-                        {dprResult.capital_structure.promoter_equity_amount != null ? (
-                          <>
-                            <div className="text-lg font-bold text-blue-700 mt-1">
-                              ₹{dprResult.capital_structure.promoter_equity_amount.toLocaleString()}
-                            </div>
-                            <div className="text-[10px] text-slate-500 mt-0.5">
-                              {dprResult.capital_structure.promoter_equity_pct != null
-                                ? `${dprResult.capital_structure.promoter_equity_pct}% margin`
-                                : 'Self-equity'}
-                            </div>
-                          </>
-                        ) : (
-                          <div className="text-[11px] text-amber-700 font-medium mt-1 leading-snug">
-                            Not specified by authoritative programme data
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="p-3 bg-slate-50 border rounded-xl">
-                        <div className="text-[10px] text-slate-500 uppercase font-semibold">Net Bank Loan Exposure</div>
-                        <div className="text-lg font-bold text-indigo-700 mt-1">
-                          {dprResult.capital_structure.net_bank_loan_exposure != null
-                            ? `₹${dprResult.capital_structure.net_bank_loan_exposure.toLocaleString()}`
-                            : 'Not applicable'}
-                        </div>
-                        {dprResult.capital_structure.initial_bank_loan != null &&
-                         dprResult.capital_structure.net_bank_loan_exposure != null &&
-                         dprResult.capital_structure.initial_bank_loan !== dprResult.capital_structure.net_bank_loan_exposure && (
-                          <div className="text-[10px] text-slate-500 mt-0.5">
-                            Gross loan: ₹{dprResult.capital_structure.initial_bank_loan.toLocaleString()}
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="p-3 bg-slate-50 border rounded-xl">
-                        <div className="text-[10px] text-slate-500 uppercase font-semibold">Monthly EMI (P+I)</div>
-                        {dprResult.government_support.is_credit_linked && dprResult.financial_assumptions.annual_interest_rate_pct != null ? (
-                          <>
-                            <div className="text-lg font-bold text-emerald-700 mt-1">
-                              ₹{dprResult.financial_assumptions.monthly_emi.toLocaleString()}
-                            </div>
-                            <div className="text-[10px] text-slate-600 mt-0.5">
-                              {dprResult.financial_assumptions.loan_tenure_months} mos @ {dprResult.financial_assumptions.annual_interest_rate_pct}%
-                              {dprResult.financial_assumptions.is_benchmark_assumption ? ' benchmark' : ''}
-                            </div>
-                            <div className="text-[9px] text-indigo-600 font-semibold mt-0.5">
-                              {dprResult.financial_assumptions.rate_display_text || 'Market-linked / lender-dependent'}
-                            </div>
-                          </>
-                        ) : (
-                          <div className="text-[11px] text-slate-500 font-medium mt-1 leading-snug">
-                            Not applicable — programme is not credit-linked.
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Component Allocation Note */}
-                    <div className="p-2.5 bg-slate-50 border border-dashed rounded-xl text-xs flex items-center justify-between text-slate-600">
-                      <span className="font-semibold text-[11px]">Term Loan / Working Capital Split:</span>
-                      <span className="text-[11px] font-medium text-slate-700">
-                        {dprResult.capital_structure.term_loan_amount != null && dprResult.capital_structure.working_capital_amount != null
-                          ? `Term: ₹${dprResult.capital_structure.term_loan_amount.toLocaleString()} | WC: ₹${dprResult.capital_structure.working_capital_amount.toLocaleString()}`
-                          : 'Not specified (component allocation determined upon bank sanction)'}
-                      </span>
-                    </div>
-
-                    {/* Amortization Table */}
-                    <div>
-                      <h3 className="text-xs font-bold text-slate-900 uppercase mb-2">Annual Debt Service Schedule</h3>
-                      <div className="overflow-x-auto border rounded-xl">
-                        <table className="w-full text-xs text-left">
-                          <thead className="bg-slate-100 text-slate-700 font-semibold border-b">
-                            <tr>
-                              <th className="p-2">Year</th>
-                              <th className="p-2">Opening (₹)</th>
-                              <th className="p-2">Principal Paid (₹)</th>
-                              <th className="p-2">Interest Paid (₹)</th>
-                              <th className="p-2">Annual Outflow (₹)</th>
-                              <th className="p-2">Closing (₹)</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-slate-100">
-                            {dprResult.financial_assumptions.amortization_schedule.map((row) => (
-                              <tr key={row.year} className="hover:bg-slate-50">
-                                <td className="p-2 font-bold text-slate-800">Year {row.year}</td>
-                                <td className="p-2 font-mono">₹{row.opening_balance.toLocaleString()}</td>
-                                <td className="p-2 font-mono text-indigo-600">₹{row.annual_principal.toLocaleString()}</td>
-                                <td className="p-2 font-mono text-orange-600">₹{row.annual_interest.toLocaleString()}</td>
-                                <td className="p-2 font-mono font-bold">₹{row.total_annual_payment.toLocaleString()}</td>
-                                <td className="p-2 font-mono text-slate-600">₹{row.closing_balance.toLocaleString()}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="p-8 text-center text-slate-500 text-xs">Computing financial assumptions...</div>
-                )}
-              </div>
-            )}
-
-            {/* ============================================================= */}
-            {/* Stage 4: Government Support */}
-            {/* ============================================================= */}
-            {currentStage === 4 && (
-              <div className="space-y-6">
-                <div className="flex items-center justify-between border-b pb-4">
-                  <div>
-                    <h2 className="text-lg font-bold text-slate-900">Stage 4: Government Scheme Support & Subsidy</h2>
-                    <p className="text-xs text-slate-500">Statutory scheme rules from PostgreSQL and recommendation engine.</p>
-                  </div>
-                  <ProvenanceBadge tag="GOVERNMENT / DATASET DERIVED" />
-                </div>
-
-                <div className="p-4 border border-indigo-200 bg-indigo-50/50 rounded-xl space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-sm font-bold text-indigo-950">
-                        {dprResult?.government_support.program_name || form.selectedProgramCode}
-                      </div>
-                      <div className="text-xs text-indigo-700 font-mono">
-                        Code: {dprResult?.government_support.program_code || form.selectedProgramCode}
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-xs text-slate-500">Eligible Subsidy</div>
-                      <div className="text-lg font-extrabold text-emerald-700">
-                        ₹{(dprResult?.government_support.eligible_subsidy_amount || 0).toLocaleString()}
-                      </div>
-                      <div className="text-[10px] text-slate-500">
-                        Rate: {dprResult?.government_support.eligible_subsidy_rate_pct || 0}%
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="text-xs text-slate-600">
-                    <span className="font-semibold">Nodal Agency:</span> {dprResult?.government_support.nodal_agency || 'KVIC / DIC'}
-                  </div>
-                </div>
-
-                {dprResult?.government_support.mandatory_statutory_conditions && (
-                  <div className="p-3 border rounded-xl bg-slate-50 space-y-1 text-xs">
-                    <span className="font-bold text-slate-900">Mandatory Statutory Conditions:</span>
-                    <ul className="list-disc list-inside text-slate-600 space-y-1">
-                      {dprResult.government_support.mandatory_statutory_conditions.map((cond, i) => (
-                        <li key={i}>{cond}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* ============================================================= */}
-            {/* Stage 5: Risk & Implementation (Risks + Milestones Combined) */}
-            {/* ============================================================= */}
-            {currentStage === 5 && (
-              <div className="space-y-6">
-                <div className="flex items-center justify-between border-b pb-4">
-                  <div>
-                    <h2 className="text-lg font-bold text-slate-900">Stage 5: Risk Analysis & Implementation Roadmap</h2>
-                    <p className="text-xs text-slate-500">
-                      Weather sensitivity signals, operational risk mitigation, and Month 1-6 commercial rollout milestones.
-                    </p>
-                  </div>
-                  <ProvenanceBadge tag="MODELLED INDICATOR" />
-                </div>
-
-                {dprResult ? (
-                  <div className="space-y-6">
-                    {/* Part A: Weather Activity & Risk Matrix */}
-                    <div className="space-y-4">
-                      <div className="p-4 bg-slate-50 border rounded-xl flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <CloudSun className="w-8 h-8 text-indigo-600" />
-                          <div>
-                            <div className="text-xs font-bold text-slate-900">Indicative Weather Activity Impact</div>
-                            <div className="text-[11px] text-slate-500">
-                              Score: {dprResult.risk_analysis.weather_activity_impact_score ?? 'N/A'}/100 ({dprResult.risk_analysis.weather_activity_impact_label ?? 'Neutral'})
-                            </div>
-                          </div>
-                        </div>
-                        <div className="text-right text-[11px] text-slate-500">
-                          <div>Heat Stress: <span className="font-semibold text-slate-800">{dprResult.risk_analysis.heat_stress_level ?? 'Low'}</span></div>
-                          <div>Rain Disruption: <span className="font-semibold text-slate-800">{dprResult.risk_analysis.rain_disruption_level ?? 'None'}</span></div>
-                        </div>
-                      </div>
-
-                      {/* Operational Risk Matrix */}
-                      <div className="space-y-2">
-                        <h3 className="text-xs font-bold text-slate-900 uppercase">Operational Risk Matrix</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                          {dprResult.risk_analysis.identified_risks.map((r, i) => (
-                            <div key={i} className="p-3 border rounded-xl text-xs space-y-1 bg-white">
-                              <div className="flex items-center justify-between">
-                                <span className="font-bold text-slate-900">{r.risk}</span>
-                                <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${r.severity === 'High' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}`}>
-                                  {r.severity}
-                                </span>
-                              </div>
-                              <p className="text-slate-600 text-[11px]">{r.mitigation}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Part B: Implementation Schedule (Month 1-6 Milestones) */}
-                    <div className="space-y-3 pt-4 border-t">
+                    {/* Nearest Neighbors Comparable Districts */}
+                    <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <h3 className="text-xs font-bold text-slate-900 uppercase">
-                          Month 1-6 Implementation Milestones & Critical Deliverables
+                        <h3 className="text-xs font-bold text-[#0B1736] uppercase tracking-wider">
+                          Nearest Neighbor Comparable Markets (scikit-learn NearestNeighbors)
                         </h3>
-                        <ProvenanceBadge tag="AI INTERPRETATION" />
+                        <span className="text-[10px] text-slate-400">Euclidean distance in 6-dimensional feature space</span>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {dprResult.implementation_plan.milestones.map((m) => (
-                          <div key={m.phase_number} className="p-3.5 border rounded-xl flex items-start gap-3 bg-white shadow-xs">
-                            <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold text-xs shrink-0">
-                              M{m.phase_number}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                        {dprResult.market_analysis.comparable_districts?.map((d: any, i: number) => (
+                          <div key={i} className="p-3.5 border border-slate-200/80 rounded-xl bg-white shadow-2xs space-y-1.5 text-xs">
+                            <div className="flex items-center justify-between">
+                              <span className="font-bold text-[#0B1736]">
+                                #{d.similarity_rank} {d.district_name}, {d.state_name}
+                              </span>
+                              <span className="font-mono text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-bold">
+                                Distance: {d.similarity_distance.toFixed(3)}
+                              </span>
                             </div>
-                            <div className="flex-1 text-xs">
-                              <div className="flex items-center justify-between">
-                                <span className="font-bold text-slate-900">{m.month_range}: {m.activity}</span>
-                              </div>
-                              <p className="text-slate-500 text-[11px] mt-1">
-                                <span className="font-semibold text-slate-700">Deliverable:</span> {m.critical_deliverable}
-                              </p>
+                            <div className="text-[11px] text-slate-600">
+                              {d.total_msmes.toLocaleString()} MSMEs ({d.micro_share.toFixed(1)}% Micro, {d.small_medium_share.toFixed(1)}% SME)
                             </div>
+                            <p className="text-[11px] text-slate-500 italic leading-relaxed">{d.qualitative_observation}</p>
                           </div>
                         ))}
                       </div>
                     </div>
                   </div>
                 ) : (
-                  <div className="p-8 text-center text-slate-500 text-xs">Computing risk & implementation roadmap...</div>
+                  <div className="p-8 text-center text-slate-500 text-xs">
+                    {generatingDPR ? 'Loading authoritative market intelligence...' : 'Click "Generate Intelligence" to compute.'}
+                  </div>
                 )}
               </div>
             )}
 
-            {/* ============================================================= */}
-            {/* Stage 6: Review & Generate */}
-            {/* ============================================================= */}
-            {currentStage === 6 && (
-              <div className="space-y-6">
-                <div className="flex items-center justify-between border-b pb-4">
-                  <div>
-                    <h2 className="text-lg font-bold text-slate-900">Stage 6: Review & Final Project Report Synthesis</h2>
-                    <p className="text-xs text-slate-500">Audit trail, provenance verification, and final bank-ready document export.</p>
-                  </div>
-                  <ProvenanceBadge tag="BACKEND DETERMINISTIC CALCULATION + AI INTERPRETATION" />
-                </div>
+            {/* ------------------------------------------------------------- */}
+            {/* STEP 3: Customers & Competition                               */}
+            {/* ------------------------------------------------------------- */}
+            {currentStep === 3 && (
+              <div className="space-y-5">
+                {dprResult ? (
+                  <div className="space-y-5">
+                    <div className="p-4 bg-slate-50/80 border border-slate-200/70 rounded-xl space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-[#0B1736]">Local Buying Behavior</span>
+                        <ProvenanceBadge tag="AI INTERPRETATION" />
+                      </div>
+                      <textarea
+                        rows={2}
+                        value={qualitativeEdits.buying_behaviour_summary ?? dprResult.customer_segments.buying_behaviour_summary}
+                        onChange={(e) => handleQualitativeChange('buying_behaviour_summary', e.target.value)}
+                        className="w-full text-xs p-3 border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all"
+                      />
+                    </div>
 
+                    <div>
+                      <h3 className="text-xs font-bold text-[#0B1736] uppercase tracking-wider mb-2.5">
+                        Customer Persona Segments
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                        {dprResult.customer_segments.customer_segments.map((seg: any, idx: number) => (
+                          <div key={idx} className="p-3.5 border border-slate-200/80 rounded-xl text-xs space-y-1 bg-white shadow-2xs">
+                            <div className="font-bold text-[#0B1736]">{seg.segment}</div>
+                            <div className="text-slate-600"><span className="font-medium text-slate-800">Need:</span> {seg.need}</div>
+                            <div className="text-slate-600"><span className="font-medium text-slate-800">Buying Factor:</span> {seg.buying_consideration}</div>
+                            <div className="text-slate-500 text-[11px]"><span className="font-medium text-slate-700">Channel:</span> {seg.recommended_channel}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="p-4 border border-slate-200/80 rounded-xl bg-slate-50/80 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-[#0B1736]">
+                          Competition Intensity: <span className="text-[#159A68]">{dprResult.competition.competition_intensity}</span>
+                        </span>
+                        <ProvenanceBadge tag="MODELLED INDICATOR" />
+                      </div>
+                      <p className="text-xs text-slate-600 leading-relaxed">{dprResult.competition.competition_rationale}</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-8 text-center text-slate-500 text-xs">Computing customer segments...</div>
+                )}
+              </div>
+            )}
+
+            {/* ------------------------------------------------------------- */}
+            {/* STEP 4: Business Model & Value Proposition                    */}
+            {/* ------------------------------------------------------------- */}
+            {currentStep === 4 && (
+              <div className="space-y-5">
+                {dprResult ? (
+                  <div className="space-y-5">
+                    <div>
+                      <label className="block text-xs font-bold text-[#0B1736] mb-1.5">Core Value Proposition</label>
+                      <textarea
+                        rows={2}
+                        value={qualitativeEdits.value_proposition ?? dprResult.business_model.value_proposition}
+                        onChange={(e) => handleQualitativeChange('value_proposition', e.target.value)}
+                        className="w-full text-xs p-3 border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="p-4 border border-slate-200/80 rounded-xl bg-white space-y-2 shadow-2xs">
+                        <h3 className="text-xs font-bold text-[#0B1736] uppercase tracking-wider">Primary Revenue Streams</h3>
+                        <ul className="text-xs text-slate-600 space-y-1 list-disc list-inside">
+                          {dprResult.business_model.primary_revenue_streams.map((s: any, idx: number) => (
+                            <li key={idx}>{s}</li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className="p-4 border border-slate-200/80 rounded-xl bg-white space-y-2 shadow-2xs">
+                        <h3 className="text-xs font-bold text-[#0B1736] uppercase tracking-wider">Commercial Off-Take Channels</h3>
+                        <ul className="text-xs text-slate-600 space-y-1 list-disc list-inside">
+                          {dprResult.business_model.sales_channels.map((c: any, idx: number) => (
+                            <li key={idx}>{c}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-8 text-center text-slate-500 text-xs">Synthesizing business model...</div>
+                )}
+              </div>
+            )}
+
+            {/* ------------------------------------------------------------- */}
+            {/* STEP 5: Operational Workflow & Capital Equipment              */}
+            {/* ------------------------------------------------------------- */}
+            {currentStep === 5 && (
+              <div className="space-y-5">
+                {dprResult ? (
+                  <div className="space-y-5">
+                    <div>
+                      <label className="block text-xs font-bold text-[#0B1736] mb-1.5">Operational Workflow Narrative</label>
+                      <textarea
+                        rows={2}
+                        value={qualitativeEdits.operations_narrative ?? dprResult.operations.operations_narrative}
+                        onChange={(e) => handleQualitativeChange('operations_narrative', e.target.value)}
+                        className="w-full text-xs p-3 border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all"
+                      />
+                    </div>
+
+                    <div className="space-y-3">
+                      <h3 className="text-xs font-bold text-[#0B1736] uppercase tracking-wider">
+                        Major Capital Machinery &amp; Equipment
+                      </h3>
+                      <div className="divide-y divide-slate-100 border border-slate-200/80 rounded-xl overflow-hidden bg-white">
+                        {dprResult.operations.machinery_list.map((m: any, idx: number) => (
+                          <div key={idx} className="p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                            <div>
+                              <div className="font-bold text-[#0B1736]">{m.machinery_name}</div>
+                              <div className="text-[11px] text-slate-500">
+                                Capacity: {m.capacity_output} • Power: {m.power_spec} • Supplier: {m.indicative_source}
+                              </div>
+                            </div>
+                            <div className="font-black text-[#159A68] sm:text-right shrink-0">
+                              ₹{m.unit_cost.toLocaleString()}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="text-right text-xs font-bold text-[#0B1736]">
+                        Total Equipment Cost: ₹{dprResult.operations.total_equipment_cost.toLocaleString()}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-8 text-center text-slate-500 text-xs">Loading operational parameters...</div>
+                )}
+              </div>
+            )}
+
+            {/* ------------------------------------------------------------- */}
+            {/* STEP 6: Go-To-Market Strategy & Pricing Architecture          */}
+            {/* ------------------------------------------------------------- */}
+            {currentStep === 6 && (
+              <div className="space-y-5">
+                {dprResult ? (
+                  <div className="space-y-5">
+                    <div>
+                      <label className="block text-xs font-bold text-[#0B1736] mb-1.5">Sales &amp; Marketing Strategy</label>
+                      <textarea
+                        rows={2}
+                        value={qualitativeEdits.marketing_strategy ?? dprResult.marketing.marketing_strategy}
+                        onChange={(e) => handleQualitativeChange('marketing_strategy', e.target.value)}
+                        className="w-full text-xs p-3 border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="p-4 border border-slate-200/80 rounded-xl bg-white space-y-2 shadow-2xs">
+                        <h3 className="text-xs font-bold text-[#0B1736] uppercase tracking-wider">Direct &amp; Indirect Channels</h3>
+                        <ul className="text-xs text-slate-600 space-y-1 list-disc list-inside">
+                          {dprResult.marketing.distribution_channels.map((d: any, idx: number) => (
+                            <li key={idx}>{d}</li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className="p-4 border border-slate-200/80 rounded-xl bg-white space-y-2 shadow-2xs">
+                        <h3 className="text-xs font-bold text-[#0B1736] uppercase tracking-wider">Unit Pricing &amp; Margin Structure</h3>
+                        <p className="text-xs text-slate-600 leading-relaxed">{dprResult.marketing.pricing_strategy_notes}</p>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-8 text-center text-slate-500 text-xs">Computing marketing channels...</div>
+                )}
+              </div>
+            )}
+
+            {/* ------------------------------------------------------------- */}
+            {/* STEP 7: Statutory Scheme Matching & Subsidy Structuring       */}
+            {/* ------------------------------------------------------------- */}
+            {currentStep === 7 && (
+              <div className="space-y-5">
+                {dprResult ? (
+                  <div className="space-y-5">
+                    <div className="p-4 bg-emerald-50/60 border border-emerald-200 rounded-xl space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-emerald-950 uppercase tracking-wider">
+                          Matched Central &amp; State Programme
+                        </span>
+                        <span className="font-mono text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">
+                          {dprResult.government_support.selected_program.program_code}
+                        </span>
+                      </div>
+                      <div className="text-base font-bold text-emerald-950">
+                        {dprResult.government_support.selected_program.program_name}
+                      </div>
+                      <div className="text-xs text-emerald-800">
+                        Ministry: {dprResult.government_support.selected_program.owning_ministry} •
+                        <a
+                          href={dprResult.government_support.selected_program.official_portal_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="ml-1 underline font-semibold inline-flex items-center gap-0.5"
+                        >
+                          Official Portal <ExternalLink className="w-3 h-3" />
+                        </a>
+                      </div>
+                    </div>
+
+                    {/* Subsidy and Margin Stack */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
+                      <div className="p-3.5 border border-slate-200/80 rounded-xl bg-white shadow-2xs">
+                        <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Total Project Cost</div>
+                        <div className="text-lg font-black text-[#0B1736] mt-1">
+                          ₹{dprResult.government_support.subsidy_breakdown.total_project_cost.toLocaleString()}
+                        </div>
+                      </div>
+
+                      <div className="p-3.5 border border-slate-200/80 rounded-xl bg-white shadow-2xs">
+                        <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Promoter Margin</div>
+                        <div className="text-lg font-black text-amber-600 mt-1">
+                          ₹{dprResult.government_support.subsidy_breakdown.promoter_contribution.toLocaleString()} (
+                          {dprResult.government_support.subsidy_breakdown.promoter_contribution_pct}%)
+                        </div>
+                      </div>
+
+                      <div className="p-3.5 border border-slate-200/80 rounded-xl bg-white shadow-2xs">
+                        <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Capital Subsidy Grant</div>
+                        <div className="text-lg font-black text-[#159A68] mt-1">
+                          ₹{dprResult.government_support.subsidy_breakdown.subsidy_amount.toLocaleString()} (
+                          {dprResult.government_support.subsidy_breakdown.subsidy_pct}%)
+                        </div>
+                      </div>
+
+                      <div className="p-3.5 border border-slate-200/80 rounded-xl bg-white shadow-2xs">
+                        <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Net Term Loan</div>
+                        <div className="text-lg font-black text-[#0B1736] mt-1">
+                          ₹{dprResult.government_support.subsidy_breakdown.bank_loan_amount.toLocaleString()}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl border border-slate-200/80 bg-slate-50/80 text-xs flex items-center justify-between">
+                      <span className="font-semibold text-slate-700">CGTMSE Credit Guarantee Coverage:</span>
+                      <span className="font-black text-[#159A68]">
+                        {dprResult.government_support.credit_guarantee_details.guarantee_coverage_pct}% Coverage
+                      </span>
+                    </div>
+
+                    {/* Disqualification Reason Check */}
+                    {dprResult.government_support.disqualification_reasons.length > 0 && (
+                      <div className="p-4 bg-red-50 border border-red-200 rounded-xl space-y-1">
+                        <div className="text-xs font-bold text-red-700">Statutory Compliance Gates:</div>
+                        <ul className="text-xs text-red-600 list-disc list-inside">
+                          {dprResult.government_support.disqualification_reasons.map((r: any, i: number) => (
+                            <li key={i}>{r}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="p-8 text-center text-slate-500 text-xs">Evaluating statutory schemes...</div>
+                )}
+              </div>
+            )}
+
+            {/* ------------------------------------------------------------- */}
+            {/* STEP 8: Financial Projections & Debt Serviceability           */}
+            {/* ------------------------------------------------------------- */}
+            {currentStep === 8 && (
+              <div className="space-y-5">
+                {dprResult ? (
+                  <div className="space-y-5">
+                    {/* Amortization Breakdown */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+                      <div className="p-4 border border-slate-200/80 rounded-xl bg-white shadow-2xs space-y-1">
+                        <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Conservative Tenure (36 Mo)</div>
+                        <div className="text-xl font-black text-[#0B1736]">
+                          ₹{dprResult.financial_plan.amortization_scenarios.conservative.monthly_emi.toLocaleString()} /mo
+                        </div>
+                        <div className="text-[10px] text-slate-500">
+                          Total Interest: ₹{dprResult.financial_plan.amortization_scenarios.conservative.total_interest.toLocaleString()}
+                        </div>
+                      </div>
+
+                      <div className="p-4 border border-[#159A68]/30 bg-[#EAF7F0] rounded-xl space-y-1 shadow-xs">
+                        <div className="text-[10px] text-[#159A68] uppercase font-bold tracking-wider">Recommended (60 Mo)</div>
+                        <div className="text-xl font-black text-[#159A68]">
+                          ₹{dprResult.financial_plan.amortization_scenarios.recommended.monthly_emi.toLocaleString()} /mo
+                        </div>
+                        <div className="text-[10px] text-emerald-800">
+                          Total Interest: ₹{dprResult.financial_plan.amortization_scenarios.recommended.total_interest.toLocaleString()}
+                        </div>
+                      </div>
+
+                      <div className="p-4 border border-slate-200/80 rounded-xl bg-white shadow-2xs space-y-1">
+                        <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Extended Tenure (84 Mo)</div>
+                        <div className="text-xl font-black text-[#0B1736]">
+                          ₹{dprResult.financial_plan.amortization_scenarios.extended.monthly_emi.toLocaleString()} /mo
+                        </div>
+                        <div className="text-[10px] text-slate-500">
+                          Total Interest: ₹{dprResult.financial_plan.amortization_scenarios.extended.total_interest.toLocaleString()}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Serviceability Metrics */}
+                    <div className="p-4 border border-slate-200/80 rounded-xl bg-slate-50/80 space-y-2 text-xs">
+                      <div className="flex items-center justify-between font-bold text-[#0B1736]">
+                        <span>Monthly Debt Serviceability (FOIR / DSCR):</span>
+                        <span className="text-[#159A68]">{dprResult.financial_plan.debt_serviceability.status}</span>
+                      </div>
+                      <p className="text-slate-600 leading-relaxed">{dprResult.financial_plan.debt_serviceability.serviceability_commentary}</p>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 pt-1 text-[11px] text-slate-600">
+                        <div><span className="font-semibold text-slate-800">Monthly Surplus:</span> ₹{dprResult.financial_plan.debt_serviceability.monthly_surplus.toLocaleString()}</div>
+                        <div><span className="font-semibold text-slate-800">Safe EMI Limit:</span> ₹{dprResult.financial_plan.debt_serviceability.safe_emi_limit.toLocaleString()}</div>
+                        <div><span className="font-semibold text-slate-800">Debt Buffer:</span> ₹{dprResult.financial_plan.debt_serviceability.debt_buffer.toLocaleString()}</div>
+                      </div>
+                    </div>
+
+                    {/* 3-Year Projections Table */}
+                    <div className="border border-slate-200/80 rounded-xl overflow-hidden shadow-2xs">
+                      <table className="w-full text-xs text-left">
+                        <thead className="bg-slate-50 border-b border-slate-200 text-[#0B1736]">
+                          <tr>
+                            <th className="p-3 font-bold">Projection Period</th>
+                            <th className="p-3 font-bold">Projected Revenue</th>
+                            <th className="p-3 font-bold">Operating Costs</th>
+                            <th className="p-3 font-bold">Debt Service EMI</th>
+                            <th className="p-3 font-bold">Net Cash Surplus</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100 bg-white">
+                          {dprResult.financial_plan.indicative_projections.map((row: any) => (
+                            <tr key={row.year}>
+                              <td className="p-3 font-bold text-[#0B1736]">Year {row.year}</td>
+                              <td className="p-3">₹{row.revenue.toLocaleString()}</td>
+                              <td className="p-3">₹{row.operating_expenses.toLocaleString()}</td>
+                              <td className="p-3">₹{row.debt_service_emi.toLocaleString()}</td>
+                              <td className="p-3 font-black text-[#159A68]">₹{row.net_cash_surplus.toLocaleString()}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-8 text-center text-slate-500 text-xs">Synthesizing financial projections...</div>
+                )}
+              </div>
+            )}
+
+            {/* ------------------------------------------------------------- */}
+            {/* STEP 9: Microclimate & Commercial Risk Management             */}
+            {/* ------------------------------------------------------------- */}
+            {currentStep === 9 && (
+              <div className="space-y-5">
+                {dprResult ? (
+                  <div className="space-y-5">
+                    {/* Atmospheric Signals */}
+                    <div className="p-4 border border-slate-200/80 bg-slate-50/80 rounded-xl space-y-2">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-xs font-bold text-[#0B1736] uppercase tracking-wider">
+                          Open-Meteo Microclimate Signals ({form.districtName}, {form.stateName})
+                        </h3>
+                        <ProvenanceBadge tag="GOVERNMENT / DATASET DERIVED" />
+                      </div>
+                      <p className="text-xs text-slate-600 leading-relaxed">{dprResult.risk_and_weather.weather_context.activity_implication}</p>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 pt-1 text-[11px] text-slate-600">
+                        <div><span className="font-semibold text-slate-800">Heat Stress:</span> {dprResult.risk_and_weather.weather_context.heat_stress_signal}</div>
+                        <div><span className="font-semibold text-slate-800">Rain Impact:</span> {dprResult.risk_and_weather.weather_context.rain_disruption_signal}</div>
+                        <div><span className="font-semibold text-slate-800">Outdoor Activity:</span> {dprResult.risk_and_weather.weather_context.outdoor_activity_signal}</div>
+                        <div><span className="font-semibold text-slate-800">Logistics:</span> {dprResult.risk_and_weather.weather_context.logistics_disruption_signal}</div>
+                      </div>
+                    </div>
+
+                    {/* Operational Risks Table */}
+                    <div className="space-y-3">
+                      <h3 className="text-xs font-bold text-[#0B1736] uppercase tracking-wider">Commercial &amp; Operational Risks</h3>
+                      <div className="divide-y divide-slate-100 border border-slate-200/80 rounded-xl overflow-hidden bg-white shadow-2xs">
+                        {dprResult.risk_and_weather.risk_matrix.map((r: any, idx: number) => (
+                          <div key={idx} className="p-3.5 text-xs space-y-1">
+                            <div className="flex items-center justify-between">
+                              <span className="font-bold text-[#0B1736]">{r.risk}</span>
+                              <span
+                                className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                                  r.impact === 'HIGH'
+                                    ? 'bg-red-50 text-red-700 border border-red-200'
+                                    : r.impact === 'MEDIUM'
+                                    ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                                    : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                }`}
+                              >
+                                {r.impact} IMPACT
+                              </span>
+                            </div>
+                            <p className="text-slate-600 text-[11px] leading-relaxed">
+                              <span className="font-medium text-slate-800">Mitigation:</span> {r.mitigation}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-8 text-center text-slate-500 text-xs">Evaluating climate and market risks...</div>
+                )}
+              </div>
+            )}
+
+            {/* ------------------------------------------------------------- */}
+            {/* STEP 10: Implementation Roadmap & Milestones                  */}
+            {/* ------------------------------------------------------------- */}
+            {currentStep === 10 && (
+              <div className="space-y-5">
+                {dprResult ? (
+                  <div className="space-y-3">
+                    <h3 className="text-xs font-bold text-[#0B1736] uppercase tracking-wider">
+                      Month 1 to 6 Implementation Timeline
+                    </h3>
+                    <div className="divide-y divide-slate-100 border border-slate-200/80 rounded-xl overflow-hidden bg-white shadow-2xs">
+                      {dprResult.milestones.implementation_timeline.map((m: any) => (
+                        <div key={m.month} className="p-3.5 flex items-start gap-3.5 text-xs">
+                          <div className="w-8 h-8 rounded-full bg-[#EAF7F0] text-[#159A68] flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                            M{m.month}
+                          </div>
+                          <div className="flex-1 space-y-0.5">
+                            <div className="font-bold text-[#0B1736] flex items-center justify-between">
+                              <span>{m.title}</span>
+                              <span className="text-[10px] text-slate-400 font-medium">Month {m.month}</span>
+                            </div>
+                            <p className="text-slate-600 text-[11px] leading-relaxed">{m.description}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-8 text-center text-slate-500 text-xs">Computing milestones...</div>
+                )}
+              </div>
+            )}
+
+            {/* ------------------------------------------------------------- */}
+            {/* STEP 11: Review & Complete Detailed Project Report            */}
+            {/* ------------------------------------------------------------- */}
+            {currentStep === 11 && (
+              <div className="space-y-6">
                 {dprResult ? (
                   <div className="space-y-6">
                     {/* Executive Summary Box */}
-                    <div className="p-4 border rounded-xl bg-slate-50 space-y-2">
+                    <div className="p-4 border border-slate-200/80 rounded-xl bg-slate-50/80 space-y-2">
                       <div className="flex items-center justify-between">
-                        <h3 className="text-xs font-bold text-slate-900 uppercase">Executive Summary Narrative</h3>
+                        <h3 className="text-xs font-bold text-[#0B1736] uppercase tracking-wider">
+                          Executive Summary Narrative
+                        </h3>
                         <ProvenanceBadge tag={getFieldProvenance('executive_narrative', 'AI INTERPRETATION')} />
                       </div>
                       <textarea
                         rows={5}
                         value={qualitativeEdits.executive_narrative ?? dprResult.executive_summary.executive_narrative}
                         onChange={(e) => handleQualitativeChange('executive_narrative', e.target.value)}
-                        className="w-full text-xs p-3 border rounded-lg bg-white leading-relaxed"
+                        className="w-full text-xs p-3 border border-slate-200 rounded-xl bg-white leading-relaxed focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all"
                       />
                     </div>
 
                     {/* Illustrative Operating Assumptions Disclaimer */}
-                    <div className="p-4 border border-orange-200 bg-orange-50/60 rounded-xl text-xs space-y-2">
+                    <div className="p-4 border border-amber-200/80 bg-[#FFF9EE] rounded-xl text-xs space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-orange-950">Illustrative Operating Assumptions</span>
+                        <span className="font-bold text-amber-950">Illustrative Operating Assumptions</span>
                         <ProvenanceBadge tag="ILLUSTRATIVE ASSUMPTION" />
                       </div>
-                      <p className="text-orange-900 text-[11px] italic font-semibold">
-                        "{dprResult.illustrative_assumptions.disclaimer}"
+                      <p className="text-amber-900 text-[11px] italic font-medium leading-relaxed">
+                        &ldquo;{dprResult.illustrative_assumptions.disclaimer}&rdquo;
                       </p>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-slate-700 text-[11px] pt-1">
-                        <div><span className="font-semibold">Working Capital Cycle:</span> {dprResult.illustrative_assumptions.working_capital_cycle_days} Days</div>
-                        <div><span className="font-semibold">Break-Even Point:</span> {dprResult.illustrative_assumptions.break_even_commentary}</div>
+                        <div><span className="font-semibold text-slate-900">Working Capital Cycle:</span> {dprResult.illustrative_assumptions.working_capital_cycle_days} Days</div>
+                        <div><span className="font-semibold text-slate-900">Break-Even Point:</span> {dprResult.illustrative_assumptions.break_even_commentary}</div>
                       </div>
                     </div>
 
                     {/* Provenance Audit Legend */}
-                    <div className="p-4 border rounded-xl bg-white space-y-3">
-                      <h3 className="text-xs font-bold text-slate-900 uppercase">Provenance Audit Trail (6 Data Categories)</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <div className="p-4 border border-slate-200/80 rounded-xl bg-white space-y-3 shadow-2xs">
+                      <h3 className="text-xs font-bold text-[#0B1736] uppercase tracking-wider">
+                        Provenance Audit Trail (6 Data Categories)
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                         {Object.entries(dprResult.provenance_legend).map(([key, desc]) => (
                           <div key={key} className="flex items-start gap-2 text-xs">
                             <ProvenanceBadge tag={key} />
-                            <span className="text-[11px] text-slate-600">{desc}</span>
+                            <span className="text-[11px] text-slate-600 leading-snug">{String(desc)}</span>
                           </div>
                         ))}
                       </div>
                     </div>
 
                     {/* Final Action Buttons */}
-                    <div className="pt-4 border-t border-[#F1F5F9] flex flex-col md:flex-row items-center justify-between gap-4">
-                      <div className="text-xs text-[#64748B]">
-                        Report ID: <span className="font-mono font-semibold text-[#0B1736]">{dprResult.report_id}</span>
+                    <div className="pt-4 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between gap-4">
+                      <div className="text-xs text-slate-500">
+                        Report ID: <span className="font-mono font-bold text-[#0B1736]">{dprResult.report_id}</span>
                       </div>
                       <button
                         type="button"
                         onClick={() => router.push(`/advisory/business-plan/${dprResult.report_id}`)}
-                        className="px-6 py-3 bg-[#159A68] hover:bg-[#128357] text-white font-semibold text-xs rounded-xl shadow-xs transition flex items-center gap-2 cursor-pointer"
+                        className="px-6 py-3 bg-[#159A68] hover:bg-[#128357] text-white font-bold text-xs rounded-xl shadow-xs transition flex items-center gap-2 cursor-pointer"
                       >
                         <FileText className="w-4 h-4" />
-                        Open Official Bank-Ready DPR View
+                        <span>Open Official Bank-Ready DPR View</span>
                       </button>
                     </div>
                   </div>
                 ) : (
-                  <div className="p-8 text-center text-[#64748B] text-xs">
+                  <div className="p-8 text-center text-slate-500 text-xs">
                     <button
                       type="button"
                       onClick={fetchDPR}
@@ -1320,37 +1129,44 @@ export default function RebuiltDPRBuilderPage() {
               </div>
             )}
 
-            {/* Stepper Footer Buttons */}
-            <div className="flex items-center justify-between pt-4 border-t border-[#F1F5F9]">
+            {/* Stepper Navigation Action Bar */}
+            <div className="flex items-center justify-between pt-5 border-t border-slate-100">
               <button
                 type="button"
-                disabled={currentStage === 1 && marketSubTab === 'customer'}
-                onClick={handlePrevious}
-                className="px-4 py-2 border border-[#E2E8F0] rounded-xl text-xs font-semibold text-[#0B1736] hover:bg-[#F8FAFC] disabled:opacity-40 flex items-center gap-1 cursor-pointer transition-colors"
+                disabled={currentStep === 1}
+                onClick={() => setCurrentStep((prev) => Math.max(1, prev - 1))}
+                className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 text-xs font-bold inline-flex items-center gap-1.5 disabled:opacity-40 transition-colors cursor-pointer"
               >
-                <ArrowLeft className="w-4 h-4" /> Previous
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>Previous</span>
               </button>
 
-              {currentStage < 6 ? (
+              {currentStep < 11 ? (
                 <button
                   type="button"
-                  onClick={handleNext}
-                  className="px-4 py-2 bg-[#0B1736] hover:bg-[#152347] text-white text-xs font-semibold rounded-xl shadow-xs transition flex items-center gap-1 cursor-pointer"
+                  onClick={() => setCurrentStep((prev) => Math.min(11, prev + 1))}
+                  className="px-5 py-2.5 rounded-xl bg-[#0B1736] hover:bg-[#152347] text-white text-xs font-bold inline-flex items-center gap-2 shadow-xs transition-colors cursor-pointer group"
                 >
-                  Next <ArrowRight className="w-4 h-4 text-[#F4A340]" />
+                  <span>Next Step</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-[#F4A340] group-hover:translate-x-0.5 transition-transform" />
                 </button>
               ) : (
                 <button
                   type="button"
                   onClick={fetchDPR}
                   disabled={generatingDPR}
-                  className="px-4 py-2 bg-[#159A68] hover:bg-[#128357] text-white text-xs font-semibold rounded-xl shadow-xs transition flex items-center gap-1 cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl bg-[#159A68] hover:bg-[#128357] text-white text-xs font-bold shadow-xs transition inline-flex items-center gap-2 cursor-pointer"
                 >
-                  {generatingDPR ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4 text-[#FFF5DF]" />}
-                  Refresh Analysis
+                  {generatingDPR ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Sparkles className="w-4 h-4 text-white" />
+                  )}
+                  <span>Refresh Analysis</span>
                 </button>
               )}
             </div>
+
           </div>
         </main>
       </div>

@@ -43,6 +43,7 @@ export default function SchemesPage() {
   const [activeState, setActiveState] = useState('');
   const [financingTarget, setFinancingTarget] = useState<number>(500000);
   const [filterWomen, setFilterWomen] = useState(false);
+  const [categoryFilter, setCategoryFilter] = useState('All Schemes');
 
   // Load canonical profile on mount
   useEffect(() => {
@@ -69,8 +70,6 @@ export default function SchemesPage() {
             project_cost: data.business?.projectCost || data.business?.estimatedCapital,
             requested_loan_amount: defaultTarget,
           });
-        } else {
-          fetchSchemes({});
         }
       })
       .catch((err) => {
@@ -121,35 +120,81 @@ export default function SchemesPage() {
     <div className="min-h-screen bg-[#F7F8F5] flex flex-col">
       <Navbar />
 
-      <div className="flex-1 flex max-w-7xl w-full mx-auto">
+      <div className="flex-1 flex w-full">
         <Sidebar />
 
-        <main className="flex-1 p-6 space-y-6">
+        <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 max-w-[1550px] w-full min-w-0 space-y-6">
           
-          {/* Header Banner */}
-          <div className="bg-white p-6 rounded-2xl border border-[#E2E8F0] shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2.5">
-                <div className="w-10 h-10 rounded-xl bg-[#FFF5DF] text-[#D97706] flex items-center justify-center">
-                  <Landmark className="w-5 h-5" />
-                </div>
-                <h1 className="text-xl sm:text-2xl font-bold text-[#0B1736]">{t('advisory.schemeMatcher')}</h1>
-              </div>
-              <p className="text-xs text-[#64748B] mt-1">
-                Authoritative 100-pt statutory engine evaluation for {activeDistrict ? `${activeDistrict}, ` : ''}{activeState || 'All India'}.
-              </p>
+          {/* Breadcrumb Navigation */}
+          <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
+            <Link href="/" className="hover:text-[#159A68] transition-colors">Home</Link>
+            <span className="text-slate-300">/</span>
+            <span className="text-[#0B1736] font-semibold">Government Schemes</span>
+          </div>
+
+          {/* ========================================================================= */}
+          {/* 1. HERO BANNER WITH INDIAN PUBLIC GOVERNANCE ARTWORK (Direct Screen 5)     */}
+          {/* ========================================================================= */}
+          <section className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-6 sm:p-8 lg:p-9 shadow-xs relative overflow-hidden">
+            {/* National Governance Architecture Art Fading on the Left */}
+            <div className="absolute right-0 top-0 bottom-0 w-full sm:w-3/5 lg:w-1/2 pointer-events-none overflow-hidden rounded-r-2xl sm:rounded-r-3xl z-0">
+              <img
+                src="/parliament-schemes.jpg"
+                alt="Indian Parliament building with the Indian flag"
+                className="w-full h-full object-cover object-[center_20%] schemes-hero-mask"
+              />
+              <style dangerouslySetInnerHTML={{ __html: `
+                .schemes-hero-mask {
+                  -webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 68%, rgba(0,0,0,0.15) 80%, rgba(0,0,0,0.9) 90%, rgba(0,0,0,1) 100%);
+                  mask-image: linear-gradient(to right, transparent 0%, transparent 68%, rgba(0,0,0,0.15) 80%, rgba(0,0,0,0.9) 90%, rgba(0,0,0,1) 100%);
+                }
+                @media (min-width: 640px) {
+                  .schemes-hero-mask {
+                    -webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 26%, rgba(0,0,0,0.15) 38%, rgba(0,0,0,0.85) 70%, rgba(0,0,0,1) 100%);
+                    mask-image: linear-gradient(to right, transparent 0%, transparent 26%, rgba(0,0,0,0.15) 38%, rgba(0,0,0,0.85) 70%, rgba(0,0,0,1) 100%);
+                  }
+                }
+                @media (min-width: 1024px) {
+                  .schemes-hero-mask {
+                    -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.12) 15%, rgba(0,0,0,0.85) 60%, rgba(0,0,0,1) 100%);
+                    mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.12) 15%, rgba(0,0,0,0.85) 60%, rgba(0,0,0,1) 100%);
+                  }
+                }
+              `}} />
             </div>
 
-            <div className="flex items-center gap-2">
-              <Link
-                href="/dashboard/profile"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#E2E8F0] text-xs font-semibold text-[#0B1736] hover:bg-[#F8FAFC] transition"
-              >
-                <MapPin className="w-3.5 h-3.5 text-[#159A68]" />
-                <span>{activeDistrict ? `${activeDistrict}, ${activeState}` : 'Configure Location'}</span>
-              </Link>
+            <div className="relative z-10 max-w-2xl space-y-2">
+              <span className="text-[11px] font-bold text-[#159A68] uppercase tracking-widest block">
+                GOVERNMENT SCHEMES
+              </span>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#0B1736] tracking-tight font-serif">
+                Discover relevant schemes
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-500 font-normal leading-relaxed max-w-xl">
+                Find government schemes, subsidies and incentives for your business across central and state programmes.
+              </p>
             </div>
-          </div>
+          </section>
+
+          {/* ========================================================================= */}
+          {/* 1B. CATEGORY FILTER TABS (Direct Reference Match - Screen 5)               */}
+          {/* ========================================================================= */}
+          <section className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+            {['All Schemes', 'Subsidy', 'Loan', 'Skill Development', 'Infrastructure', 'Export', 'State Schemes'].map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setCategoryFilter(cat)}
+                className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+                  categoryFilter === cat
+                    ? 'bg-[#159A68] text-white shadow-xs'
+                    : 'bg-white text-slate-600 hover:text-[#0B1736] border border-slate-200/80 hover:bg-slate-50'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </section>
 
           {/* Statutory Eligibility Assessment Gate Banner */}
           {eligibilitySummary && (

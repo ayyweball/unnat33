@@ -1,605 +1,304 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/lib/i18n/useLanguage';
 import {
   TrendingUp,
   Landmark,
   BadgeIndianRupee,
-  ShieldCheck,
-  Plus,
-  MapPin,
-  ArrowRight,
-  Sun,
-  LayoutDashboard,
-  User,
-  PieChart,
   FileSpreadsheet,
-  FileText,
-  Bot,
-  HelpCircle,
-  ChevronDown,
-  Sparkles,
-  BarChart3,
+  ArrowRight,
   CheckCircle2,
-  Zap,
+  Sparkles,
 } from 'lucide-react';
-import {
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  PieChart as RePieChart,
-  Pie,
-  Cell,
-  CartesianGrid,
-} from 'recharts';
+
+interface ModuleData {
+  id: string;
+  badge: string;
+  titleEn: string;
+  titleHi: string;
+  subtitleEn: string;
+  subtitleHi: string;
+  descEn: string;
+  descHi: string;
+  pointsEn: string[];
+  pointsHi: string[];
+  image: string;
+  imageAlt: string;
+  statBadge: string;
+  href: string;
+  ctaEn: string;
+  ctaHi: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
+const MODULES: ModuleData[] = [
+  {
+    id: 'market',
+    badge: '01 • CENSUS & CLUSTER TELEMETRY',
+    titleEn: 'Hyper-Local Market & Enterprise Clustering',
+    titleHi: 'हाइपर-लोकल बाजार एवं क्लस्टर विश्लेषण',
+    subtitleEn: '785 Districts Empirical Intelligence',
+    subtitleHi: '785 जिलों का वास्तविक डेटा',
+    descEn:
+      'Evaluate district-level enterprise density, supply chain gaps, and consumer demand absorption using empirical census and mandi registers.',
+    descHi:
+      '785 भारतीय जिलों से वास्तविक उद्योग घनत्व, आपूर्ति श्रृंखला अंतराल और उपभोक्ता मांग का आधिकारिक डेटा प्राप्त करें।',
+    pointsEn: [
+      'Empirical enterprise scale distribution across micro, small, and medium units',
+      'Local demand absorption scoring calibrated to regional consumer spending',
+      'Microclimate logistics disruption indicators from official weather telemetry',
+    ],
+    pointsHi: [
+      'सूक्ष्म, लघु एवं मध्यम इकाइयों का वास्तविक जिला-स्तरीय वर्गीकरण',
+      'स्थानीय उपभोक्ता खर्च और मांग अवशोषण की सांख्यिकीय गणना',
+      'मौसम और क्षेत्रीय परिवहन आपूर्ति जोखिम का वास्तविक समय विश्लेषण',
+    ],
+    image: '/market-banner.jpg',
+    imageAlt: 'Indian marketplace cluster',
+    statBadge: '785 Districts Covered',
+    href: '/dashboard',
+    ctaEn: 'Explore Market Intelligence',
+    ctaHi: 'बाजार विश्लेषण देखें',
+    icon: TrendingUp,
+  },
+  {
+    id: 'schemes',
+    badge: '02 • STATUTORY ELIGIBILITY GATE',
+    titleEn: 'Deterministic Statutory Eligibility Matcher',
+    titleHi: '60+ सरकारी योजनाओं का सटीक मिलान',
+    subtitleEn: 'Zero AI Hallucination in Grants',
+    subtitleHi: 'पारदर्शी एवं नियम-आधारित पात्रता',
+    descEn:
+      'Rule-based evaluation matching your promoter profile, trade category, and investment scale directly against 60+ Central and State assistance programs.',
+    descHi:
+      'आयु, लिंग, सामाजिक वर्ग, निवेश और व्यापार श्रेणी के आधार पर 60+ केंद्रीय और राज्य योजनाओं की पात्रता का सत्यापन।',
+    pointsEn: [
+      'Full coverage of PMEGP, MUDRA, PM Vishwakarma, PMFME, and Stand-Up India',
+      'Exact statutory eligibility confidence scoring with transparent criteria',
+      'Automated subsidy, margin money, and interest subvention calculation',
+    ],
+    pointsHi: [
+      'PMEGP, मुद्रा, पीएम विश्वकर्मा, पीएमएफएमई और स्टैंड-अप इंडिया का कवरेज',
+      'पात्रता का सटीक प्रतिशत एवं अयोग्यता के कारणों का पारदर्शी विवरण',
+      'सब्सिडी, मार्जिन मनी और ब्याज छूट की स्वचालित गणना',
+    ],
+    image: '/schemes-national.jpg',
+    imageAlt: 'Indian artisan enterprise support',
+    statBadge: '60+ Priority Schemes',
+    href: '/advisory/schemes',
+    ctaEn: 'Evaluate Scheme Eligibility',
+    ctaHi: 'योजना पात्रता जांचें',
+    icon: Landmark,
+  },
+  {
+    id: 'finance',
+    badge: '03 • CAPITAL STRUCTURING & EMIS',
+    titleEn: 'Financial Structuring & EMI Affordability',
+    titleHi: 'ऋण संरचना एवं सुरक्षित ईएमआई योजना',
+    subtitleEn: 'Prudent Banking Feasibility',
+    subtitleHi: 'बैंक-स्वीकृत वित्तीय प्रारूप',
+    descEn:
+      'Structure conservative debt-to-income ratios and model sustainable repayment scenarios to ensure commercial loan viability without promoter distress.',
+    descHi:
+      'ऋण-से-आय (DTI) और मासिक अधिशेष के आधार पर सुरक्षित पुनर्भुगतान सीमाएं और सस्ती ईएमआई योजना तैयार करें।',
+    pointsEn: [
+      'Conservative, Recommended, and Extended tenure EMI repayment projections',
+      'CGTMSE collateral-free credit guarantee coverage and fee analysis',
+      'Optimized capital stack balancing promoter equity, bank debt, and subsidies',
+    ],
+    pointsHi: [
+      'रूढ़िवादी, अनुशंसित और विस्तारित अवधि के ईएमआई परिदृश्य',
+      'सीजीटीएमएसई बिना किसी बंधक के क्रेडिट गारंटी कवरेज की जांच',
+      'प्रमोटर इक्विटी, बैंक ऋण और सरकारी अनुदान का संतुलित विभाजन',
+    ],
+    image: '/financial-banner.jpg',
+    imageAlt: 'Indian business financial planning',
+    statBadge: 'RBI / CGTMSE Norms',
+    href: '/advisory/financial',
+    ctaEn: 'Structure Capital Stack',
+    ctaHi: 'पूंजी संरचना की योजना बनाएं',
+    icon: BadgeIndianRupee,
+  },
+  {
+    id: 'dpr',
+    badge: '04 • 13-SECTION CANONICAL EXPORT',
+    titleEn: '13-Section Canonical DPR Generator',
+    titleHi: '13-अनुभाग बैंक डीपीआर एवं पीडीएफ रिपोर्ट',
+    subtitleEn: 'Appraisal-Ready Documentation',
+    subtitleHi: 'बैंक शाखा में जमा करने योग्य दस्तावेज',
+    descEn:
+      'Synthesize comprehensive Detailed Project Reports structured to statutory scheduled commercial bank guidelines, ready for branch appraisal.',
+    descHi:
+      'अनुसूचित वाणिज्यिक बैंकों के क्रेडिट मानकों के अनुसार 13 मानकीकृत अनुभागों में बैंक-तैयार डीपीआर तैयार करें।',
+    pointsEn: [
+      '13 standardized chapters formatted to commercial bank credit standards',
+      'Qualitative market absorption narrative and risk-mitigation framing',
+      'Downloadable canonical PDF export with shareable branch verification',
+    ],
+    pointsHi: [
+      'बैंक ऋण समिति के मानकों के अनुसार 13 मानकीकृत अध्याय',
+      'मांग अवशोषण और जोखिम प्रबंधन का विस्तृत विश्लेषणात्मक विवरण',
+      'आधिकारिक पीडीएफ निर्यात और बैंक शाखा के लिए सत्यापन लिंक',
+    ],
+    image: '/dpr-banner.jpg',
+    imageAlt: 'Detailed Project Report document',
+    statBadge: '< 60 Sec Synthesis',
+    href: '/advisory/business-plan',
+    ctaEn: 'Generate Bank-Ready DPR',
+    ctaHi: 'बैंक डीपीआर तैयार करें',
+    icon: FileSpreadsheet,
+  },
+];
 
 export default function ScrollRevealDashboard() {
-  const { t, language } = useLanguage();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [selectedState, setSelectedState] = useState('Uttar Pradesh');
-  const [activeTab, setActiveTab] = useState('market');
+  const { language } = useLanguage();
+  const [activeId, setActiveId] = useState('market');
 
-  // Scroll driven 3D perspective animation matching Framer app mockup
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start end', 'start start'],
-  });
-
-  const rotateX = useTransform(scrollYProgress, [0, 1], [18, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [0.88, 1]);
-  const opacity = useTransform(scrollYProgress, [0, 0.4], [0.4, 1]);
-  const translateY = useTransform(scrollYProgress, [0, 1], [60, 0]);
-
-  // Chart Data for Business Growth Projection
-  const growthData = [
-    { year: t('dashboardMock.year1'), revenue: 10.2 },
-    { year: t('dashboardMock.year2'), revenue: 18.4 },
-    { year: t('dashboardMock.year3'), revenue: 35.0 },
-  ];
-
-  // Chart Data for Funding Sources Donut Chart
-  const fundingSourcesData = [
-    { name: language === 'hi' ? 'सरकारी योजनाएं' : 'Government Schemes', value: 45, color: '#059669' },
-    { name: language === 'hi' ? 'बैंक ऋण' : 'Bank Loans', value: 30, color: '#2563eb' },
-    { name: language === 'hi' ? 'सब्सिडी' : 'Subsidies', value: 15, color: '#eab308' },
-    { name: language === 'hi' ? 'स्व-निवेश' : 'Self Investment', value: 10, color: '#9333ea' },
-  ];
+  const activeModule = MODULES.find((m) => m.id === activeId) || MODULES[0];
+  const IconComponent = activeModule.icon;
 
   return (
-    <div ref={containerRef} className="py-12 md:py-24 relative overflow-hidden bg-slate-900/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold mb-4 shadow-sm border border-emerald-200">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-600 animate-pulse" />
-            <span>Interactive Advisory Dashboard Reveal</span>
-          </div>
-          <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">
-            {language === 'hi' ? 'स्मार्ट बिज़नेस डैशबोर्ड का अनुभव करें' : 'Experience the Smart Advisory Dashboard'}
-          </h2>
-          <p className="text-sm md:text-base text-slate-600 mt-3 leading-relaxed font-normal">
-            {language === 'hi'
-              ? 'स्थान, योजना पात्रता, ऋण संरचना और बाजार संभावना का एक एकीकृत दृश्य।'
-              : 'Unified real-time visibility into local market demand, scheme matching, EMI structuring, and instant DPR creation.'}
-          </p>
-        </div>
-
-        {/* 3D Perspective Card Reveal Container */}
-        <div style={{ perspective: 1200 }} className="w-full">
-          <motion.div
-            style={{
-              rotateX,
-              scale,
-              opacity,
-              y: translateY,
-            }}
-            className="w-full bg-white rounded-3xl border border-slate-200/90 shadow-2xl shadow-slate-900/10 overflow-hidden transform-gpu"
-          >
-            {/* Mockup Top Window Bar */}
-            <div className="bg-slate-100/90 px-6 py-3 border-b border-slate-200 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-rose-400" />
-                <div className="w-3 h-3 rounded-full bg-amber-400" />
-                <div className="w-3 h-3 rounded-full bg-emerald-400" />
-                <span className="ml-2 text-xs font-semibold text-slate-500 hidden sm:inline">
-                  https://unnate.gov.in/dashboard
-                </span>
-              </div>
-              <div className="flex items-center gap-2 text-xs font-bold text-slate-600">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                <span>Live AI Advisory Stream</span>
-              </div>
-            </div>
-
-            {/* Dashboard Inner App Layout */}
-            <div className="flex min-h-[640px]">
-              
-              {/* Left Sidebar Mockup matching Image 2 */}
-              <div className="hidden lg:flex w-64 bg-slate-50/80 border-r border-slate-200/80 p-5 flex-col justify-between shrink-0">
-                <div className="space-y-6">
-                  {/* Brand Logo in Mockup */}
-                  <div className="flex items-center gap-2.5 px-2">
-                    <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-700 to-green-500 flex items-center justify-center text-white shadow-md">
-                      <TrendingUp className="w-4 h-4" />
-                    </div>
-                    <span className="text-base font-extrabold text-slate-900">Unnat<span className="text-emerald-600">E</span></span>
-                  </div>
-
-                  {/* Sidebar Navigation Items */}
-                  <nav className="space-y-1">
-                    <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-emerald-100/80 text-emerald-800 font-bold text-xs shadow-sm">
-                      <LayoutDashboard className="w-4 h-4 text-emerald-700" />
-                      <span>{t('nav.dashboard')}</span>
-                    </div>
-
-                    <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold text-xs transition-colors">
-                      <User className="w-4 h-4 text-slate-400" />
-                      <span>{t('nav.businessProfile')}</span>
-                    </div>
-
-                    <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold text-xs transition-colors">
-                      <BarChart3 className="w-4 h-4 text-slate-400" />
-                      <span>{t('nav.marketAnalysis')}</span>
-                    </div>
-
-                    <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold text-xs transition-colors">
-                      <Landmark className="w-4 h-4 text-slate-400" />
-                      <span>{t('nav.governmentSchemes')}</span>
-                    </div>
-
-                    <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold text-xs transition-colors">
-                      <BadgeIndianRupee className="w-4 h-4 text-slate-400" />
-                      <span>{t('nav.financialOptions')}</span>
-                    </div>
-
-                    <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold text-xs transition-colors">
-                      <FileSpreadsheet className="w-4 h-4 text-slate-400" />
-                      <span>{t('nav.dprBuilder')}</span>
-                    </div>
-
-                    <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold text-xs transition-colors">
-                      <FileText className="w-4 h-4 text-slate-400" />
-                      <span>{t('nav.insightsReports')}</span>
-                    </div>
-
-                    <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold text-xs transition-colors">
-                      <Bot className="w-4 h-4 text-slate-400" />
-                      <span>{t('nav.aiAdvisor')}</span>
-                    </div>
-                  </nav>
-                </div>
-
-                {/* Need Guidance Box */}
-                <div className="p-4 rounded-2xl bg-gradient-to-br from-amber-50 to-emerald-50 border border-amber-200/60 space-y-2">
-                  <div className="flex items-center gap-2 text-xs font-bold text-amber-900">
-                    <HelpCircle className="w-4 h-4 text-amber-600" />
-                    <span>{t('dashboard.needGuidance')}</span>
-                  </div>
-                  <p className="text-[11px] text-amber-800 leading-snug">
-                    {t('dashboard.askAdvisor')}
-                  </p>
-                </div>
-              </div>
-
-              {/* Main Content View matching Image 2 */}
-              <div className="flex-1 p-6 md:p-8 space-y-6 bg-slate-50/40">
-                
-                {/* Greeting & Header Bar */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div>
-                    <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
-                      <span>{t('dashboard.greeting')}</span>
-                      <Sun className="w-6 h-6 text-amber-500 fill-amber-400" />
-                    </h1>
-                    <p className="text-xs font-medium text-slate-500 mt-0.5">
-                      {t('dashboard.snapshot')}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    {/* Location Dropdown */}
-                    <div className="relative">
-                      <button className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-700 shadow-sm hover:border-emerald-300">
-                        <MapPin className="w-3.5 h-3.5 text-emerald-600" />
-                        <span>{selectedState}</span>
-                        <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
-                      </button>
-                    </div>
-
-                    {/* Start New Analysis Button */}
-                    <Link
-                      href="/dashboard"
-                      className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition-all shrink-0"
-                    >
-                      <span>{t('dashboard.startNewAnalysis')}</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
-                  </div>
-                </div>
-
-                {/* 4 Metric Cards matching Image 2 */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  
-                  {/* Card 1: Market Demand */}
-                  <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
-                        <TrendingUp className="w-5 h-5" />
-                      </div>
-                      <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold">
-                        {t('dashboardMock.high')}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-xs font-medium text-slate-500">{t('dashboard.marketDemand')}</span>
-                      <div className="text-xl font-black text-slate-900 mt-0.5">{t('dashboardMock.strong')}</div>
-                    </div>
-                    <p className="text-[11px] text-slate-400">{t('dashboardMock.growingDemand')}</p>
-                  </div>
-
-                  {/* Card 2: Relevant Schemes */}
-                  <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
-                        <Landmark className="w-5 h-5" />
-                      </div>
-                      <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-extrabold">
-                        5+
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-xs font-medium text-slate-500">{t('dashboard.relevantSchemes')}</span>
-                      <div className="text-xl font-black text-slate-900 mt-0.5">{t('dashboardMock.available')}</div>
-                    </div>
-                    <p className="text-[11px] text-slate-400">{t('dashboardMock.centralState')}</p>
-                  </div>
-
-                  {/* Card 3: Estimated Funding */}
-                  <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center">
-                        <BadgeIndianRupee className="w-5 h-5" />
-                      </div>
-                    </div>
-                    <div>
-                      <span className="text-xs font-medium text-slate-500">{t('dashboard.estimatedFunding')}</span>
-                      <div className="text-xl font-black text-slate-900 mt-0.5">₹12.5 Lakh+</div>
-                    </div>
-                    <p className="text-[11px] text-slate-400">{t('dashboardMock.financialSupport')}</p>
-                  </div>
-
-                  {/* Card 4: Business Readiness with Circular Progress Ring */}
-                  <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-sm flex items-center justify-between gap-3">
-                    <div className="space-y-2 flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center shrink-0">
-                          <ShieldCheck className="w-4 h-4" />
-                        </div>
-                        <span className="px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 text-[10px] font-extrabold">
-                          78%
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-xs font-medium text-slate-500 truncate block">{t('dashboard.businessReadiness')}</span>
-                        <div className="text-xl font-black text-slate-900 mt-0.5">78 / 100</div>
-                      </div>
-                      <p className="text-[11px] text-slate-400 truncate">{t('dashboardMock.goodPotential')}</p>
-                    </div>
-
-                    {/* Circular Progress Ring */}
-                    <div className="relative w-16 h-16 shrink-0 flex items-center justify-center">
-                      <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 48 48">
-                        <circle
-                          cx="24"
-                          cy="24"
-                          r="19"
-                          className="text-slate-100"
-                          strokeWidth="4"
-                          stroke="currentColor"
-                          fill="transparent"
-                        />
-                        <circle
-                          cx="24"
-                          cy="24"
-                          r="19"
-                          className="text-purple-600"
-                          strokeWidth="4"
-                          strokeDasharray={119.38}
-                          strokeDashoffset={119.38 * (1 - 0.78)}
-                          strokeLinecap="round"
-                          stroke="currentColor"
-                          fill="transparent"
-                        />
-                      </svg>
-                      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                        <span className="text-xs font-black text-slate-900 leading-none">78%</span>
-                        <span className="text-[8px] font-bold text-slate-400 uppercase mt-0.5">Score</span>
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-
-                {/* 2 Charts Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  
-                  {/* Chart 1: Business Growth Projection (Area Chart with Gradient) */}
-                  <div className="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center justify-between mb-4">
-                        <div>
-                          <h3 className="text-sm font-bold text-slate-900">{t('dashboard.growthProjection')}</h3>
-                          <p className="text-[11px] text-slate-400">{t('dashboardMock.estimatedRevenue')}</p>
-                        </div>
-                        <span className="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-extrabold">
-                          {t('dashboardMock.years')}
-                        </span>
-                      </div>
-
-                      <div className="h-56 w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <AreaChart data={growthData} margin={{ top: 10, right: 20, left: 0, bottom: 5 }}>
-                            <defs>
-                              <linearGradient id="growthAreaFill" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#059669" stopOpacity={0.25} />
-                                <stop offset="95%" stopColor="#059669" stopOpacity={0.0} />
-                              </linearGradient>
-                            </defs>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                            <XAxis dataKey="year" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={{ stroke: '#e2e8f0' }} />
-                            <YAxis stroke="#94a3b8" fontSize={11} tickFormatter={(v) => `₹${v}L`} tickLine={false} axisLine={false} />
-                            <Tooltip
-                              formatter={(v: any) => [`₹${v} Lakh`, 'Projected Revenue']}
-                              contentStyle={{ backgroundColor: '#ffffff', borderRadius: '0.75rem', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.05)', fontSize: '12px', fontWeight: 'bold' }}
-                            />
-                            <Area
-                              type="monotone"
-                              dataKey="revenue"
-                              stroke="#059669"
-                              strokeWidth={3}
-                              fillOpacity={1}
-                              fill="url(#growthAreaFill)"
-                              dot={{ r: 4, fill: '#059669', stroke: '#ffffff', strokeWidth: 2 }}
-                              activeDot={{ r: 6, fill: '#059669', stroke: '#ffffff', strokeWidth: 2 }}
-                            />
-                          </AreaChart>
-                        </ResponsiveContainer>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Chart 2: Funding Sources (Donut Chart with Structured Legend) */}
-                  <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-sm flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-bold text-slate-900">{t('dashboard.fundingSources')}</h3>
-                        <span className="text-xs font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-100">
-                          Recommended
-                        </span>
-                      </div>
-
-                      <div className="h-44 w-full relative flex items-center justify-center">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <RePieChart>
-                            <Pie
-                              data={fundingSourcesData}
-                              cx="50%"
-                              cy="50%"
-                              innerRadius={50}
-                              outerRadius={70}
-                              paddingAngle={4}
-                              dataKey="value"
-                            >
-                              {fundingSourcesData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={entry.color} stroke="#ffffff" strokeWidth={2} />
-                              ))}
-                            </Pie>
-                            <Tooltip formatter={(v: any) => [`${v}%`, 'Share']} />
-                          </RePieChart>
-                        </ResponsiveContainer>
-                        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                          <span className="text-xs font-black text-slate-900">₹58.4L</span>
-                          <span className="text-[10px] text-slate-400 font-semibold">{t('dashboardMock.potential')}</span>
-                        </div>
-                      </div>
-
-                      {/* Donut Legend */}
-                      <div className="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-slate-100">
-                        {fundingSourcesData.map((item, idx) => (
-                          <div key={idx} className="flex items-center gap-1.5 text-[11px]">
-                            <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: item.color }} />
-                            <span className="text-slate-600 font-medium truncate">{item.name}</span>
-                            <span className="font-extrabold text-slate-900 ml-auto bg-slate-50 px-1.5 py-0.5 rounded border border-slate-200 text-[10px]">{item.value}%</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-
-              </div>
-            </div>
-
-          </motion.div>
-        </div>
-
-        {/* Animated Tabs Section revealing features as user scrolls */}
-        <div id="analysis" className="mt-20 space-y-8">
-          <div className="text-center max-w-2xl mx-auto">
-            <h3 className="text-2xl font-extrabold text-slate-900">
-              {language === 'hi' ? 'विस्तृत सलाहकार मॉड्यूल' : 'Explore Advisory Modules'}
-            </h3>
-            <p className="text-xs text-slate-500 mt-1">
-              {language === 'hi' ? 'अपनी व्यावसायिक आवश्यकता के अनुसार टैब पर क्लिक करें' : 'Click through modules to see hyper-local insights in action'}
-            </p>
-          </div>
-
-          {/* Interactive Tab Switcher */}
-          <div className="flex items-center justify-center gap-2 flex-wrap">
-            <button
-              onClick={() => setActiveTab('market')}
-              className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all shadow-sm ${
-                activeTab === 'market'
-                  ? 'bg-slate-900 text-white shadow-emerald-950/20'
-                  : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
-              }`}
-            >
-              ⭐ {t('badges.market')}
-            </button>
-
-            <button
-              onClick={() => setActiveTab('schemes')}
-              className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all shadow-sm ${
-                activeTab === 'schemes'
-                  ? 'bg-slate-900 text-white shadow-emerald-950/20'
-                  : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
-              }`}
-            >
-              ⚡ {t('badges.governmentSchemes')}
-            </button>
-
-            <button
-              onClick={() => setActiveTab('finance')}
-              className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all shadow-sm ${
-                activeTab === 'finance'
-                  ? 'bg-slate-900 text-white shadow-emerald-950/20'
-                  : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
-              }`}
-            >
-              🛡️ {t('badges.finance')}
-            </button>
-
-            <button
-              onClick={() => setActiveTab('dpr')}
-              className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all shadow-sm ${
-                activeTab === 'dpr'
-                  ? 'bg-slate-900 text-white shadow-emerald-950/20'
-                  : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
-              }`}
-            >
-              📊 {t('badges.dprBuilder')}
-            </button>
-          </div>
-
-          {/* Tab Content Display */}
-          <div className="bg-white p-8 rounded-3xl border border-slate-200/90 shadow-xl max-w-4xl mx-auto">
-            {activeTab === 'market' && (
-              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
-                    <TrendingUp className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="text-base font-bold text-slate-900">
-                      {language === 'hi' ? 'हाइपर-लोकल बाजार विश्लेषण' : 'Hyper-Local Market & Enterprise Clustering'}
-                    </h4>
-                    <p className="text-xs text-slate-500">
-                      {language === 'hi' ? '785 भारतीय जिलों से वास्तविक उद्योग घनत्व डाटा' : 'Real-time MSME cluster classification & demand estimation'}
-                    </p>
-                  </div>
-                </div>
-                <div className="grid sm:grid-cols-2 gap-3 pt-2">
-                  <div className="p-3.5 rounded-xl bg-emerald-50/60 border border-emerald-100 text-xs text-emerald-900 font-medium">
-                    ✔ {language === 'hi' ? 'उद्योगों का वास्तविक प्रतिशत वर्गीकरण' : 'Empirical enterprise scale distribution (Micro/Small/Medium)'}
-                  </div>
-                  <div className="p-3.5 rounded-xl bg-blue-50/60 border border-blue-100 text-xs text-blue-900 font-medium">
-                    ✔ {language === 'hi' ? 'खुले मौसम API द्वारा जलवायु जोखिम संकेत' : 'Open-Meteo microclimate footfall & logistics disruption signals'}
-                  </div>
-                </div>
-              </motion.div>
-            )}
-
-            {activeTab === 'schemes' && (
-              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
-                    <Landmark className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="text-base font-bold text-slate-900">
-                      {language === 'hi' ? '60+ सरकारी योजनाओं का मिलान' : 'Deterministic Statutory Eligibility Matcher'}
-                    </h4>
-                    <p className="text-xs text-slate-500">
-                      {language === 'hi' ? 'मुद्रा, पीएमईजीपी, स्टैंड-अप इंडिया और राज्य योजनाएं' : 'Matches age, gender, category, and investment with statutory rules'}
-                    </p>
-                  </div>
-                </div>
-                <div className="grid sm:grid-cols-2 gap-3 pt-2">
-                  <div className="p-3.5 rounded-xl bg-amber-50/60 border border-amber-100 text-xs text-amber-900 font-medium">
-                    ✔ {language === 'hi' ? 'पात्रता की गारंटीकृत गणना' : 'Exact statutory eligibility confidence scoring & disqualification reasons'}
-                  </div>
-                  <div className="p-3.5 rounded-xl bg-purple-50/60 border border-purple-100 text-xs text-purple-900 font-medium">
-                    ✔ {language === 'hi' ? 'सब्सिडी और मार्जिन मनी ऑटो-कैलकुलेशन' : 'Instant subsidy & margin money statutory calculations'}
-                  </div>
-                </div>
-              </motion.div>
-            )}
-
-            {activeTab === 'finance' && (
-              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold">
-                    <BadgeIndianRupee className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="text-base font-bold text-slate-900">
-                      {language === 'hi' ? 'ऋण संरचना और किफायती EMI सलाहकार' : 'Financial Structuring & EMI Affordability'}
-                    </h4>
-                    <p className="text-xs text-slate-500">
-                      {language === 'hi' ? 'ऋण-से-आय (DTI) और पुनर्भुगतान परिदृश्य' : 'Calculates safe repayment limits based on monthly surplus'}
-                    </p>
-                  </div>
-                </div>
-                <div className="grid sm:grid-cols-2 gap-3 pt-2">
-                  <div className="p-3.5 rounded-xl bg-blue-50/60 border border-blue-100 text-xs text-blue-900 font-medium">
-                    ✔ {language === 'hi' ? 'रूढ़िवादी, अनुशंसित और विस्तारित ऋण परिदृश्य' : 'Conservative, Recommended & Extended tenure EMI scenarios'}
-                  </div>
-                  <div className="p-3.5 rounded-xl bg-emerald-50/60 border border-emerald-100 text-xs text-emerald-900 font-medium">
-                    ✔ {language === 'hi' ? 'सीजीटीएमएसई क्रेडिट गारंटी कवरेज' : 'CGTMSE credit guarantee coverage analysis'}
-                  </div>
-                </div>
-              </motion.div>
-            )}
-
-            {activeTab === 'dpr' && (
-              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold">
-                    <FileSpreadsheet className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="text-base font-bold text-slate-900">
-                      {language === 'hi' ? 'कैनोनिकल 13-अनुभाग डीपीआर और पीडीएफ रिपोर्ट' : '13-Section Canonical DPR Generator'}
-                    </h4>
-                    <p className="text-xs text-slate-500">
-                      {language === 'hi' ? 'बैंक जमा करने के लिए तैयार विस्तृत रिपोर्ट' : 'Bank-ready PDF detailed project reports synthesized in under 60s'}
-                    </p>
-                  </div>
-                </div>
-                <div className="grid sm:grid-cols-2 gap-3 pt-2">
-                  <div className="p-3.5 rounded-xl bg-purple-50/60 border border-purple-100 text-xs text-purple-900 font-medium">
-                    ✔ {language === 'hi' ? 'क्लोद 3.5 सॉनेट द्वारा AI विश्लेषण' : 'Anthropic Claude 3.5 Sonnet qualitative market synthesis'}
-                  </div>
-                  <div className="p-3.5 rounded-xl bg-emerald-50/60 border border-emerald-100 text-xs text-emerald-900 font-medium">
-                    ✔ {language === 'hi' ? 'डाउनलोड करने योग्य PDF और 7-दिवसीय साझा लिंक' : 'Downloadable PDF & 7-day shareable report URL'}
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </div>
-        </div>
-
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      
+      {/* Section Header */}
+      <div className="text-center max-w-2xl mx-auto">
+        <span className="text-xs font-bold text-[#159A68] uppercase tracking-wider block mb-2">
+          Modular Advisory Capabilities
+        </span>
+        <h2 className="text-2xl sm:text-4xl font-black text-[#0B1736] tracking-tight mb-3">
+          {language === 'hi' ? 'विस्तृत सलाहकार मॉड्यूल' : 'Explore Advisory Modules'}
+        </h2>
+        <p className="text-sm text-slate-600 leading-relaxed font-normal">
+          {language === 'hi'
+            ? 'अपनी व्यावसायिक आवश्यकता के अनुसार मॉड्यूल चुनें और व्यावहारिक विश्लेषण देखें।'
+            : 'Select any module below to examine how our deterministic advisory engine guides every stage of enterprise growth.'}
+        </p>
       </div>
+
+      {/* Module Navigation Tabs */}
+      <div className="flex justify-center">
+        <div className="inline-flex flex-wrap items-center justify-center p-1 rounded-2xl bg-white border border-slate-200/90 shadow-xs gap-1">
+          {MODULES.map((m) => {
+            const isActive = m.id === activeId;
+            const TabIcon = m.icon;
+            return (
+              <button
+                key={m.id}
+                type="button"
+                onClick={() => setActiveId(m.id)}
+                className={`inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
+                  isActive
+                    ? 'bg-[#0B1736] text-white shadow-xs'
+                    : 'text-slate-600 hover:text-[#0B1736] hover:bg-slate-50'
+                }`}
+              >
+                <TabIcon className={`w-3.5 h-3.5 ${isActive ? 'text-[#159A68]' : 'text-slate-400'}`} />
+                <span>
+                  {m.id === 'market' && (language === 'hi' ? 'बाजार विश्लेषण' : 'Market')}
+                  {m.id === 'schemes' && (language === 'hi' ? 'सरकारी योजनाएं' : 'Government Schemes')}
+                  {m.id === 'finance' && (language === 'hi' ? 'ऋण संरचना' : 'Finance')}
+                  {m.id === 'dpr' && (language === 'hi' ? 'डीपीआर बिल्डर' : 'DPR Builder')}
+                </span>
+                {isActive && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#159A68]" />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Editorial Information Panel */}
+      <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xs overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeModule.id}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="grid grid-cols-1 lg:grid-cols-12"
+          >
+            {/* Left Content Area */}
+            <div className="lg:col-span-7 p-6 sm:p-10 lg:p-12 flex flex-col justify-between space-y-6">
+              <div>
+                {/* Eyebrow */}
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EAF6F0] border border-[#159A68]/20 text-[#159A68] text-[11px] font-black tracking-wider uppercase mb-4">
+                  <Sparkles className="w-3 h-3 text-[#159A68]" />
+                  <span>{activeModule.badge}</span>
+                </div>
+
+                {/* Heading */}
+                <h3 className="text-xl sm:text-2xl lg:text-[1.75rem] font-black text-[#0B1736] tracking-tight leading-snug mb-3">
+                  {language === 'hi' ? activeModule.titleHi : activeModule.titleEn}
+                </h3>
+
+                {/* Description */}
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal mb-6">
+                  {language === 'hi' ? activeModule.descHi : activeModule.descEn}
+                </p>
+
+                {/* Key Points */}
+                <div className="space-y-2.5 pt-1">
+                  {(language === 'hi' ? activeModule.pointsHi : activeModule.pointsEn).map((pt, i) => (
+                    <div
+                      key={i}
+                      className="p-3 rounded-xl bg-[#F7F8F5] border border-slate-200/70 flex items-start gap-3"
+                    >
+                      <CheckCircle2 className="w-4 h-4 text-[#159A68] shrink-0 mt-0.5" />
+                      <span className="text-xs text-[#0B1736] font-medium leading-relaxed">
+                        {pt}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Action Link Button */}
+              <div className="pt-4 border-t border-slate-100 flex items-center justify-between flex-wrap gap-4">
+                <Link
+                  href={activeModule.href}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0B1736] hover:bg-[#159A68] text-white text-xs font-semibold shadow-xs hover:shadow-sm transition-all duration-200 group cursor-pointer"
+                >
+                  <span>{language === 'hi' ? activeModule.ctaHi : activeModule.ctaEn}</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                </Link>
+
+                <div className="text-[11px] font-bold text-slate-400">
+                  {language === 'hi' ? activeModule.subtitleHi : activeModule.subtitleEn}
+                </div>
+              </div>
+            </div>
+
+            {/* Right Visual/Data Showcase */}
+            <div className="lg:col-span-5 relative bg-[#0B1736] min-h-[260px] sm:min-h-[320px] lg:min-h-auto overflow-hidden flex flex-col justify-end p-6 sm:p-8">
+              {/* Background Image */}
+              <img
+                src={activeModule.image}
+                alt={activeModule.imageAlt}
+                className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-luminosity scale-105 transition-transform duration-700 hover:scale-100"
+              />
+              {/* Gradient Scrim */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0B1736] via-[#0B1736]/60 to-transparent pointer-events-none" />
+
+              {/* Floating Landmark Badge */}
+              <div className="relative z-10 space-y-2">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/95 backdrop-blur-sm text-[#0B1736] text-[11px] font-bold shadow-xs">
+                  <span className="w-2 h-2 rounded-full bg-[#159A68]" />
+                  <span>{activeModule.statBadge}</span>
+                </div>
+                <div className="text-white text-xs font-semibold leading-snug drop-shadow-sm">
+                  {language === 'hi' ? activeModule.titleHi : activeModule.titleEn}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
     </div>
   );
 }

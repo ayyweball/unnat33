@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useLanguage } from '@/lib/i18n/useLanguage';
 import { useAppStore } from '@/lib/store';
 import {
@@ -19,6 +20,8 @@ import {
   Bot,
   Building2,
   ChevronRight,
+  Search,
+  MapPin,
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -28,6 +31,51 @@ export default function Navbar() {
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  // Navigation active & hover states
+  const [activeId, setActiveId] = useState<string>('how-it-works');
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const shouldReduceMotion = useReducedMotion();
+
+  const navItems = [
+    { id: 'how-it-works', href: '#how-it-works', label: t('nav.howItWorks') },
+    { id: 'analysis', href: '#analysis', label: t('nav.analysis') },
+    { id: 'entrepreneurs', href: '#entrepreneurs', label: t('nav.forEntrepreneurs') },
+    { id: 'about', href: '#about', label: t('nav.aboutUs') },
+  ];
+
+  // Synchronize active navigation link with current scroll position on homepage
+  useEffect(() => {
+    if (pathname !== '/') return;
+
+    if (typeof window !== 'undefined' && window.location.hash) {
+      const hashId = window.location.hash.replace('#', '');
+      if (['how-it-works', 'analysis', 'entrepreneurs', 'about'].includes(hashId)) {
+        setActiveId(hashId);
+      }
+    }
+
+    const sections = ['how-it-works', 'analysis', 'entrepreneurs', 'about'];
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + 160;
+
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const el = document.getElementById(sections[i]);
+        if (el) {
+          const top = el.offsetTop;
+          if (scrollPosition >= top) {
+            setActiveId(sections[i]);
+            return;
+          }
+        }
+      }
+      setActiveId('how-it-works');
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [pathname]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -72,47 +120,115 @@ export default function Navbar() {
               alt="UnnatE - Business Grows A Stronger Bharat"
               className="h-10 sm:h-11 w-auto object-contain"
             />
-            <span className="hidden sm:inline-flex text-[9px] font-bold text-[#159A68] bg-[#EAF6F0] px-1.5 py-0.5 rounded border border-[#159A68]/20 tracking-wider self-center">
-              SIH26091
-            </span>
           </Link>
 
-          {/* Desktop Navigation Links */}
+          {/* Desktop Navigation Links with Animated Hover Effects */}
           {!isAuthPage && !isDashboardOrAdvisory && (
-            <nav className="hidden lg:flex items-center gap-7 text-xs font-semibold text-slate-700">
-              <Link
-                href="#how-it-works"
-                className="hover:text-[#159A68] transition-colors py-1"
-              >
-                {t('nav.howItWorks')}
-              </Link>
-              <Link
-                href="#analysis"
-                className="hover:text-[#159A68] transition-colors py-1"
-              >
-                {t('nav.analysis')}
-              </Link>
-              <Link
-                href="#entrepreneurs"
-                className="hover:text-[#159A68] transition-colors py-1"
-              >
-                {t('nav.forEntrepreneurs')}
-              </Link>
-              <Link
-                href="#about"
-                className="hover:text-[#159A68] transition-colors py-1"
-              >
-                {t('nav.aboutUs')}
-              </Link>
+            <nav
+              onMouseLeave={() => setHoveredId(null)}
+              className="relative hidden lg:flex items-center gap-2 text-xs font-semibold py-1 select-none"
+              aria-label="Main Navigation"
+            >
+              {navItems.map((item) => {
+                const isHovered = hoveredId === item.id;
+                const isActive = activeId === item.id;
+                const isCurrent = isHovered || (hoveredId === null && isActive);
+
+                return (
+                  <Link
+                    key={item.id}
+                    href={item.href}
+                    onMouseEnter={() => setHoveredId(item.id)}
+                    onClick={() => {
+                      setActiveId(item.id);
+                    }}
+                    className="group relative px-4 py-2 rounded-xl text-xs font-semibold transition-colors duration-200 cursor-pointer select-none"
+                  >
+                    {/* Animated Sliding Hover Capsule Pill (React Bits style) */}
+                    <AnimatePresence>
+                      {isHovered && !shouldReduceMotion && (
+                        <motion.span
+                          layoutId="navTabHoverPill"
+                          className="absolute inset-0 rounded-xl bg-[#EAF7F0] border border-[#159A68]/25 -z-0 pointer-events-none shadow-2xs"
+                          initial={{ opacity: 0, scale: 0.96 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.96 }}
+                          transition={{
+                            type: 'spring',
+                            stiffness: 450,
+                            damping: 32,
+                            mass: 0.7,
+                          }}
+                        />
+                      )}
+                    </AnimatePresence>
+
+                    {/* Active & Hover Traveling Underline Indicator */}
+                    {isCurrent && (
+                      <motion.span
+                        layoutId="navTabUnderline"
+                        className="absolute -bottom-0.5 left-3.5 right-3.5 h-[2.5px] bg-[#159A68] rounded-full z-10 pointer-events-none"
+                        transition={
+                          shouldReduceMotion
+                            ? { duration: 0 }
+                            : {
+                                type: 'spring',
+                                stiffness: 450,
+                                damping: 32,
+                                mass: 0.7,
+                              }
+                        }
+                      />
+                    )}
+
+                    {/* Tab Text with subtle -1px lift on hover */}
+                    <span
+                      className={`relative z-10 inline-block transition-all duration-200 ease-out group-hover:-translate-y-[1px] ${
+                        isCurrent
+                          ? 'text-[#159A68] font-bold'
+                          : 'text-[#0B1736] group-hover:text-[#159A68]'
+                      }`}
+                    >
+                      {item.label}
+                    </span>
+                  </Link>
+                );
+              })}
             </nav>
+          )}
+
+          {/* Center Search Input (Dashboard & Advisory Views — Direct Reference Match) */}
+          {isDashboardOrAdvisory && (
+            <div className="hidden md:flex flex-1 max-w-md mx-4 lg:mx-8">
+              <div className="relative w-full">
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  placeholder="Search schemes, markets, or ask anything... (Ctrl K)"
+                  className="w-full pl-9 pr-4 py-1.5 rounded-full bg-slate-50 border border-slate-200/90 text-xs text-[#0B1736] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#159A68] focus:border-transparent transition"
+                />
+              </div>
+            </div>
           )}
 
           {/* Right Action Controls */}
           <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
+            {/* Quick District Location Pill (Dashboard Views) */}
+            {isDashboardOrAdvisory && (
+              <Link
+                href="/dashboard/profile"
+                className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#EAF7F0] border border-[#159A68]/20 text-xs font-semibold text-[#159A68] hover:bg-[#d5ede0] transition-colors"
+                title="View or Change Geographic Location"
+              >
+                <MapPin className="w-3 h-3 text-[#159A68]" />
+                <span>{user?.district ? `${user.district}, ${user.state || 'India'}` : 'Lucknow, Uttar Pradesh'}</span>
+              </Link>
+            )}
+
             {/* Bilingual Language Switcher Toggle */}
             <button
               onClick={() => setLanguage(language === 'en' ? 'hi' : 'en')}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-slate-900 font-semibold text-xs transition-colors border border-slate-200 cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-slate-900 font-semibold text-xs transition-colors border border-slate-200 cursor-pointer"
               title="Switch Language / भाषा बदलें"
             >
               <Globe className="w-3.5 h-3.5 text-[#159A68]" />
@@ -122,15 +238,15 @@ export default function Navbar() {
             {user ? (
               <div className="hidden sm:flex items-center gap-2">
                 <Link
-                  href="/dashboard"
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-[#0B1736] font-semibold text-xs transition-colors border border-slate-200"
+                  href="/dashboard/profile"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-50 hover:bg-slate-100 text-[#0B1736] font-semibold text-xs transition-colors border border-slate-200"
                 >
                   <UserIcon className="w-3.5 h-3.5 text-[#159A68]" />
                   <span className="max-w-[120px] truncate">{user.name}</span>
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="p-1.5 rounded-lg text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer border border-transparent hover:border-rose-100"
+                  className="p-1.5 rounded-full text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer border border-transparent hover:border-rose-100"
                   title={t('nav.logout')}
                 >
                   <LogOut className="w-4 h-4" />
@@ -139,11 +255,18 @@ export default function Navbar() {
             ) : (
               <div className="hidden sm:flex items-center gap-2">
                 <Link
-                  href="/dashboard"
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#0B1736] hover:bg-[#159A68] text-white font-bold text-xs shadow-xs transition-colors group"
+                  href="/dashboard/profile"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-50 hover:bg-slate-100 text-[#0B1736] font-semibold text-xs transition-colors border border-slate-200"
                 >
-                  <span>Explore Platform</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-white/80 group-hover:translate-x-0.5 transition-transform" />
+                  <UserIcon className="w-3.5 h-3.5 text-[#159A68]" />
+                  <span>Demo Entrepreneur</span>
+                </Link>
+                <Link
+                  href="/dashboard"
+                  className="p-1.5 rounded-full text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer border border-transparent hover:border-rose-100"
+                  title="Logout"
+                >
+                  <LogOut className="w-4 h-4" />
                 </Link>
               </div>
             )}
