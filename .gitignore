@@ -4,4 +4,18 @@ __pycache__/
 .pytest_cache/
 .env
 *_backup.db
-isolated_test_seed.db
+isolated_test_seed.db
+# Local datasets
+ASI_DATA_2023_24_CSV.zip
+Data_in_CSV (1).zip
+Data_in_CSV.zip
+HCES_Data_2023-24_Csv.zip
+DVD_EC_6th_ECONOMIC_CENSUS_2012_v3_lud_23june2016.rar
+CSV_ASUSE2025.zip
+
+# Generated / local dependencies
+node_modules/
+.next/
+venv/
+__pycache__/
+*.pyc
