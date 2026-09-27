@@ -49,12 +49,16 @@ class MarketIntelligenceService:
         Execute unified market intelligence pipeline for a target district.
         Returns None only if district cannot be resolved in either geography or MSME records.
         """
-        # 1. Fetch unified research context (Geography + Udyam MSME + Weather + Baseline Observations)
+        # 1. Fetch unified research context (Geography + Udyam MSME + Weather + Baseline Observations + Consumer Evidence)
+        b_type = req.business_profile.business_type if req.business_profile else None
+        b_sector = req.business_profile.sub_type if req.business_profile else None
         base_context = await self.research_service.get_district_research_context(
             db=db,
             district_name=req.district_name,
             state_name=req.state_name,
             lg_dt_code=req.lg_dt_code,
+            business_type=b_type,
+            sector=b_sector,
         )
 
         if not base_context:
@@ -111,6 +115,7 @@ class MarketIntelligenceService:
             weather_context=base_context.weather_context,
             ml_analysis=ml_analysis,
             llm_analysis=llm_analysis,
+            consumer_market_evidence=base_context.consumer_market_evidence,
             research_observations=base_context.research_observations,
             operational_cautions=base_context.operational_cautions,
             disclaimer=base_context.disclaimer,

@@ -12,7 +12,37 @@ from app.schemas.district_msme import DistrictMarketContext
 from app.schemas.weather import DistrictWeatherContext
 
 
+class ConsumerMarketEvidence(BaseModel):
+    """
+    Structured empirical consumer survey evidence from PwC Voice of the Consumer 2025.
+    Contextual evidence only; does not determine statutory scheme eligibility.
+    """
+    model_config = ConfigDict(from_attributes=True)
+
+    source: str = Field(
+        default="PwC Voice of the Consumer 2025: India perspective",
+        description="Survey source publication"
+    )
+    geography: str = Field(
+        default="India",
+        description="Survey geographic scope (National)"
+    )
+    survey_year: int = Field(
+        default=2025,
+        description="Survey publication year"
+    )
+    sample_size: int = Field(
+        default=1031,
+        description="Survey sample size across India"
+    )
+    evidence: List[str] = Field(
+        default_factory=list,
+        description="Relevant empirical consumer survey observations filtered by sector"
+    )
+
+
 class DistrictResearchContextResponse(BaseModel):
+
     """
     Unified Research Context response for a target district.
     Aggregates:
@@ -41,6 +71,10 @@ class DistrictResearchContextResponse(BaseModel):
     weather_context: Optional[DistrictWeatherContext] = Field(
         None, description="Observational weather conditions and short-term forecast"
     )
+    consumer_market_evidence: Optional[ConsumerMarketEvidence] = Field(
+        None, description="Relevant empirical consumer survey evidence from PwC Voice of the Consumer (food/agri/retail/fmcg)"
+    )
+
 
     research_observations: List[str] = Field(
         default_factory=list,

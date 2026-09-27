@@ -115,4 +115,4 @@ class ProgramQueryParams(BaseModel):
     ministry: Optional[str] = Field(None, description="Filter by owning ministry")
     sector: Optional[str] = Field(None, description="Filter by industry sector code or name")
     skip: int = Field(default=0, ge=0, description="Offset for pagination")
-    limit: int = Field(default=100, ge=1, le=100, description="Maximum records to return (up to 100)")
+    limit: int = Field(default=200, ge=1, le=500, description="Maximum records to return (up to 500)")

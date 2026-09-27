@@ -8,16 +8,21 @@ Unified research context aggregator synthesizing:
 - Defensible, data-backed operational observations and cautions
 """
 
+import logging
+import json
 from typing import Optional, List
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 
 from app.schemas.geography import DistrictCoordinates
 from app.schemas.district_msme import DistrictMarketContext
 from app.schemas.weather import DistrictWeatherContext
-from app.schemas.research_context import DistrictResearchContextResponse
+from app.schemas.research_context import DistrictResearchContextResponse, ConsumerMarketEvidence
 from app.services.district_msme_service import DistrictMsmeService
 from app.services.geography_service import GeographyService
 from app.services.weather_service import WeatherService, weather_service
+
+logger = logging.getLogger(__name__)
 
 
 class ResearchContextService:
@@ -32,7 +37,10 @@ class ResearchContextService:
         district_name: Optional[str] = None,
         state_name: Optional[str] = None,
         lg_dt_code: Optional[str] = None,
+        business_type: Optional[str] = None,
+        sector: Optional[str] = None,
     ) -> Optional[DistrictResearchContextResponse]:
+
         """
         Synthesize geographic, MSME market, and weather intelligence for a target district.
         Returns None only if district cannot be resolved in either geography or MSME data.
@@ -53,7 +61,11 @@ class ResearchContextService:
             lg_dt_code=lg_dt_code or (geo_coords.lg_dt_code if geo_coords else None),
         )
 
+        if not geo_coords and not msme_ctx:
+            return None
+
         if not geo_coords:
+
             geo_coords = DistrictCoordinates(
                 district_id=1,
                 district_name=district_name or "Lucknow",
@@ -112,8 +124,13 @@ class ResearchContextService:
                 longitude=geo_coords.longitude,
             )
 
-        # 4. Generate Defensible Research Observations and Cautions
-        observations = self._generate_observations(geo_coords, msme_ctx, weather_ctx)
+        # 4. Resolve Relevant Consumer Survey Evidence (PwC Voice of the Consumer 2025)
+        pwc_evidence = self._get_pwc_evidence(db=db, business_type=business_type, sector=sector)
+
+        # 5. Generate Defensible Research Observations and Cautions
+        observations = self._generate_observations(
+            geo_coords, msme_ctx, weather_ctx, db=db, state_name=resolved_state_name, pwc_evidence=pwc_evidence
+        )
         cautions = self._generate_operational_cautions(geo_coords, msme_ctx, weather_ctx)
 
         return DistrictResearchContextResponse(
@@ -124,18 +141,48 @@ class ResearchContextService:
             geographic_coordinates=geo_coords,
             msme_market_context=msme_ctx,
             weather_context=weather_ctx,
+            consumer_market_evidence=pwc_evidence,
             research_observations=observations,
             operational_cautions=cautions,
         )
+
 
     def _generate_observations(
         self,
         geo: Optional[DistrictCoordinates],
         msme: Optional[DistrictMarketContext],
         weather: Optional[DistrictWeatherContext],
+        db: Optional[Session] = None,
+        state_name: Optional[str] = None,
+        pwc_evidence: Optional[ConsumerMarketEvidence] = None,
     ) -> List[str]:
-        """Generate empirical, data-backed market and environment observations."""
+        """Generate empirical, data-backed market, environment, and consumption observations."""
         obs: List[str] = []
+
+        # Official Household Consumption Expenditure Benchmark (HCES 2022-23)
+        if db and state_name:
+            try:
+                from app.services.hces_service import hces_service
+                state_hces = hces_service.get_state_mpce(db, state_name=state_name)
+                if state_hces:
+                    r_val = int(state_hces["rural_mpce"])
+                    u_val = int(state_hces["urban_mpce"])
+                    obs.append(
+                        f"State Consumption Benchmark (HCES 2022-23): Average MPCE for {state_hces['state_name']} is "
+                        f"Rs. {r_val:,} (Rural) and Rs. {u_val:,} (Urban). "
+                        f"Source: Government of India / MoSPI (Official State Benchmark; district MPCE is not fabricated)."
+                    )
+            except Exception as e:
+                logger.debug("Failed to append HCES observation: %s", e)
+
+        # Consumer Market Survey Context (PwC Voice of the Consumer 2025)
+        if pwc_evidence and pwc_evidence.evidence:
+            obs.append(
+                f"Consumer Market Survey Context (PwC Voice of the Consumer 2025): National survey benchmark "
+                f"(sample size: {pwc_evidence.sample_size:,} respondents across India) indicates relevant sector "
+                f"consumer preferences. Survey metrics reflect consumer sentiment and do not predict localized footfall or enterprise success."
+            )
+
 
         # MSME Enterprise Density Observations
         if msme:
@@ -228,6 +275,95 @@ class ResearchContextService:
             )
 
         return cautions
+
+    def _get_pwc_evidence(
+        self,
+        db: Optional[Session],
+        business_type: Optional[str] = None,
+        sector: Optional[str] = None,
+    ) -> Optional[ConsumerMarketEvidence]:
+        """
+        Retrieve empirical consumer survey evidence from PwC Voice of the Consumer 2025: India perspective.
+        Evidence is exposed strictly when business context is relevant to Food, Agriculture, Retail, or FMCG.
+        Returns None if not relevant, if DB is unavailable, or if data source record is not found.
+        """
+        if not db:
+            return None
+
+        # Build search tokens
+        query_text = f"{business_type or ''} {sector or ''}".lower().strip()
+        if not query_text:
+            return None
+
+        # Determine domain relevance
+        matched_domains = set()
+
+        # Food keywords
+        if any(k in query_text for k in [
+            "food", "dairy", "bakery", "beverage", "restaurant", "cafe", "snack",
+            "confectionery", "catering", "nutrition", "edible", "spices", "poultry", "meat"
+        ]):
+            matched_domains.add("food")
+
+        # Agriculture keywords
+        if any(k in query_text for k in [
+            "agri", "farm", "crop", "horticulture", "organic", "produce",
+            "cultivat", "plantation", "livestock", "seed"
+        ]):
+            matched_domains.add("agriculture")
+
+        # Retail keywords
+        if any(k in query_text for k in [
+            "retail", "grocery", "supermarket", "store", "shop", "mart",
+            "quick-commerce", "commerce", "outlet"
+        ]):
+            matched_domains.add("retail")
+
+        # FMCG keywords
+        if any(k in query_text for k in [
+            "fmcg", "packaged", "consumer goods", "personal care", "hygiene", "detergent"
+        ]):
+            matched_domains.add("fmcg")
+
+        if not matched_domains:
+            return None
+
+        # Query data_sources table for the official PwC record
+        try:
+            row = db.execute(
+                text("SELECT metadata_info, record_count FROM data_sources WHERE name = :name"),
+                {"name": "PwC Voice of the Consumer 2025: India perspective"}
+            ).fetchone()
+
+            if not row or not row[0]:
+                return None
+
+            meta = row[0] if isinstance(row[0], dict) else json.loads(row[0])
+            source = meta.get("source", "PwC Voice of the Consumer 2025: India perspective")
+            geography = meta.get("geography", "India")
+            survey_year = int(meta.get("survey_year", 2025))
+            sample_size = int(meta.get("sample_size", 1031))
+            domain_evidence = meta.get("domain_evidence", {})
+
+            collected_evidence: List[str] = []
+            # Preserve deterministic domain order: food, agriculture, retail, fmcg
+            for domain in ["food", "agriculture", "retail", "fmcg"]:
+                if domain in matched_domains and domain in domain_evidence:
+                    collected_evidence.extend(domain_evidence[domain])
+
+            if not collected_evidence:
+                return None
+
+            return ConsumerMarketEvidence(
+                source=source,
+                geography=geography,
+                survey_year=survey_year,
+                sample_size=sample_size,
+                evidence=collected_evidence,
+            )
+        except Exception as e:
+            logger.debug("Failed to retrieve PwC consumer market evidence: %s", e)
+            return None
 
 
 research_context_service = ResearchContextService()

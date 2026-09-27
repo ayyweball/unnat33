@@ -40,6 +40,12 @@ async def get_district_market_context(
     lg_dt_code: Optional[str] = Query(
         None, description="Official Local Government Directory (LGD) district code (e.g. '194')"
     ),
+    business_type: Optional[str] = Query(
+        None, description="Optional business type for consumer market evidence filtering (e.g. 'Food Processing', 'Retail')"
+    ),
+    sector: Optional[str] = Query(
+        None, description="Optional sector / trade sub-type for consumer market evidence filtering"
+    ),
     db: Session = Depends(get_db),
 ) -> DistrictResearchContextResponse:
     """
@@ -48,6 +54,7 @@ async def get_district_market_context(
     - Official geographic centroid coordinates and elevation from PostgreSQL.
     - Empirical Udyam MSME market density, composition shares, and rankings.
     - Observational weather conditions and 3-day forecast snapshots from Open-Meteo / DB cache.
+    - Relevant consumer market evidence from PwC Voice of the Consumer (food/agri/retail/fmcg).
     - Defensible, data-backed operational observations and cautions.
 
     At least one parameter (`district_name`, `state_name`, or `lg_dt_code`) must be provided.
@@ -63,6 +70,8 @@ async def get_district_market_context(
         district_name=district_name,
         state_name=state_name,
         lg_dt_code=lg_dt_code,
+        business_type=business_type,
+        sector=sector,
     )
 
     if not context:

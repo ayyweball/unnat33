@@ -12,7 +12,7 @@
     "actionabilityType": "DIRECTLY_RECOMMENDABLE",
     "officialPortalUrl": "https://financialservices.gov.in/pradhan-mantri-mudra-yojana-pmmy",
     "loanMin": null,
-    "loanMax": 50000.0,
+    "loanMax": 50000,
     "subsidyPct": null,
     "interestRate": null,
     "tenureYears": null,
@@ -20,10 +20,16 @@
       "All"
     ],
     "targetCategories": [
-      "Direct Financing"
+      "General",
+      "OBC",
+      "SC",
+      "ST"
     ],
     "targetSectors": [
-      "Micro Enterprise"
+      "Manufacturing",
+      "Services",
+      "Trading",
+      "Agriculture"
     ],
     "ruralEligible": true,
     "urbanEligible": true,
@@ -46,8 +52,8 @@
     "primaryType": "CREDIT / LOAN",
     "actionabilityType": "DIRECTLY_RECOMMENDABLE",
     "officialPortalUrl": "https://financialservices.gov.in/pradhan-mantri-mudra-yojana-pmmy",
-    "loanMin": 50000.01,
-    "loanMax": 500000.0,
+    "loanMin": null,
+    "loanMax": 500000,
     "subsidyPct": null,
     "interestRate": null,
     "tenureYears": null,
@@ -55,10 +61,16 @@
       "All"
     ],
     "targetCategories": [
-      "Direct Financing"
+      "General",
+      "OBC",
+      "SC",
+      "ST"
     ],
     "targetSectors": [
-      "Micro Enterprise"
+      "Manufacturing",
+      "Services",
+      "Trading",
+      "Agriculture"
     ],
     "ruralEligible": true,
     "urbanEligible": true,
@@ -81,8 +93,8 @@
     "primaryType": "CREDIT / LOAN",
     "actionabilityType": "DIRECTLY_RECOMMENDABLE",
     "officialPortalUrl": "https://financialservices.gov.in/pradhan-mantri-mudra-yojana-pmmy",
-    "loanMin": 500000.01,
-    "loanMax": 1000000.0,
+    "loanMin": null,
+    "loanMax": 1000000,
     "subsidyPct": null,
     "interestRate": null,
     "tenureYears": null,
@@ -90,10 +102,16 @@
       "All"
     ],
     "targetCategories": [
-      "Direct Financing"
+      "General",
+      "OBC",
+      "SC",
+      "ST"
     ],
     "targetSectors": [
-      "Micro Enterprise"
+      "Manufacturing",
+      "Services",
+      "Trading",
+      "Agriculture"
     ],
     "ruralEligible": true,
     "urbanEligible": true,
@@ -116,8 +134,8 @@
     "primaryType": "CREDIT / LOAN",
     "actionabilityType": "DIRECTLY_RECOMMENDABLE",
     "officialPortalUrl": "https://financialservices.gov.in/pradhan-mantri-mudra-yojana-pmmy",
-    "loanMin": 1000000.01,
-    "loanMax": 2000000.0,
+    "loanMin": null,
+    "loanMax": 2000000,
     "subsidyPct": null,
     "interestRate": null,
     "tenureYears": null,
@@ -125,10 +143,16 @@
       "All"
     ],
     "targetCategories": [
-      "Direct Financing"
+      "General",
+      "OBC",
+      "SC",
+      "ST"
     ],
     "targetSectors": [
-      "Micro Enterprise"
+      "Manufacturing",
+      "Services",
+      "Trading",
+      "Agriculture"
     ],
     "ruralEligible": true,
     "urbanEligible": true,
@@ -152,25 +176,31 @@
     "actionabilityType": "DIRECTLY_RECOMMENDABLE",
     "officialPortalUrl": "https://www.kviconline.gov.in/pmegpeportal/pmegphome/index.jsp",
     "loanMin": null,
-    "loanMax": 5000000.0,
-    "subsidyPct": 15.0,
+    "loanMax": 5000000,
+    "subsidyPct": 35,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
       "All"
     ],
     "targetCategories": [
-      "Direct Financing"
+      "General",
+      "OBC",
+      "SC",
+      "ST"
     ],
     "targetSectors": [
-      "Micro Enterprise"
+      "Manufacturing",
+      "Services",
+      "Trading",
+      "Agriculture"
     ],
     "ruralEligible": true,
     "urbanEligible": true,
-    "minAge": 18,
+    "minAge": null,
     "maxAge": null,
-    "newBusinessOnly": true,
-    "existingBusinessAllowed": false,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
     "isArtisanSpecial": false,
     "isStreetVendorSpecial": false
   },
@@ -187,18 +217,24 @@
     "actionabilityType": "DIRECTLY_RECOMMENDABLE",
     "officialPortalUrl": "https://www.kviconline.gov.in/pmegpeportal/pmegphome/index.jsp",
     "loanMin": null,
-    "loanMax": 10000000.0,
-    "subsidyPct": 15.0,
+    "loanMax": 10000000,
+    "subsidyPct": 20,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
       "All"
     ],
     "targetCategories": [
-      "Existing Business Growth"
+      "General",
+      "OBC",
+      "SC",
+      "ST"
     ],
     "targetSectors": [
-      "Micro Enterprise"
+      "Manufacturing",
+      "Services",
+      "Trading",
+      "Agriculture"
     ],
     "ruralEligible": true,
     "urbanEligible": true,
@@ -222,26 +258,32 @@
     "actionabilityType": "DIRECTLY_RECOMMENDABLE",
     "officialPortalUrl": "https://pmvishwakarma.gov.in",
     "loanMin": null,
-    "loanMax": 300000.0,
-    "subsidyPct": null,
-    "interestRate": 5.0,
+    "loanMax": 300000,
+    "subsidyPct": 5,
+    "interestRate": null,
     "tenureYears": null,
     "targetGender": [
       "All"
     ],
     "targetCategories": [
-      "Artisan Support"
+      "General",
+      "OBC",
+      "SC",
+      "ST"
     ],
     "targetSectors": [
-      "Artisan Enterprise"
+      "Manufacturing",
+      "Services",
+      "Trading",
+      "Agriculture"
     ],
     "ruralEligible": true,
     "urbanEligible": true,
-    "minAge": 18,
+    "minAge": null,
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": true,
+    "isArtisanSpecial": false,
     "isStreetVendorSpecial": false
   },
   {
@@ -256,19 +298,25 @@
     "primaryType": "CREDIT / LOAN",
     "actionabilityType": "DIRECTLY_RECOMMENDABLE",
     "officialPortalUrl": "https://pmsvanidhi.mohua.gov.in",
-    "loanMin": 15000.0,
-    "loanMax": 50000.0,
-    "subsidyPct": null,
+    "loanMin": null,
+    "loanMax": 50000,
+    "subsidyPct": 7,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
       "All"
     ],
     "targetCategories": [
-      "Direct Financing"
+      "General",
+      "OBC",
+      "SC",
+      "ST"
     ],
     "targetSectors": [
-      "Informal Micro Enterprise"
+      "Manufacturing",
+      "Services",
+      "Trading",
+      "Agriculture"
     ],
     "ruralEligible": true,
     "urbanEligible": true,
@@ -277,7 +325,7 @@
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
     "isArtisanSpecial": false,
-    "isStreetVendorSpecial": true
+    "isStreetVendorSpecial": false
   },
   {
     "id": 9,
@@ -292,18 +340,24 @@
     "actionabilityType": "DIRECTLY_RECOMMENDABLE",
     "officialPortalUrl": "https://nsfdc.nic.in",
     "loanMin": null,
-    "loanMax": 125000.0,
-    "subsidyPct": null,
-    "interestRate": 6.5,
-    "tenureYears": 3.0,
+    "loanMax": 60000,
+    "subsidyPct": 5,
+    "interestRate": null,
+    "tenureYears": null,
     "targetGender": [
       "All"
     ],
     "targetCategories": [
-      "NSFDC Financing"
+      "General",
+      "OBC",
+      "SC",
+      "ST"
     ],
     "targetSectors": [
-      "Income Generating Activity"
+      "Manufacturing",
+      "Services",
+      "Trading",
+      "Agriculture"
     ],
     "ruralEligible": true,
     "urbanEligible": true,
@@ -327,18 +381,24 @@
     "actionabilityType": "DIRECTLY_RECOMMENDABLE",
     "officialPortalUrl": "https://nsfdc.nic.in",
     "loanMin": null,
-    "loanMax": 125000.0,
+    "loanMax": 60000,
     "subsidyPct": null,
-    "interestRate": 15.0,
-    "tenureYears": 3.0,
+    "interestRate": null,
+    "tenureYears": null,
     "targetGender": [
       "All"
     ],
     "targetCategories": [
-      "NSFDC Financing"
+      "General",
+      "OBC",
+      "SC",
+      "ST"
     ],
     "targetSectors": [
-      "Income Generating Activity"
+      "Manufacturing",
+      "Services",
+      "Trading",
+      "Agriculture"
     ],
     "ruralEligible": true,
     "urbanEligible": true,
@@ -362,18 +422,24 @@
     "actionabilityType": "DIRECTLY_RECOMMENDABLE",
     "officialPortalUrl": "https://nsfdc.nic.in",
     "loanMin": null,
-    "loanMax": 4500000.0,
+    "loanMax": 5000000,
     "subsidyPct": null,
-    "interestRate": 8.0,
-    "tenureYears": 7.0,
+    "interestRate": null,
+    "tenureYears": null,
     "targetGender": [
       "All"
     ],
     "targetCategories": [
-      "NSFDC Financing"
+      "General",
+      "OBC",
+      "SC",
+      "ST"
     ],
     "targetSectors": [
-      "Income Generating Activity"
+      "Manufacturing",
+      "Services",
+      "Trading",
+      "Agriculture"
     ],
     "ruralEligible": true,
     "urbanEligible": true,
@@ -397,18 +463,24 @@
     "actionabilityType": "DIRECTLY_RECOMMENDABLE",
     "officialPortalUrl": "https://nsfdc.nic.in",
     "loanMin": null,
-    "loanMax": 450000.0,
-    "subsidyPct": null,
+    "loanMax": 44000,
+    "subsidyPct": 4,
     "interestRate": null,
-    "tenureYears": 5.0,
+    "tenureYears": null,
     "targetGender": [
       "All"
     ],
     "targetCategories": [
-      "NSFDC Financing"
+      "General",
+      "OBC",
+      "SC",
+      "ST"
     ],
     "targetSectors": [
-      "Income Generating Activity"
+      "Manufacturing",
+      "Services",
+      "Trading",
+      "Agriculture"
     ],
     "ruralEligible": true,
     "urbanEligible": true,
@@ -431,11 +503,11 @@
     "primaryType": "CREDIT / LOAN",
     "actionabilityType": "DIRECTLY_RECOMMENDABLE",
     "officialPortalUrl": "https://www.standupmitra.in",
-    "loanMin": 1000000.0,
-    "loanMax": 10000000.0,
+    "loanMin": 1000000,
+    "loanMax": 10000000,
     "subsidyPct": null,
     "interestRate": null,
-    "tenureYears": 7.0,
+    "tenureYears": 7,
     "targetGender": [
       "All"
     ],
@@ -448,17 +520,17 @@
     "targetSectors": [
       "Manufacturing",
       "Services",
-      "Trading / Retail",
-      "Agriculture and Allied Activities"
+      "Trading",
+      "Agriculture"
     ],
     "ruralEligible": 1,
     "urbanEligible": 1,
     "minAge": 18,
     "maxAge": null,
-    "newBusinessOnly": true,
+    "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 14,
@@ -472,11 +544,11 @@
     "primaryType": "CREDIT / LOAN",
     "actionabilityType": "DIRECTLY_RECOMMENDABLE",
     "officialPortalUrl": "https://www.sidbi.in",
-    "loanMin": 1000000.0,
-    "loanMax": 250000000.0,
+    "loanMin": 1000000,
+    "loanMax": 250000000,
     "subsidyPct": null,
     "interestRate": null,
-    "tenureYears": 10.0,
+    "tenureYears": 10,
     "targetGender": [
       "All"
     ],
@@ -496,8 +568,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 15,
@@ -512,12 +584,12 @@
     "actionabilityType": "DIRECTLY_RECOMMENDABLE",
     "officialPortalUrl": "https://nbcfdc.gov.in",
     "loanMin": null,
-    "loanMax": 200000.0,
-    "subsidyPct": null,
-    "interestRate": 5.0,
-    "tenureYears": 8.0,
+    "loanMax": 200000,
+    "subsidyPct": 5,
+    "interestRate": 5,
+    "tenureYears": 8,
     "targetGender": [
-      "All"
+      "Female"
     ],
     "targetCategories": [
       "General",
@@ -528,17 +600,17 @@
     "targetSectors": [
       "Manufacturing",
       "Services",
-      "Trading / Retail",
-      "Agriculture and Allied Activities"
+      "Trading",
+      "Agriculture"
     ],
     "ruralEligible": 1,
     "urbanEligible": 1,
     "minAge": 18,
     "maxAge": 55,
-    "newBusinessOnly": true,
+    "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 16,
@@ -553,12 +625,12 @@
     "actionabilityType": "DIRECTLY_RECOMMENDABLE",
     "officialPortalUrl": "https://nstfdc.tribal.gov.in",
     "loanMin": null,
-    "loanMax": 200000.0,
-    "subsidyPct": null,
-    "interestRate": 4.0,
-    "tenureYears": 5.0,
+    "loanMax": 200000,
+    "subsidyPct": 4,
+    "interestRate": 4,
+    "tenureYears": 5,
     "targetGender": [
-      "All"
+      "Female"
     ],
     "targetCategories": [
       "General",
@@ -569,8 +641,8 @@
     "targetSectors": [
       "Manufacturing",
       "Services",
-      "Trading / Retail",
-      "Agriculture and Allied Activities"
+      "Trading",
+      "Agriculture"
     ],
     "ruralEligible": 1,
     "urbanEligible": 1,
@@ -578,8 +650,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 17,
@@ -594,8 +666,8 @@
     "actionabilityType": "FRAMEWORK",
     "officialPortalUrl": "https://www.cgtmse.in",
     "loanMin": null,
-    "loanMax": 100000000.0,
-    "subsidyPct": null,
+    "loanMax": 100000000,
+    "subsidyPct": 85,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -610,7 +682,7 @@
     "targetSectors": [
       "Manufacturing",
       "Services",
-      "Trading / Retail"
+      "Trading"
     ],
     "ruralEligible": 1,
     "urbanEligible": 1,
@@ -618,8 +690,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 18,
@@ -634,8 +706,8 @@
     "actionabilityType": "DIRECTLY_RECOMMENDABLE",
     "officialPortalUrl": "https://www.cgtmse.in",
     "loanMin": null,
-    "loanMax": 7500000.0,
-    "subsidyPct": null,
+    "loanMax": 7500000,
+    "subsidyPct": 90,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -650,7 +722,7 @@
     "targetSectors": [
       "Manufacturing",
       "Services",
-      "Trading / Retail"
+      "Trading"
     ],
     "ruralEligible": 1,
     "urbanEligible": 1,
@@ -658,8 +730,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 19,
@@ -674,8 +746,8 @@
     "actionabilityType": "DIRECTLY_RECOMMENDABLE",
     "officialPortalUrl": "https://www.ncgtc.org.in",
     "loanMin": null,
-    "loanMax": 100000000.0,
-    "subsidyPct": null,
+    "loanMax": 100000000,
+    "subsidyPct": 80,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -697,8 +769,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 20,
@@ -713,8 +785,8 @@
     "actionabilityType": "DIRECTLY_RECOMMENDABLE",
     "officialPortalUrl": "https://pmfme.mofpi.gov.in",
     "loanMin": null,
-    "loanMax": 1000000.0,
-    "subsidyPct": 35.0,
+    "loanMax": 10000000,
+    "subsidyPct": 35,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -735,8 +807,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 21,
@@ -751,8 +823,8 @@
     "actionabilityType": "COMPONENT_RECOMMENDABLE",
     "officialPortalUrl": "https://www.mofpi.gov.in",
     "loanMin": null,
-    "loanMax": 50000000.0,
-    "subsidyPct": 35.0,
+    "loanMax": 50000000,
+    "subsidyPct": 35,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -773,8 +845,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 22,
@@ -789,8 +861,8 @@
     "actionabilityType": "DIRECTLY_RECOMMENDABLE",
     "officialPortalUrl": "https://agriinfra.dac.gov.in",
     "loanMin": null,
-    "loanMax": 20000000.0,
-    "subsidyPct": 3.0,
+    "loanMax": 20000000,
+    "subsidyPct": 3,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -803,7 +875,7 @@
       "ST"
     ],
     "targetSectors": [
-      "Agriculture and Allied Activities"
+      "Agriculture"
     ],
     "ruralEligible": 1,
     "urbanEligible": 1,
@@ -811,8 +883,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 23,
@@ -827,8 +899,8 @@
     "actionabilityType": "COMPONENT_RECOMMENDABLE",
     "officialPortalUrl": "https://www.scsthub.in",
     "loanMin": null,
-    "loanMax": 2500000.0,
-    "subsidyPct": 25.0,
+    "loanMax": 10000000,
+    "subsidyPct": 25,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -850,8 +922,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 24,
@@ -866,7 +938,7 @@
     "actionabilityType": "COMPONENT_RECOMMENDABLE",
     "officialPortalUrl": "https://dmi.gov.in",
     "loanMin": null,
-    "loanMax": 8750000.0,
+    "loanMax": 8750000,
     "subsidyPct": 33.33,
     "interestRate": null,
     "tenureYears": null,
@@ -880,7 +952,7 @@
       "ST"
     ],
     "targetSectors": [
-      "Agriculture and Allied Activities"
+      "Agriculture"
     ],
     "ruralEligible": 1,
     "urbanEligible": 0,
@@ -888,8 +960,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 25,
@@ -904,8 +976,8 @@
     "actionabilityType": "COMPONENT_RECOMMENDABLE",
     "officialPortalUrl": "https://agrimachinery.nic.in",
     "loanMin": null,
-    "loanMax": 1000000.0,
-    "subsidyPct": 40.0,
+    "loanMax": 2500000,
+    "subsidyPct": 40,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -919,7 +991,7 @@
     ],
     "targetSectors": [
       "Services",
-      "Agriculture and Allied Activities"
+      "Agriculture"
     ],
     "ruralEligible": 1,
     "urbanEligible": 1,
@@ -927,8 +999,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 26,
@@ -943,8 +1015,8 @@
     "actionabilityType": "COMPONENT_RECOMMENDABLE",
     "officialPortalUrl": "https://pms.dcmsme.gov.in",
     "loanMin": null,
-    "loanMax": 300000.0,
-    "subsidyPct": null,
+    "loanMax": 300000,
+    "subsidyPct": 100,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -966,8 +1038,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 27,
@@ -1005,8 +1077,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 28,
@@ -1022,7 +1094,7 @@
     "officialPortalUrl": "https://sambandh.msme.gov.in",
     "loanMin": null,
     "loanMax": null,
-    "subsidyPct": null,
+    "subsidyPct": 25,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -1044,8 +1116,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 29,
@@ -1061,7 +1133,7 @@
     "officialPortalUrl": "https://gem.gov.in",
     "loanMin": null,
     "loanMax": null,
-    "subsidyPct": null,
+    "subsidyPct": 100,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -1076,7 +1148,7 @@
     "targetSectors": [
       "Manufacturing",
       "Services",
-      "Trading / Retail"
+      "Trading"
     ],
     "ruralEligible": 1,
     "urbanEligible": 1,
@@ -1084,8 +1156,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 30,
@@ -1101,7 +1173,7 @@
     "officialPortalUrl": "https://www.scsthub.in",
     "loanMin": null,
     "loanMax": null,
-    "subsidyPct": null,
+    "subsidyPct": 100,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -1123,8 +1195,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 31,
@@ -1139,8 +1211,8 @@
     "actionabilityType": "COMPONENT_RECOMMENDABLE",
     "officialPortalUrl": "https://zed.msme.gov.in",
     "loanMin": null,
-    "loanMax": 50000.0,
-    "subsidyPct": null,
+    "loanMax": 50000,
+    "subsidyPct": 80,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -1161,8 +1233,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 32,
@@ -1178,7 +1250,7 @@
     "officialPortalUrl": "https://lean.msme.gov.in",
     "loanMin": null,
     "loanMax": null,
-    "subsidyPct": null,
+    "subsidyPct": 90,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -1199,8 +1271,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 33,
@@ -1215,7 +1287,7 @@
     "actionabilityType": "COMPONENT_RECOMMENDABLE",
     "officialPortalUrl": "https://champions.gov.in",
     "loanMin": null,
-    "loanMax": 500000.0,
+    "loanMax": 500000,
     "subsidyPct": null,
     "interestRate": null,
     "tenureYears": null,
@@ -1238,8 +1310,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 34,
@@ -1254,8 +1326,8 @@
     "actionabilityType": "COMPONENT_RECOMMENDABLE",
     "officialPortalUrl": "https://pharmaceuticals.gov.in",
     "loanMin": null,
-    "loanMax": 10000000.0,
-    "subsidyPct": 20.0,
+    "loanMax": 10000000,
+    "subsidyPct": 20,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -1276,8 +1348,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 35,
@@ -1292,8 +1364,8 @@
     "actionabilityType": "COMPONENT_RECOMMENDABLE",
     "officialPortalUrl": "https://www.scsthub.in",
     "loanMin": null,
-    "loanMax": 100000.0,
-    "subsidyPct": null,
+    "loanMax": 100000,
+    "subsidyPct": 100,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -1314,8 +1386,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 36,
@@ -1330,8 +1402,8 @@
     "actionabilityType": "COMPONENT_RECOMMENDABLE",
     "officialPortalUrl": "https://innovative.msme.gov.in",
     "loanMin": null,
-    "loanMax": 1500000.0,
-    "subsidyPct": null,
+    "loanMax": 1500000,
+    "subsidyPct": 100,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -1353,8 +1425,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 37,
@@ -1369,8 +1441,8 @@
     "actionabilityType": "COMPONENT_RECOMMENDABLE",
     "officialPortalUrl": "https://innovative.msme.gov.in",
     "loanMin": null,
-    "loanMax": 4000000.0,
-    "subsidyPct": null,
+    "loanMax": 4000000,
+    "subsidyPct": 75,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -1392,8 +1464,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 38,
@@ -1408,7 +1480,7 @@
     "actionabilityType": "COMPONENT_RECOMMENDABLE",
     "officialPortalUrl": "https://innovative.msme.gov.in",
     "loanMin": null,
-    "loanMax": 500000.0,
+    "loanMax": 500000,
     "subsidyPct": null,
     "interestRate": null,
     "tenureYears": null,
@@ -1431,8 +1503,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 39,
@@ -1447,7 +1519,7 @@
     "actionabilityType": "DIRECTLY_RECOMMENDABLE",
     "officialPortalUrl": "https://seedfund.startupindia.gov.in",
     "loanMin": null,
-    "loanMax": 5000000.0,
+    "loanMax": 5000000,
     "subsidyPct": null,
     "interestRate": null,
     "tenureYears": null,
@@ -1470,8 +1542,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 40,
@@ -1487,7 +1559,7 @@
     "officialPortalUrl": "https://esdp.msme.gov.in",
     "loanMin": null,
     "loanMax": null,
-    "subsidyPct": null,
+    "subsidyPct": 100,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -1511,8 +1583,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 41,
@@ -1528,7 +1600,7 @@
     "officialPortalUrl": "https://samarth-textiles.gov.in",
     "loanMin": null,
     "loanMax": null,
-    "subsidyPct": null,
+    "subsidyPct": 100,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -1549,8 +1621,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 42,
@@ -1581,7 +1653,7 @@
     "targetSectors": [
       "Manufacturing",
       "Services",
-      "Trading / Retail"
+      "Trading"
     ],
     "ruralEligible": 1,
     "urbanEligible": 1,
@@ -1589,8 +1661,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 43,
@@ -1606,11 +1678,11 @@
     "officialPortalUrl": "https://coirboard.gov.in",
     "loanMin": null,
     "loanMax": null,
-    "subsidyPct": null,
+    "subsidyPct": 75,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
-      "All"
+      "Female"
     ],
     "targetCategories": [
       "General",
@@ -1628,8 +1700,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 44,
@@ -1644,8 +1716,8 @@
     "actionabilityType": "COMPONENT_RECOMMENDABLE",
     "officialPortalUrl": "https://cdp.msme.gov.in",
     "loanMin": null,
-    "loanMax": 300000000.0,
-    "subsidyPct": null,
+    "loanMax": 300000000,
+    "subsidyPct": 70,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -1666,8 +1738,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 45,
@@ -1682,8 +1754,8 @@
     "actionabilityType": "COMPONENT_RECOMMENDABLE",
     "officialPortalUrl": "https://cdp.msme.gov.in",
     "loanMin": null,
-    "loanMax": 150000000.0,
-    "subsidyPct": null,
+    "loanMax": 150000000,
+    "subsidyPct": 60,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -1705,8 +1777,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 46,
@@ -1721,8 +1793,8 @@
     "actionabilityType": "COMPONENT_RECOMMENDABLE",
     "officialPortalUrl": "https://aspire.msme.gov.in",
     "loanMin": null,
-    "loanMax": 10000000.0,
-    "subsidyPct": null,
+    "loanMax": 10000000,
+    "subsidyPct": 100,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -1736,7 +1808,7 @@
     ],
     "targetSectors": [
       "Manufacturing",
-      "Agriculture and Allied Activities"
+      "Agriculture"
     ],
     "ruralEligible": 1,
     "urbanEligible": 1,
@@ -1744,8 +1816,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 47,
@@ -1760,8 +1832,8 @@
     "actionabilityType": "DIRECTLY_RECOMMENDABLE",
     "officialPortalUrl": "https://sfurti.msme.gov.in",
     "loanMin": null,
-    "loanMax": 50000000.0,
-    "subsidyPct": null,
+    "loanMax": 50000000,
+    "subsidyPct": 100,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -1783,8 +1855,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 48,
@@ -1800,7 +1872,7 @@
     "officialPortalUrl": "https://www.kvic.gov.in",
     "loanMin": null,
     "loanMax": null,
-    "subsidyPct": null,
+    "subsidyPct": 100,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -1814,7 +1886,7 @@
     ],
     "targetSectors": [
       "Manufacturing",
-      "Agriculture and Allied Activities",
+      "Agriculture",
       "Artisans and Traditional Crafts"
     ],
     "ruralEligible": 1,
@@ -1823,8 +1895,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 49,
@@ -1839,8 +1911,8 @@
     "actionabilityType": "COMPONENT_RECOMMENDABLE",
     "officialPortalUrl": "https://coirboard.gov.in",
     "loanMin": null,
-    "loanMax": 6250000.0,
-    "subsidyPct": 25.0,
+    "loanMax": 25000000,
+    "subsidyPct": 25,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -1861,8 +1933,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 50,
@@ -1877,10 +1949,10 @@
     "actionabilityType": "COMPONENT_RECOMMENDABLE",
     "officialPortalUrl": "https://handlooms.nic.in",
     "loanMin": null,
-    "loanMax": 200000.0,
-    "subsidyPct": null,
-    "interestRate": 6.0,
-    "tenureYears": 3.0,
+    "loanMax": 200000,
+    "subsidyPct": 7,
+    "interestRate": 6,
+    "tenureYears": 3,
     "targetGender": [
       "All"
     ],
@@ -1900,8 +1972,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 51,
@@ -1916,8 +1988,8 @@
     "actionabilityType": "COMPONENT_RECOMMENDABLE",
     "officialPortalUrl": "https://ic.msme.gov.in",
     "loanMin": null,
-    "loanMax": 450000.0,
-    "subsidyPct": null,
+    "loanMax": 450000,
+    "subsidyPct": 100,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -1939,8 +2011,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 52,
@@ -1955,8 +2027,8 @@
     "actionabilityType": "COMPONENT_RECOMMENDABLE",
     "officialPortalUrl": "https://ic.msme.gov.in",
     "loanMin": null,
-    "loanMax": 130000.0,
-    "subsidyPct": null,
+    "loanMax": 130000,
+    "subsidyPct": 75,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -1978,8 +2050,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 53,
@@ -1995,7 +2067,7 @@
     "officialPortalUrl": "https://commerce.gov.in",
     "loanMin": null,
     "loanMax": null,
-    "subsidyPct": null,
+    "subsidyPct": 50,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -2017,8 +2089,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 54,
@@ -2047,7 +2119,7 @@
       "ST"
     ],
     "targetSectors": [
-      "Agriculture and Allied Activities"
+      "Agriculture"
     ],
     "ruralEligible": 1,
     "urbanEligible": 1,
@@ -2055,8 +2127,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 55,
@@ -2094,8 +2166,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 56,
@@ -2133,8 +2205,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 57,
@@ -2150,7 +2222,7 @@
     "officialPortalUrl": "https://www.scsthub.in",
     "loanMin": null,
     "loanMax": null,
-    "subsidyPct": null,
+    "subsidyPct": 100,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -2172,8 +2244,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 58,
@@ -2188,8 +2260,8 @@
     "actionabilityType": "COMPONENT_RECOMMENDABLE",
     "officialPortalUrl": "https://www.scsthub.in",
     "loanMin": null,
-    "loanMax": 100000.0,
-    "subsidyPct": null,
+    "loanMax": 100000,
+    "subsidyPct": 100,
     "interestRate": null,
     "tenureYears": null,
     "targetGender": [
@@ -2211,8 +2283,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 59,
@@ -2242,7 +2314,7 @@
     ],
     "targetSectors": [
       "Services",
-      "Agriculture and Allied Activities"
+      "Agriculture"
     ],
     "ruralEligible": 1,
     "urbanEligible": 1,
@@ -2250,8 +2322,8 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   },
   {
     "id": 60,
@@ -2266,7 +2338,1095 @@
     "actionabilityType": "DIRECTLY_RECOMMENDABLE",
     "officialPortalUrl": "https://meity.gov.in/esdm/sip-eit",
     "loanMin": null,
-    "loanMax": 1500000.0,
+    "loanMax": 1500000,
+    "subsidyPct": 50,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Services"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 61,
+    "code": "PMKSY_COLD_CHAIN",
+    "name": "PMKSY - Integrated Cold Chain and Value Addition Infrastructure",
+    "ministry": "Ministry of Food Processing Industries",
+    "nodalAgency": "MoFPI",
+    "description": "Financial assistance for creating integrated cold chain and preservation infrastructure from farm gate to consumer.",
+    "benefitSummary": "Grant-in-aid of 35% for general areas and 50% for North East / difficult areas of eligible project cost up to max Rs. 10.00 Crore.",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "INFRASTRUCTURE_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://www.mofpi.gov.in/schemes/pradhan-mantri-kisan-sampada-yojana/cold-chain",
+    "loanMin": 10000000,
+    "loanMax": 500000000,
+    "subsidyPct": 35,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 62,
+    "code": "PMKSY_AGRO_CLUSTERS",
+    "name": "PMKSY - Creation of Infrastructure for Agro Processing Clusters (APC)",
+    "ministry": "Ministry of Food Processing Industries",
+    "nodalAgency": "MoFPI",
+    "description": "Grant for establishing common modern infrastructure to encourage entrepreneurs to set up food processing units.",
+    "benefitSummary": "Grant-in-aid of 35% of eligible project cost in General areas and 50% in North East / Hilly / SC/ST areas, subject to maximum Rs. 10.00 Crore.",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "INFRASTRUCTURE_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://www.mofpi.gov.in/schemes/pradhan-mantri-kisan-sampada-yojana/agro-processing-clusters",
+    "loanMin": 25000000,
+    "loanMax": 500000000,
+    "subsidyPct": 35,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 63,
+    "code": "PMKSY_OPERATION_GREENS",
+    "name": "PMKSY - Operation Greens (Long Term Interventions)",
+    "ministry": "Ministry of Food Processing Industries",
+    "nodalAgency": "MoFPI / NAFED",
+    "description": "Integrated value chain development for Tomato, Onion, Potato (TOP) and 22 notified perishable crops.",
+    "benefitSummary": "Capital subsidy of 50% for general areas and 70% for FPOs/SC-ST in North East/Hilly states up to maximum Rs. 15.00 Crore.",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "VALUE_CHAIN_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://www.mofpi.gov.in/schemes/pradhan-mantri-kisan-sampada-yojana/operation-greens",
+    "loanMin": 10000000,
+    "loanMax": 500000000,
+    "subsidyPct": 50,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 64,
+    "code": "PMKSY_FOOD_TESTING",
+    "name": "PMKSY - Food Safety and Quality Assurance Infrastructure",
+    "ministry": "Ministry of Food Processing Industries",
+    "nodalAgency": "MoFPI",
+    "description": "Financial support for establishing and upgrading Food Testing Laboratories to ensure international safety compliance.",
+    "benefitSummary": "Financial assistance of 50% of cost of laboratory equipment and 25% of technical civil works up to Rs. 10.00 Crore.",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "QUALITY_CERTIFICATION",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://www.mofpi.gov.in/schemes/pradhan-mantri-kisan-sampada-yojana/food-safety",
+    "loanMin": 5000000,
+    "loanMax": 200000000,
+    "subsidyPct": 50,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Services"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 65,
+    "code": "PMKSY_BACKWARD_FORWARD",
+    "name": "PMKSY - Creation of Backward and Forward Linkages (BFL)",
+    "ministry": "Ministry of Food Processing Industries",
+    "nodalAgency": "MoFPI",
+    "description": "Financial support for creating backward and forward linkages to food processing units. IMPORTANT STATUS NOTE: Fresh project proposals are no longer being accepted under this component; ongoing committed liabilities continue where applicable. Fresh food processing opportunities should be directed toward currently applicable PMKSY components such as CEFPPC and Agro Processing Clusters (APC).",
+    "benefitSummary": "Grant-in-aid of 35% (50% for NE/Hilly areas) for ongoing committed linkage projects. (Fresh proposals discontinued; directed to PMKSY-CEFPPC/APC).",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "VALUE_CHAIN_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://www.mofpi.gov.in/schemes/pradhan-mantri-kisan-sampada-yojana/backward-forward-linkages",
+    "loanMin": 5000000,
+    "loanMax": 150000000,
+    "subsidyPct": 35,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Trading",
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 66,
+    "code": "AHIDF_INFRA",
+    "name": "Animal Husbandry Infrastructure Development Fund (AHIDF)",
+    "ministry": "Ministry of Fisheries, Animal Husbandry and Dairying",
+    "nodalAgency": "Department of Animal Husbandry and Dairying (DAHD) / SIDBI",
+    "description": "Incentivises investments by individual entrepreneurs, FPOs, and MSMEs in dairy and meat processing, animal feed plants, and breed multiplication.",
+    "benefitSummary": "3% interest subvention on bank loan up to 90% of project cost with 2 years moratorium and 8 years repayment tenure, plus 25% credit guarantee.",
+    "benefitType": "INTEREST_SUBVENTION",
+    "primaryType": "CREDIT / INTEREST_SUBVENTION",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://ahidf.udyamimitra.in/",
+    "loanMin": 1000000,
+    "loanMax": 300000000,
+    "subsidyPct": 3,
+    "interestRate": 6.5,
+    "tenureYears": 10,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 67,
+    "code": "NLM_POULTRY",
+    "name": "National Livestock Mission - Rural Poultry Entrepreneurship Scheme",
+    "ministry": "Ministry of Fisheries, Animal Husbandry and Dairying",
+    "nodalAgency": "DAHD / State Animal Husbandry Departments",
+    "description": "50% capital subsidy for establishing rural parent broiler/layer poultry breeding farms with hatchery units.",
+    "benefitSummary": "50% capital subsidy up to Rs. 25.00 Lakh for establishing rural parent poultry farm (1,000 parent birds) with hatchery and brooder unit.",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "CAPITAL_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://nlm.udyamimitra.in/",
+    "loanMin": 1000000,
+    "loanMax": 4500000,
+    "subsidyPct": 50,
+    "interestRate": null,
+    "tenureYears": 7,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 68,
+    "code": "NLM_SHEEP_GOAT",
+    "name": "National Livestock Mission - Sheep and Goat Breed Development",
+    "ministry": "Ministry of Fisheries, Animal Husbandry and Dairying",
+    "nodalAgency": "DAHD / State Animal Husbandry Departments",
+    "description": "50% capital subsidy for establishing intensive commercial sheep and goat breeding farms.",
+    "benefitSummary": "50% capital subsidy up to Rs. 50.00 Lakh for establishing sheep/goat breeding farms (up to 500 females + 25 males).",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "CAPITAL_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://nlm.udyamimitra.in/",
+    "loanMin": 2500000,
+    "loanMax": 10000000,
+    "subsidyPct": 50,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 69,
+    "code": "NLM_PIGGERY",
+    "name": "National Livestock Mission - Pig Breed Development Entrepreneurship",
+    "ministry": "Ministry of Fisheries, Animal Husbandry and Dairying",
+    "nodalAgency": "DAHD",
+    "description": "50% capital subsidy for establishing commercial pig breeding units.",
+    "benefitSummary": "50% capital subsidy up to Rs. 30.00 Lakh for setting up pig breeding farms (100 sows + 10 boars).",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "CAPITAL_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://nlm.udyamimitra.in/",
+    "loanMin": 1500000,
+    "loanMax": 6000000,
+    "subsidyPct": 50,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 70,
+    "code": "NLM_FEED_FODDER",
+    "name": "National Livestock Mission - Fodder Production & Feed Pellet Entrepreneurship",
+    "ministry": "Ministry of Fisheries, Animal Husbandry and Dairying",
+    "nodalAgency": "DAHD",
+    "description": "50% capital subsidy for establishing feed pelleting plants, Total Mixed Ration (TMR) plants, or silage making units.",
+    "benefitSummary": "50% capital subsidy up to Rs. 50.00 Lakh for establishing feed/fodder pellet plants or silage processing units.",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "CAPITAL_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://nlm.udyamimitra.in/",
+    "loanMin": 2000000,
+    "loanMax": 10000000,
+    "subsidyPct": 50,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 71,
+    "code": "RGM_BREED_FARMS",
+    "name": "Rashtriya Gokul Mission - Breed Multiplication Farm Scheme",
+    "ministry": "Ministry of Fisheries, Animal Husbandry and Dairying",
+    "nodalAgency": "DAHD / NDDB",
+    "description": "50% capital subsidy for establishing high-yielding indigenous bovine breed multiplication farms.",
+    "benefitSummary": "50% capital subsidy up to Rs. 2.00 Crore for establishing high-yielding indigenous cattle/buffalo breeding farms (min 200 animals).",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "CAPITAL_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://dahd.nic.in/schemes/programmes/rashtriya-gokul-mission",
+    "loanMin": 10000000,
+    "loanMax": 40000000,
+    "subsidyPct": 50,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 72,
+    "code": "PMMSY_RAS",
+    "name": "PM Matsya Sampada Yojana - Recirculatory Aquaculture Systems (RAS)",
+    "ministry": "Ministry of Fisheries, Animal Husbandry and Dairying",
+    "nodalAgency": "Department of Fisheries (NFDB)",
+    "description": "Financial assistance for modern water-recirculating intensive fish aquaculture systems.",
+    "benefitSummary": "40% subsidy for General category and 60% for Women/SC/ST of unit cost up to Rs. 50.00 Lakh for Medium RAS (Rs. 20-30 Lakh subsidy).",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "CAPITAL_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://pmmsy.dof.gov.in/",
+    "loanMin": 500000,
+    "loanMax": 5000000,
+    "subsidyPct": 40,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 73,
+    "code": "PMMSY_BIOFLOC",
+    "name": "PM Matsya Sampada Yojana - Biofloc Aquaculture Units",
+    "ministry": "Ministry of Fisheries, Animal Husbandry and Dairying",
+    "nodalAgency": "Department of Fisheries (NFDB)",
+    "description": "Financial assistance for high-density eco-friendly Biofloc fish/shrimp farming units.",
+    "benefitSummary": "40% subsidy for General and 60% for Women/SC/ST of unit cost (up to Rs. 18.00 Lakh for Medium Biofloc 7-tank unit).",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "CAPITAL_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://pmmsy.dof.gov.in/",
+    "loanMin": 150000,
+    "loanMax": 1800000,
+    "subsidyPct": 40,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 74,
+    "code": "PMMSY_COLD_CHAIN_VEHICLES",
+    "name": "PMMSY - Refrigerated and Insulated Fish Transport Vehicles",
+    "ministry": "Ministry of Fisheries, Animal Husbandry and Dairying",
+    "nodalAgency": "Department of Fisheries (NFDB)",
+    "description": "Financial assistance for purchasing refrigerated and insulated trucks for post-harvest fish transport.",
+    "benefitSummary": "40% financial assistance for General category and 60% for Women/SC/ST for Refrigerated Trucks (Rs. 25 Lakh cap) and Insulated Trucks (Rs. 15 Lakh cap).",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "CAPITAL_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://pmmsy.dof.gov.in/",
+    "loanMin": 500000,
+    "loanMax": 2500000,
+    "subsidyPct": 40,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Services",
+      "Trading",
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 75,
+    "code": "PMMSY_FISH_FEED_MILL",
+    "name": "PMMSY - Establishment of Fish Feed Mills",
+    "ministry": "Ministry of Fisheries, Animal Husbandry and Dairying",
+    "nodalAgency": "Department of Fisheries (NFDB)",
+    "description": "Financial assistance for establishing Mini and Medium Fish Feed Mills to ensure affordable aquafeed availability.",
+    "benefitSummary": "40% subsidy for General and 60% for Women/SC/ST for Mini Fish Feed Mills (Rs. 30 Lakh unit cost) and Medium Mills (Rs. 100 Lakh unit cost).",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "CAPITAL_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://pmmsy.dof.gov.in/",
+    "loanMin": 2000000,
+    "loanMax": 10000000,
+    "subsidyPct": 40,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 76,
+    "code": "PMMSY_OPEN_SEA_CAGE",
+    "name": "PMMSY - Open Sea Cage Culture / Mariculture",
+    "ministry": "Ministry of Fisheries, Animal Husbandry and Dairying",
+    "nodalAgency": "Department of Fisheries (NFDB)",
+    "description": "Financial assistance for open sea cage culture and coastal mariculture projects.",
+    "benefitSummary": "40% subsidy for General and 60% for Women/SC/ST up to Rs. 5.00 Lakh per sea cage unit for marine fish farming.",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "CAPITAL_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://pmmsy.dof.gov.in/",
+    "loanMin": 200000,
+    "loanMax": 500000,
+    "subsidyPct": 40,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 77,
+    "code": "PMMSY_RETAIL_MARKET",
+    "name": "PMMSY - Modern Fish Retail Outlets and Kiosks",
+    "ministry": "Ministry of Fisheries, Animal Husbandry and Dairying",
+    "nodalAgency": "Department of Fisheries (NFDB)",
+    "description": "Financial assistance for establishing hygienic fish retail outlets and mobile fish kiosks.",
+    "benefitSummary": "40% subsidy for General and 60% for Women/SC/ST of project cost (Rs. 10.00 Lakh for Kiosks; Rs. 30.00 Lakh for Retail Outlets).",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "CAPITAL_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://pmmsy.dof.gov.in/",
+    "loanMin": 300000,
+    "loanMax": 3000000,
+    "subsidyPct": 40,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Trading",
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 78,
+    "code": "MIDH_PACK_HOUSE",
+    "name": "MIDH - Integrated Pack House for Horticulture Produce",
+    "ministry": "Ministry of Agriculture and Farmers Welfare",
+    "nodalAgency": "National Horticulture Board (NHB) / MIDH",
+    "description": "Credit-linked back-ended capital subsidy for setting up integrated pack houses with mechanised grading, sorting, and packing lines.",
+    "benefitSummary": "Credit linked back-ended subsidy of 35% of project cost in General areas and 50% in Hilly and Scheduled areas (max Rs. 25.00 Lakh).",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "CAPITAL_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://nhb.gov.in/",
+    "loanMin": 1500000,
+    "loanMax": 5000000,
+    "subsidyPct": 35,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 79,
+    "code": "MIDH_COLD_STORAGE",
+    "name": "MIDH - Cold Storage and Controlled Atmosphere (CA) Storage",
+    "ministry": "Ministry of Agriculture and Farmers Welfare",
+    "nodalAgency": "National Horticulture Board (NHB)",
+    "description": "Credit-linked back-ended subsidy for establishing modern energy-efficient Cold Storage (Type 1 & Type 2) and Controlled Atmosphere facilities.",
+    "benefitSummary": "Credit linked back-ended capital subsidy of 35% for general areas and 50% for NE/Hilly states up to Rs. 1.75 Crore (5000 MT capacity).",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "CAPITAL_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://nhb.gov.in/",
+    "loanMin": 10000000,
+    "loanMax": 50000000,
+    "subsidyPct": 35,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Services",
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 80,
+    "code": "MIDH_RIPENING",
+    "name": "MIDH - Ripening Chamber for Fruits",
+    "ministry": "Ministry of Agriculture and Farmers Welfare",
+    "nodalAgency": "National Horticulture Board (NHB)",
+    "description": "Credit-linked back-ended subsidy for establishing multi-chamber ethylene-based fruit ripening facilities.",
+    "benefitSummary": "Credit linked back-ended subsidy of 35% in General areas and 50% in Hilly/NE areas for multi-chamber ripening units (cap Rs. 50.00 Lakh).",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "CAPITAL_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://nhb.gov.in/",
+    "loanMin": 2000000,
+    "loanMax": 10000000,
+    "subsidyPct": 35,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Services",
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 81,
+    "code": "MOVCDNER_ORGANIC",
+    "name": "Mission Organic Value Chain Development for North Eastern Region (MOVCDNER)",
+    "ministry": "Ministry of Agriculture and Farmers Welfare",
+    "nodalAgency": "MoA&FW / State Agriculture Departments",
+    "description": "Financial assistance for organic value chain development, collection, packaging, and processing in North Eastern States.",
+    "benefitSummary": "Financial support of 75% for FPOs/Lead Promoters up to Rs. 75.00 Lakh for setting up certified organic processing and packaging units.",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "VALUE_CHAIN_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://movcd.dac.gov.in/",
+    "loanMin": 2000000,
+    "loanMax": 10000000,
+    "subsidyPct": 75,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 82,
+    "code": "NBHM_BEEKEEPING",
+    "name": "National Beekeeping and Honey Mission (NBHM)",
+    "ministry": "Ministry of Agriculture and Farmers Welfare",
+    "nodalAgency": "National Bee Board (NBB)",
+    "description": "Financial assistance for commercial scientific beekeeping, custom hiring centres, and honey processing plants.",
+    "benefitSummary": "50% to 75% financial assistance up to Rs. 50.00 Lakh for setting up commercial beekeeping units, honey processing, and testing labs.",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "CAPITAL_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://nbhm.gov.in/",
+    "loanMin": 1000000,
+    "loanMax": 10000000,
+    "subsidyPct": 50,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 83,
+    "code": "FPO_10K_SCHEME",
+    "name": "Formation and Promotion of 10,000 Farmer Producer Organizations (FPOs)",
+    "ministry": "Ministry of Agriculture and Farmers Welfare",
+    "nodalAgency": "SFAC / NABARD / NCDC",
+    "description": "Matching Equity Grant up to Rs. 15 Lakh and Credit Guarantee Cover up to Rs. 2 Crore for Farmer Producer Companies.",
+    "benefitSummary": "Matching equity grant up to Rs. 15.00 Lakh per FPO and credit guarantee cover up to Rs. 2.00 Crore project loan.",
+    "benefitType": "GRANT",
+    "primaryType": "EQUITY_AND_CREDIT_GUARANTEE",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://enam.gov.in/web/fpo",
+    "loanMin": null,
+    "loanMax": 20000000,
+    "subsidyPct": null,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Trading",
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 84,
+    "code": "PM_KUSUM_B",
+    "name": "PM-KUSUM Component B - Standalone Solar Agriculture Pumps",
+    "ministry": "Ministry of New and Renewable Energy",
+    "nodalAgency": "State Renewable Energy Development Agencies / MNRE",
+    "description": "Subsidies for installation of individual off-grid solar agriculture pumps up to 7.5 HP capacity.",
+    "benefitSummary": "Central Financial Assistance (CFA) of 30% (50% in NE/Hilly states) + State subsidy 30%, farmer pays only 10-40% for solar pump.",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "CAPITAL_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://pmkusum.mnre.gov.in/",
+    "loanMin": 150000,
+    "loanMax": 500000,
+    "subsidyPct": 30,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 0,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 85,
+    "code": "PM_KUSUM_C",
+    "name": "PM-KUSUM Component C - Grid-Connected Pump Solarisation & Feeder Solarisation",
+    "ministry": "Ministry of New and Renewable Energy",
+    "nodalAgency": "State Power Distribution Companies (DISCOMs) / MNRE",
+    "description": "Financial assistance for solarising existing grid-connected agricultural pumps and dedicated agricultural feeders.",
+    "benefitSummary": "CFA of 30% (50% in NE/Hilly states) for individual pumps or Rs. 1.05 Cr/MW for feeder level solarisation, enabling surplus power sale.",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "CAPITAL_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://pmkusum.mnre.gov.in/",
+    "loanMin": 200000,
+    "loanMax": 35000000,
+    "subsidyPct": 30,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Services",
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 86,
+    "code": "NGHM_SIGHT",
+    "name": "National Green Hydrogen Mission - SIGHT Programme",
+    "ministry": "Ministry of New and Renewable Energy",
+    "nodalAgency": "Solar Energy Corporation of India (SECI) / MNRE",
+    "description": "Strategic Interventions for Green Hydrogen Transition (SIGHT) is a national institutional bidding framework under the National Green Hydrogen Mission. Financial incentives for domestic manufacturing of electrolysers and green hydrogen production are awarded via competitive tenders administered by SECI, rather than direct walk-in MSME grants.",
+    "benefitSummary": "National competitive bidding incentives for electrolyser manufacturing (Rs. 4,440/kW down to Rs. 1,480/kW) and green hydrogen production (Rs. 50/kg down to Rs. 30/kg) awarded through SECI tenders.",
+    "benefitType": "SUBSIDY",
+    "primaryType": "PRODUCTION_LINKED_INCENTIVE",
+    "actionabilityType": "FRAMEWORK",
+    "officialPortalUrl": "https://mnre.gov.in/green-hydrogen/",
+    "loanMin": 50000000,
+    "loanMax": 10000000000,
+    "subsidyPct": null,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 87,
+    "code": "PM_SURYA_GHAR_MSME",
+    "name": "PM Surya Ghar / Rooftop Solar Scheme for Commercial & Industrial MSMEs",
+    "ministry": "Ministry of New and Renewable Energy",
+    "nodalAgency": "REC Limited / SIDBI / State DISCOMs",
+    "description": "Concessional debt financing and tax incentives for commercial and industrial MSMEs installing rooftop solar PV systems. Note: Direct Central Financial Assistance (CFA) capital subsidies under PM Surya Ghar apply exclusively to residential consumers; commercial and industrial MSMEs access concessional debt financing via SIDBI (4E Scheme / Rooftop Solar Financing) and accelerated depreciation benefits under the Income Tax Act.",
+    "benefitSummary": "Collateral-free concessional debt financing up to Rs. 2.00 Crore from SIDBI (4E Scheme) and commercial banks (7.0% to 8.5% p.a.) with accelerated depreciation tax benefits for MSME rooftop solar installations.",
+    "benefitType": "TERM_LOAN",
+    "primaryType": "CREDIT / CONCESSIONAL_FINANCE",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://pmsuryaghar.gov.in/",
+    "loanMin": 500000,
+    "loanMax": 20000000,
+    "subsidyPct": null,
+    "interestRate": 7,
+    "tenureYears": 7,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Services",
+      "Trading"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 88,
+    "code": "FFS_SIDBI",
+    "name": "Fund of Funds for Startups (FFS - SIDBI)",
+    "ministry": "Ministry of Commerce and Industry",
+    "nodalAgency": "DPIIT / SIDBI",
+    "description": "Rs. 10,000 Crore corpus providing venture capital via SEBI-registered Alternative Investment Funds (AIFs) to high-growth Indian startups.",
+    "benefitSummary": "Equity capital investment up to Rs. 50.00 Crore per eligible DPIIT-recognised startup via SIDBI partner AIFs.",
+    "benefitType": "EQUITY",
+    "primaryType": "EQUITY_INVESTMENT",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://www.startupindia.gov.in/content/sih/en/fund-of-funds-for-startups.html",
+    "loanMin": null,
+    "loanMax": 500000000,
     "subsidyPct": null,
     "interestRate": null,
     "tenureYears": null,
@@ -2289,7 +3449,1062 @@
     "maxAge": null,
     "newBusinessOnly": false,
     "existingBusinessAllowed": true,
-    "isArtisanSpecial": false,
-    "isStreetVendorSpecial": false
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 89,
+    "code": "EPCG_SCHEME",
+    "name": "Export Promotion Capital Goods (EPCG) Scheme",
+    "ministry": "Ministry of Commerce and Industry",
+    "nodalAgency": "Directorate General of Foreign Trade (DGFT)",
+    "description": "Zero customs duty import of capital goods for pre-production, production, and post-production for export-oriented manufacturers and service providers.",
+    "benefitSummary": "100% customs duty exemption on import of capital goods/machinery subject to export obligation (6x duty saved in 6 years, 75% for MSMEs).",
+    "benefitType": "TAX_EXEMPTION",
+    "primaryType": "TAX_DUTY_EXEMPTION",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://www.dgft.gov.in/CP/?opt=epcg",
+    "loanMin": null,
+    "loanMax": null,
+    "subsidyPct": 100,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Services"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 90,
+    "code": "ADVANCE_AUTH",
+    "name": "Advance Authorisation Scheme",
+    "ministry": "Ministry of Commerce and Industry",
+    "nodalAgency": "Directorate General of Foreign Trade (DGFT)",
+    "description": "Duty-free import of raw materials, components, and packaging materials required for manufacturing export goods.",
+    "benefitSummary": "100% exemption from Basic Customs Duty, IGST, and Compensation Cess on imported inputs with minimum 15% value addition.",
+    "benefitType": "TAX_EXEMPTION",
+    "primaryType": "DUTY_EXEMPTION",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://www.dgft.gov.in/CP/?opt=advance-authorisation",
+    "loanMin": null,
+    "loanMax": null,
+    "subsidyPct": 100,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 91,
+    "code": "RODTEP_SCHEME",
+    "name": "Remission of Duties and Taxes on Exported Products (RoDTEP) Scheme",
+    "ministry": "Ministry of Commerce and Industry",
+    "nodalAgency": "Department of Commerce / CBIC / DGFT",
+    "description": "Rebate of un-refunded embedded central, state, and local taxes/duties incurred in the manufacture and distribution of exported goods.",
+    "benefitSummary": "Electronic duty credit scrips ranging from 0.5% to 4.3% of FOB export value, freely transferable for paying basic customs duties.",
+    "benefitType": "REIMBURSEMENT",
+    "primaryType": "EXPORT_DUTY_REMISSION",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://www.dgft.gov.in/CP/?opt=rodtep",
+    "loanMin": null,
+    "loanMax": null,
+    "subsidyPct": 4.3,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Agriculture"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 92,
+    "code": "STARTUP_TAX_80IAC",
+    "name": "Startup India 100% Tax Exemption (Section 80-IAC)",
+    "ministry": "Ministry of Commerce and Industry",
+    "nodalAgency": "DPIIT / CBDT (Inter-Ministerial Board)",
+    "description": "100% income tax deduction on profits derived from eligible business for 3 consecutive assessment years out of 10 years.",
+    "benefitSummary": "100% tax holiday on corporate profits for 3 consecutive years for IMB-certified DPIIT startups.",
+    "benefitType": "TAX_EXEMPTION",
+    "primaryType": "TAX_EXEMPTION",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://www.startupindia.gov.in/content/sih/en/80iac-tax-exemption.html",
+    "loanMin": null,
+    "loanMax": null,
+    "subsidyPct": 100,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Services"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 93,
+    "code": "MEITY_TIDE_2",
+    "name": "MeitY TIDE 2.0 (Technology Incubation and Development of Entrepreneurs)",
+    "ministry": "Ministry of Electronics and Information Technology",
+    "nodalAgency": "MeitY Startup Hub (MSH)",
+    "description": "Financial and mentoring support to tech startups utilizing emerging technologies (AI, IoT, Blockchain, Robotics, Cybersecurity).",
+    "benefitSummary": "EiR fellowship grant up to Rs. 4.00 Lakh and Grant-in-Aid for Proof-of-Concept validation up to Rs. 7.00 Lakh per startup.",
+    "benefitType": "GRANT",
+    "primaryType": "GRANT_IN_AID",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://meitystartuphub.in/",
+    "loanMin": 100000,
+    "loanMax": 1000000,
+    "subsidyPct": null,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Services"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 94,
+    "code": "MEITY_SAMRIDH",
+    "name": "MeitY SAMRIDH Scheme (Startup Accelerator of MeitY for Product Innovation, Development and Growth)",
+    "ministry": "Ministry of Electronics and Information Technology",
+    "nodalAgency": "MeitY Startup Hub (MSH)",
+    "description": "Matching acceleration funding and scaling support for existing software and hardware product startups.",
+    "benefitSummary": "Matching acceleration grant / funding up to Rs. 40.00 Lakh per startup via empaneled accelerators, matched 1:1 with venture capital.",
+    "benefitType": "GRANT",
+    "primaryType": "EQUITY_MATCHING_GRANT",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://meitystartuphub.in/schemes/samridh",
+    "loanMin": 2000000,
+    "loanMax": 10000000,
+    "subsidyPct": null,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Services"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 95,
+    "code": "MEITY_SPECS",
+    "name": "Scheme for Promotion of Manufacturing of Electronic Components and Semiconductors (SPECS)",
+    "ministry": "Ministry of Electronics and Information Technology",
+    "nodalAgency": "IFCI / MeitY",
+    "description": "Financial incentive of 25% on capital expenditure for manufacturing electronic components, semiconductors, ATMP, and specialized assemblies. IMPORTANT STATUS NOTE: The window for submitting fresh applications closed on 31 March 2024; existing approved projects continue through implementation, milestone verification, and eligible incentive disbursement.",
+    "benefitSummary": "25% financial reimbursement of eligible capex on plant, machinery, and utilities for approved projects. (Fresh application window closed on 31 March 2024; active for ongoing execution and disbursement).",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "CAPITAL_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://www.meity.gov.in/esdm/specs",
+    "loanMin": 50000000,
+    "loanMax": 10000000000,
+    "subsidyPct": 25,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 96,
+    "code": "MEITY_DLI",
+    "name": "Design Linked Incentive (DLI) Scheme for Semiconductor Design",
+    "ministry": "Ministry of Electronics and Information Technology",
+    "nodalAgency": "CDAC / India Semiconductor Mission (ISM)",
+    "description": "Financial incentives and design infrastructure support for domestic semiconductor and fabless chip design companies.",
+    "benefitSummary": "Reimbursement up to 50% of eligible design expenditure (cap Rs. 15.00 Crore) and 6% to 4% deployment-linked incentive on net sales (cap Rs. 30.00 Crore).",
+    "benefitType": "REIMBURSEMENT",
+    "primaryType": "DESIGN_INCENTIVE",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://www.c-dac.in/index.aspx?id=dli_scheme",
+    "loanMin": 10000000,
+    "loanMax": 300000000,
+    "subsidyPct": 50,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Services"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 97,
+    "code": "PM_MITRA_PARKS",
+    "name": "PM Mega Integrated Textile Region and Apparel (PM MITRA) Parks Scheme",
+    "ministry": "Ministry of Textiles",
+    "nodalAgency": "Ministry of Textiles",
+    "description": "World-class integrated industrial infrastructure with plug-and-play facilities and Competitive Incentive Support (CIS) for textile units.",
+    "benefitSummary": "Development Capital Support up to Rs. 500 Crore per park and Competitive Incentive Support up to Rs. 300 Crore (up to Rs. 30 Cr per unit).",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "INFRASTRUCTURE_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://texmin.nic.in/pm-mitra-parks-scheme",
+    "loanMin": 50000000,
+    "loanMax": 5000000000,
+    "subsidyPct": null,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 98,
+    "code": "SILK_SAMAGRA_2",
+    "name": "Silk Samagra 2 - Integrated Scheme for Development of Silk Industry",
+    "ministry": "Ministry of Textiles",
+    "nodalAgency": "Central Silk Board (CSB)",
+    "description": "50% to 75% financial assistance for mulberry and vanya sericulture, automated reeling units (ARM), and silk processing machinery.",
+    "benefitSummary": "50% to 75% subsidy on rearing appliances, automatic reeling machines, twisting units, and seed production (up to Rs. 35.00 Lakh).",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "CAPITAL_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://csb.gov.in/",
+    "loanMin": 200000,
+    "loanMax": 15000000,
+    "subsidyPct": 50,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Agriculture",
+      "Artisans and Traditional Crafts"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 99,
+    "code": "NHDP_HANDLOOM_CLUSTERS",
+    "name": "National Handloom Development Programme - Block Level Clusters (BLC)",
+    "ministry": "Ministry of Textiles",
+    "nodalAgency": "Development Commissioner for Handlooms",
+    "description": "Financial grant for setting up Common Facility Centres, technological upgradation of looms/jacquards (up to 90% subsidy), and design interventions.",
+    "benefitSummary": "Grant assistance up to Rs. 2.00 Crore per cluster for common facility centres, skill training, and 90% subsidy for modern looms/jacquards.",
+    "benefitType": "GRANT",
+    "primaryType": "CLUSTER_DEVELOPMENT",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://handlooms.nic.in/",
+    "loanMin": 500000,
+    "loanMax": 20000000,
+    "subsidyPct": 90,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Artisans and Traditional Crafts"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 1,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 100,
+    "code": "AHVY_HANDICRAFTS",
+    "name": "Ambedkar Hastshilp Vikas Yojana (AHVY) for Handicrafts Artisans",
+    "ministry": "Ministry of Textiles",
+    "nodalAgency": "Development Commissioner (Handicrafts)",
+    "description": "Comprehensive cluster development for handicraft artisans covering baseline surveys, modern toolkit distribution (100% subsidy), and CFC creation.",
+    "benefitSummary": "Cluster assistance up to Rs. 1.50 Crore covering skill upgradation, design clinics, 100% toolkit subsidy, and market exhibitions.",
+    "benefitType": "GRANT",
+    "primaryType": "ARTISAN_CLUSTER_SUPPORT",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://www.handicrafts.nic.in/",
+    "loanMin": 200000,
+    "loanMax": 15000000,
+    "subsidyPct": 100,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Artisans and Traditional Crafts"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 1,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 101,
+    "code": "TEXTILE_PLI",
+    "name": "Production Linked Incentive (PLI) Scheme for Textiles",
+    "ministry": "Ministry of Textiles",
+    "nodalAgency": "Ministry of Textiles / IFCI",
+    "description": "Production Linked Incentive of 3% to 15% on incremental sales turnover for Man-Made Fibre (MMF) fabrics, garments, and Technical Textiles.",
+    "benefitSummary": "Incentive of 3% to 15% on incremental turnover for 5 consecutive years with minimum investment of Rs. 100 Cr (Part 2) or Rs. 300 Cr (Part 1).",
+    "benefitType": "SUBSIDY",
+    "primaryType": "PRODUCTION_LINKED_INCENTIVE",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://pli.texmin.gov.in/",
+    "loanMin": 1000000000,
+    "loanMax": 10000000000,
+    "subsidyPct": 15,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 102,
+    "code": "NIDHI_PRAYAS",
+    "name": "DST NIDHI-PRAYAS (Promoting and Accelerating Young and ASpiring innovators)",
+    "ministry": "Ministry of Science and Technology",
+    "nodalAgency": "Department of Science and Technology (DST) / SINE IIT Bombay",
+    "description": "Proof-of-concept grant support to convert an innovative hardware idea into a working physical prototype.",
+    "benefitSummary": "Prototype grant-in-aid support up to Rs. 10.00 Lakh per innovator/startup along with fabrication lab access in PRAYAS Centres.",
+    "benefitType": "GRANT",
+    "primaryType": "GRANT_IN_AID",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://dst.gov.in/national-initiative-developing-and-harnessing-innovations-nidhi",
+    "loanMin": 200000,
+    "loanMax": 1000000,
+    "subsidyPct": null,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Services"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 103,
+    "code": "NIDHI_EIR",
+    "name": "DST NIDHI-EIR (Entrepreneurs-in-Residence) Fellowship",
+    "ministry": "Ministry of Science and Technology",
+    "nodalAgency": "DST / Venture Center Pune",
+    "description": "Monthly fellowship grant to support aspiring technology entrepreneurs while developing their startup venture full-time.",
+    "benefitSummary": "Monthly grant up to Rs. 30,000 per month for up to 18 months (total up to Rs. 5.40 Lakh) with dedicated mentorship and incubation support.",
+    "benefitType": "GRANT",
+    "primaryType": "FELLOWSHIP_GRANT",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://www.nidhi-eir.in/",
+    "loanMin": 100000,
+    "loanMax": 540000,
+    "subsidyPct": null,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Services"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 104,
+    "code": "BIRAC_BIG",
+    "name": "BIRAC Biotechnology Ignition Grant (BIG) Scheme",
+    "ministry": "Ministry of Science and Technology",
+    "nodalAgency": "Biotechnology Industry Research Assistance Council (BIRAC) / DBT",
+    "description": "Equity-free grant-in-aid funding for biotech, medtech, diagnostics, and agri-biotech startups to establish proof-of-concept.",
+    "benefitSummary": "Equity-free grant-in-aid up to Rs. 50.00 Lakh for up to 18 months for biotech and healthcare startups.",
+    "benefitType": "GRANT",
+    "primaryType": "GRANT_IN_AID",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://birac.nic.in/desc_new.php?id=37",
+    "loanMin": 1000000,
+    "loanMax": 5000000,
+    "subsidyPct": null,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Services"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 105,
+    "code": "BIRAC_SBIRI",
+    "name": "BIRAC Small Business Innovation Research Initiative (SBIRI)",
+    "ministry": "Ministry of Science and Technology",
+    "nodalAgency": "Biotechnology Industry Research Assistance Council (BIRAC) / DBT",
+    "description": "Financial support for early-stage innovation and late-stage pre-commercialisation research by Indian biotech SMEs and startups.",
+    "benefitSummary": "Grant-in-aid funding up to Rs. 5.00 Crore (up to 50% of project cost) for high-risk biotechnology industrial R&D.",
+    "benefitType": "GRANT",
+    "primaryType": "PUBLIC_PRIVATE_RND_GRANT",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://birac.nic.in/desc_new.php?id=38",
+    "loanMin": 5000000,
+    "loanMax": 100000000,
+    "subsidyPct": 50,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 106,
+    "code": "NSTFDC_TERM_LOAN",
+    "name": "NSTFDC Term Loan Scheme for Scheduled Tribe Entrepreneurs",
+    "ministry": "Ministry of Tribal Affairs",
+    "nodalAgency": "National Scheduled Tribes Finance and Development Corporation (NSTFDC)",
+    "description": "Concessional credit up to 90% of project cost for Scheduled Tribe entrepreneurs for setting up viable income-generating enterprises.",
+    "benefitSummary": "Term loan assistance up to Rs. 50.00 Lakh per unit at subsidized interest rate of 6% to 8% p.a. for Scheduled Tribe entrepreneurs.",
+    "benefitType": "TERM_LOAN",
+    "primaryType": "CONCESSIONAL_CREDIT",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://nstfdc.tribal.gov.in/term-loan-scheme",
+    "loanMin": 100000,
+    "loanMax": 5000000,
+    "subsidyPct": 6,
+    "interestRate": 6,
+    "tenureYears": 10,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Services",
+      "Trading",
+      "Agriculture",
+      "Artisans and Traditional Crafts"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 107,
+    "code": "NMDFC_TERM_LOAN",
+    "name": "NMDFC Term Loan Scheme for Minority Entrepreneurs",
+    "ministry": "Ministry of Minority Affairs",
+    "nodalAgency": "National Minorities Development and Finance Corporation (NMDFC)",
+    "description": "Concessional credit for notified minorities (Muslims, Christians, Sikhs, Buddhists, Jains, Parsis) to set up commercial and manufacturing enterprises.",
+    "benefitSummary": "Concessional term loan up to Rs. 20.00 Lakh at 6% to 8% interest rate for notified minority entrepreneurs.",
+    "benefitType": "TERM_LOAN",
+    "primaryType": "CONCESSIONAL_CREDIT",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://www.nmdfc.org/term-loan",
+    "loanMin": 50000,
+    "loanMax": 2000000,
+    "subsidyPct": 6,
+    "interestRate": 6,
+    "tenureYears": 5,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Services",
+      "Trading",
+      "Agriculture",
+      "Artisans and Traditional Crafts"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 108,
+    "code": "NMDFC_VIRASAT",
+    "name": "NMDFC Virasat Scheme for Minority Artisans and Craftsmen",
+    "ministry": "Ministry of Minority Affairs",
+    "nodalAgency": "National Minorities Development and Finance Corporation (NMDFC)",
+    "description": "Concessional credit for craft equipment, raw materials, and working capital for traditional minority artisans.",
+    "benefitSummary": "Concessional credit up to Rs. 10.00 Lakh for craft equipment and working capital at highly subsidized interest rate of 5% p.a. (4% for female artisans).",
+    "benefitType": "COMPOSITE_LOAN",
+    "primaryType": "CONCESSIONAL_CREDIT",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://www.nmdfc.org/virasat-scheme",
+    "loanMin": 50000,
+    "loanMax": 1000000,
+    "subsidyPct": 5,
+    "interestRate": 4,
+    "tenureYears": 5,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Artisans and Traditional Crafts"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 1,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 109,
+    "code": "VCF_SC",
+    "name": "Venture Capital Fund for Scheduled Castes (VCF-SC)",
+    "ministry": "Ministry of Social Justice and Empowerment",
+    "nodalAgency": "IFCI Venture Capital Funds Ltd / MoSJE",
+    "description": "Equity and quasi-equity financial support to foster entrepreneurship and innovation among Scheduled Castes.",
+    "benefitSummary": "Equity and quasi-equity funding from Rs. 20.00 Lakh up to Rs. 15.00 Crore per enterprise with 60%+ SC shareholding.",
+    "benefitType": "EQUITY",
+    "primaryType": "EQUITY_VENTURE_CAPITAL",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://vcfsc.in/",
+    "loanMin": null,
+    "loanMax": 150000000,
+    "subsidyPct": null,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Services"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 110,
+    "code": "VCF_BC",
+    "name": "Venture Capital Fund for Backward Classes (VCF-BC)",
+    "ministry": "Ministry of Social Justice and Empowerment",
+    "nodalAgency": "IFCI Venture Capital Funds Ltd / MoSJE",
+    "description": "Concessional equity and debt financing for scalable commercial enterprises owned by Backward Classes.",
+    "benefitSummary": "Concessional equity and debt funding from Rs. 20.00 Lakh up to Rs. 5.00 Crore for companies with 60%+ OBC shareholding.",
+    "benefitType": "EQUITY",
+    "primaryType": "EQUITY_VENTURE_CAPITAL",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://vcfbc.in/",
+    "loanMin": null,
+    "loanMax": 50000000,
+    "subsidyPct": null,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Services"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 111,
+    "code": "CEGSSC_SCHEME",
+    "name": "Credit Enhancement Guarantee Scheme for Scheduled Castes (CEGSSC)",
+    "ministry": "Ministry of Social Justice and Empowerment",
+    "nodalAgency": "IFCI Limited / MoSJE",
+    "description": "Credit enhancement guarantee cover for term loans and working capital sanctioned to SC-owned enterprises.",
+    "benefitSummary": "100% guarantee cover on collateral-free loans from Rs. 15.00 Lakh up to Rs. 5.00 Crore sanctioned to SC entrepreneurs.",
+    "benefitType": "CREDIT_GUARANTEE",
+    "primaryType": "CREDIT_GUARANTEE",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://cegssc.in/",
+    "loanMin": null,
+    "loanMax": 50000000,
+    "subsidyPct": 100,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Services",
+      "Trading"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 112,
+    "code": "RAMP_GIFT",
+    "name": "RAMP - Green Investment and Financing for Transformation (GIFT) Scheme",
+    "ministry": "Ministry of Micro, Small and Medium Enterprises",
+    "nodalAgency": "SIDBI / Ministry of MSME",
+    "description": "Concessional green credit and interest subvention for MSMEs investing in clean energy, energy efficiency, and rooftop solar.",
+    "benefitSummary": "Concessional green loans with interest subvention up to 2.50% and technical consulting support for energy efficiency upgrades.",
+    "benefitType": "INTEREST_SUBVENTION",
+    "primaryType": "GREEN_CREDIT_INTEREST_SUBVENTION",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://ramp.msme.gov.in/",
+    "loanMin": 1000000,
+    "loanMax": 50000000,
+    "subsidyPct": 2.5,
+    "interestRate": 6.5,
+    "tenureYears": 7,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Services"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 113,
+    "code": "RAMP_MSE_SPICE",
+    "name": "RAMP - MSE Scheme for Promotion of Investment, Clean Energy and Circular Economy (MSE-SPICE)",
+    "ministry": "Ministry of Micro, Small and Medium Enterprises",
+    "nodalAgency": "Ministry of MSME",
+    "description": "25% capital subsidy for Micro and Small Enterprises investing in circular economy, waste recycling, and pollution abatement.",
+    "benefitSummary": "25% capital subsidy up to Rs. 50.00 Lakh for MSEs investing in circular economy, waste recycling, and effluent treatment systems.",
+    "benefitType": "CAPITAL_SUBSIDY",
+    "primaryType": "CAPITAL_SUBSIDY",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://ramp.msme.gov.in/",
+    "loanMin": 1000000,
+    "loanMax": 20000000,
+    "subsidyPct": 25,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 114,
+    "code": "MSME_IPFC",
+    "name": "MSME Intellectual Property Facilitation Centre (IPFC) Sub-Component",
+    "ministry": "Ministry of Micro, Small and Medium Enterprises",
+    "nodalAgency": "Development Commissioner (MSME)",
+    "description": "Sub-component under MSME Innovative Scheme (IPR Component) providing financial support for establishing Intellectual Property Facilitation Centres (IPFCs) and IP awareness/reimbursement for MSMEs.",
+    "benefitSummary": "Financial support up to Rs. 1.00 Crore for establishing IPFCs and reimbursement support for patents, trademarks, and GIs under MSME Innovative Scheme.",
+    "benefitType": "REIMBURSEMENT",
+    "primaryType": "REIMBURSEMENT",
+    "actionabilityType": "COMPONENT_RECOMMENDABLE",
+    "officialPortalUrl": "https://champions.gov.in/",
+    "loanMin": 10000,
+    "loanMax": 1000000,
+    "subsidyPct": null,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Services"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
+  },
+  {
+    "id": 115,
+    "code": "COIR_RAW_MATERIAL_BANK",
+    "name": "Coir Board - Raw Material Bank (RMB) Scheme",
+    "ministry": "Ministry of Micro, Small and Medium Enterprises",
+    "nodalAgency": "Coir Board",
+    "description": "Financial assistance for setting up Raw Material Banks to maintain buffer stocks of coir yarn, fibre, and pith for small coir spinners.",
+    "benefitSummary": "Financial assistance of 50% of the cost of setting up Raw Material Banks up to Rs. 50.00 Lakh to ensure uninterrupted raw material supply.",
+    "benefitType": "GRANT",
+    "primaryType": "WORKING_CAPITAL_SUPPORT",
+    "actionabilityType": "DIRECTLY_RECOMMENDABLE",
+    "officialPortalUrl": "https://coirboard.gov.in/",
+    "loanMin": 2000000,
+    "loanMax": 10000000,
+    "subsidyPct": 50,
+    "interestRate": null,
+    "tenureYears": null,
+    "targetGender": [
+      "All"
+    ],
+    "targetCategories": [
+      "General",
+      "OBC",
+      "SC",
+      "ST"
+    ],
+    "targetSectors": [
+      "Manufacturing",
+      "Artisans and Traditional Crafts"
+    ],
+    "ruralEligible": 1,
+    "urbanEligible": 1,
+    "minAge": 18,
+    "maxAge": null,
+    "newBusinessOnly": false,
+    "existingBusinessAllowed": true,
+    "isArtisanSpecial": 0,
+    "isStreetVendorSpecial": 0
   }
 ]

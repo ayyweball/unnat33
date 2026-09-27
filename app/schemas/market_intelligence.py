@@ -14,6 +14,8 @@ from app.schemas.geography import DistrictCoordinates
 from app.schemas.district_msme import DistrictMarketContext
 from app.schemas.weather import DistrictWeatherContext
 from app.schemas.market_similarity import ComparableMarketContext
+from app.schemas.research_context import ConsumerMarketEvidence
+
 
 
 class BusinessProfileContext(BaseModel):
@@ -199,7 +201,11 @@ class MarketIntelligenceResponse(BaseModel):
     comparable_markets: Optional[ComparableMarketContext] = Field(
         None, description="Empirical market similarity across 785 districts from scikit-learn NearestNeighbors"
     )
+    consumer_market_evidence: Optional[ConsumerMarketEvidence] = Field(
+        None, description="Relevant empirical consumer survey evidence from PwC Voice of the Consumer (food/agri/retail/fmcg)"
+    )
     research_observations: List[str] = Field(
+
         default_factory=list, description="Empirical observations regarding market density and local conditions"
     )
     operational_cautions: List[str] = Field(

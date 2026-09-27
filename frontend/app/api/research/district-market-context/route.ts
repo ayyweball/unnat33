@@ -9,12 +9,16 @@ export async function GET(req: Request) {
   const district = searchParams.get('district_name') || searchParams.get('district') || 'Lucknow';
   const state = searchParams.get('state_name') || searchParams.get('state') || 'Uttar Pradesh';
   const lgDtCode = searchParams.get('lg_dt_code') || undefined;
+  const businessType = searchParams.get('business_type') || undefined;
+  const sector = searchParams.get('sector') || undefined;
 
   try {
     const context = await backendApiClient.getDistrictResearchContext({
       district_name: district,
       state_name: state,
       lg_dt_code: lgDtCode,
+      business_type: businessType,
+      sector: sector,
     });
 
     return NextResponse.json(context);

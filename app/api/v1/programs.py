@@ -32,7 +32,7 @@ def get_programs(
     ministry: Optional[str] = Query(None, description="Filter by owning ministry"),
     sector: Optional[str] = Query(None, description="Filter by sector code or name (e.g. 'MFG', 'Agriculture')"),
     skip: int = Query(0, ge=0, description="Offset for pagination"),
-    limit: int = Query(100, ge=1, le=100, description="Maximum records to return (up to 100)"),
+    limit: int = Query(200, ge=1, le=500, description="Maximum records to return (up to 500)"),
     db: Session = Depends(get_db),
 ) -> List[ProgramResponse]:
     """Retrieve government programmes applying optional multi-attribute filters and pagination."""

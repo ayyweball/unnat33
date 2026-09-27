@@ -148,10 +148,10 @@ class ProgramRepository:
 
             # Pagination & Deterministic Sorting
             skip = max(0, filters.skip)
-            limit = max(1, min(100, filters.limit))
+            limit = max(1, filters.limit)
             query = query.order_by(GovernmentProgram.id).offset(skip).limit(limit)
         else:
-            query = query.order_by(GovernmentProgram.id).limit(100)
+            query = query.order_by(GovernmentProgram.id)
 
         return query.all()
 

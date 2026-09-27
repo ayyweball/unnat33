@@ -12,7 +12,7 @@ export async function GET(req: Request) {
     const ministry = searchParams.get('ministry') || undefined;
     const sector = searchParams.get('sector') || undefined;
     const status = searchParams.get('status') || 'active';
-    const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : 60;
+    const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : 200;
     const skip = searchParams.get('skip') ? parseInt(searchParams.get('skip')!) : 0;
 
     try {

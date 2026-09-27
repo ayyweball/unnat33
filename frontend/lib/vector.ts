@@ -166,7 +166,7 @@ export async function findMatchingSchemes(
     return {
       schemes,
       eligibilitySummary: {
-        totalEvaluated: eligResponse?.total_evaluated || recResponse?.total_programs_evaluated || 60,
+        totalEvaluated: eligResponse?.total_evaluated || recResponse?.total_programs_evaluated || 115,
         totalEligible: eligResponse?.total_eligible || recResponse?.eligible_candidates_count || 0,
         totalPartiallyVerified: eligResponse?.total_partially_verified || recResponse?.partially_verified_candidates_count || 0,
         totalIneligible: eligResponse?.total_ineligible || 0,

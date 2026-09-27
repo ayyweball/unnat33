@@ -46,14 +46,14 @@ class RecommendationRequest(BaseModel):
     profile: Optional[UserProfile] = Field(None, description="Optional inline UserProfile attributes")
     target_financing_need: Optional[float] = Field(None, ge=0, description="Desired financing or project funding amount in INR")
     preferred_assistance_type: Optional[str] = Field(None, description="Optional filter: 'CREDIT / LOAN', 'SUBSIDY', 'CREDIT GUARANTEE', etc.")
-    top_k: int = Field(10, ge=1, le=60, description="Maximum number of recommendations to return (1 to 60)")
+    top_k: int = Field(10, ge=1, le=115, description="Maximum number of recommendations to return (1 to 115)")
 
 
 class RecommendationResponse(BaseModel):
     """Authoritative recommendation assessment response."""
     model_config = ConfigDict(from_attributes=True)
 
-    total_programs_evaluated: int = Field(..., description="Total statutory programmes evaluated (e.g. 60)")
+    total_programs_evaluated: int = Field(..., description="Total statutory programmes evaluated (e.g. 115)")
     eligible_candidates_count: int = Field(..., description="Candidates with status 'Eligible'")
     partially_verified_candidates_count: int = Field(..., description="Candidates with status 'Partially Verified'")
     total_recommended: int = Field(..., description="Number of ranked programmes returned in this response")

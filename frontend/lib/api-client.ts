@@ -408,6 +408,14 @@ export interface DistrictWeatherContext {
   is_cached?: boolean;
 }
 
+export interface ConsumerMarketEvidence {
+  source: string;
+  geography: string;
+  survey_year: number;
+  sample_size: number;
+  evidence: string[];
+}
+
 export interface DistrictResearchContextResponse {
   district_id?: number | null;
   district_name: string;
@@ -416,6 +424,7 @@ export interface DistrictResearchContextResponse {
   geographic_coordinates?: DistrictCoordinates | null;
   msme_market_context?: DistrictMarketContext | null;
   weather_context?: DistrictWeatherContext | null;
+  consumer_market_evidence?: ConsumerMarketEvidence | null;
   research_observations: string[];
   operational_cautions: string[];
   disclaimer: string;
@@ -523,6 +532,7 @@ export interface MarketIntelligenceResponse {
   llm_analysis: QualitativeLLMAnalysis;
   weather_activity_impact?: WeatherActivityImpactAnalysis | null;
   comparable_markets?: ComparableMarketContext | null;
+  consumer_market_evidence?: ConsumerMarketEvidence | null;
   research_observations: string[];
   operational_cautions: string[];
   disclaimer: string;
@@ -916,11 +926,15 @@ class BackendApiClient {
     district_name?: string;
     state_name?: string;
     lg_dt_code?: string;
+    business_type?: string;
+    sector?: string;
   }): Promise<DistrictResearchContextResponse> {
     const search = new URLSearchParams();
     if (params.district_name) search.append('district_name', params.district_name);
     if (params.state_name) search.append('state_name', params.state_name);
     if (params.lg_dt_code) search.append('lg_dt_code', params.lg_dt_code);
+    if (params.business_type) search.append('business_type', params.business_type);
+    if (params.sector) search.append('sector', params.sector);
 
     const qs = search.toString();
     return this.request<DistrictResearchContextResponse>(
