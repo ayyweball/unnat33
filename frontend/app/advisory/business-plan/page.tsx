@@ -30,6 +30,10 @@ import {
   Check,
 } from 'lucide-react';
 import { DPRResponse } from '@/lib/api-client';
+import AshokaLionEmblem from '@/components/AshokaLionEmblem';
+import CurvedNationalAccent from '@/components/CurvedNationalAccent';
+import IndianArchitecturalLineArt from '@/components/IndianArchitecturalLineArt';
+import DprEditorialArt, { DprEditorialArtType } from '@/components/DprEditorialArt';
 
 const PROVENANCE_STYLES: Record<string, string> = {
   'USER PROVIDED': 'bg-blue-50 text-blue-700 border-blue-200',
@@ -44,6 +48,26 @@ const PROVENANCE_STYLES: Record<string, string> = {
 function ProvenanceBadge({ tag }: { tag: string }) {
   return null;
 }
+
+// Primary Navigation Categories (Business is the unified master category for steps 2-6)
+const PRIMARY_CATEGORIES = [
+  { id: 'overview', stepId: 1, label: 'Overview', icon: Building2 },
+  { id: 'business', stepRange: [2, 3, 4, 5, 6], defaultStep: 2, label: 'Business', icon: Briefcase },
+  { id: 'government', stepId: 7, label: 'Government', icon: ShieldCheck },
+  { id: 'financial', stepId: 8, label: 'Financial', icon: IndianRupee },
+  { id: 'risk', stepId: 9, label: 'Risk & Climate', icon: CloudSun },
+  { id: 'milestones', stepId: 10, label: 'Milestones', icon: Calendar },
+  { id: 'review', stepId: 11, label: 'Review & Finalize', icon: FileText },
+];
+
+// Secondary Navigation under Business
+const BUSINESS_SUB_NAV = [
+  { id: 2, label: 'Market', shortDesc: 'Census & Neighbors' },
+  { id: 3, label: 'Customers', shortDesc: 'Target Customers' },
+  { id: 4, label: 'Business Model', shortDesc: 'Value Proposition' },
+  { id: 5, label: 'Operations', shortDesc: 'Workflow & Machinery' },
+  { id: 6, label: 'Marketing', shortDesc: 'GTM Strategy' },
+];
 
 const STEPS = [
   { id: 1, name: 'Overview', fullName: 'Business & Promoter Overview', icon: Building2, desc: 'Auto-prefilled from your verified entrepreneur profile.' },
@@ -426,7 +450,7 @@ export default function RebuiltDPRBuilderPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F8F5] text-[#0B1736] flex flex-col font-sans selection:bg-[#159A68] selection:text-white">
+    <div className="min-h-screen bg-[#F4F7FB] text-[#0B1736] flex flex-col font-sans selection:bg-[#159A68] selection:text-white">
       <Navbar />
 
       <div className="flex-1 flex w-full">
@@ -442,37 +466,22 @@ export default function RebuiltDPRBuilderPage() {
           </div>
 
           {/* ========================================================================= */}
-          {/* 1. DPR INTRODUCTION BANNER (National Indian Enterprise Artwork)           */}
+          {/* 1. DPR INTRODUCTION BANNER (Architectural Line-Art Artwork & Accents)     */}
           {/* ========================================================================= */}
-          <section className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-6 sm:p-8 lg:p-9 shadow-xs relative overflow-hidden">
-            {/* National India Enterprise Artwork Fading on the Right */}
-            <div className="absolute right-0 top-0 bottom-0 w-full sm:w-3/5 lg:w-1/2 pointer-events-none overflow-hidden rounded-r-2xl sm:rounded-r-3xl z-0">
-              <img
-                src="/dpr-infographic.jpg"
-                alt="Why Does a DPR Matter infographic"
-                className="w-full h-full object-cover object-[78%_center] dpr-hero-mask"
-              />
-              <style dangerouslySetInnerHTML={{ __html: `
-                .dpr-hero-mask {
-                  -webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 68%, rgba(0,0,0,0.15) 80%, rgba(0,0,0,0.9) 90%, rgba(0,0,0,1) 100%);
-                  mask-image: linear-gradient(to right, transparent 0%, transparent 68%, rgba(0,0,0,0.15) 80%, rgba(0,0,0,0.9) 90%, rgba(0,0,0,1) 100%);
-                }
-                @media (min-width: 640px) {
-                  .dpr-hero-mask {
-                    -webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 26%, rgba(0,0,0,0.15) 38%, rgba(0,0,0,0.85) 70%, rgba(0,0,0,1) 100%);
-                    mask-image: linear-gradient(to right, transparent 0%, transparent 26%, rgba(0,0,0,0.15) 38%, rgba(0,0,0,0.85) 70%, rgba(0,0,0,1) 100%);
-                  }
-                }
-                @media (min-width: 1024px) {
-                  .dpr-hero-mask {
-                    -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.12) 15%, rgba(0,0,0,0.85) 60%, rgba(0,0,0,1) 100%);
-                    mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.12) 15%, rgba(0,0,0,0.85) 60%, rgba(0,0,0,1) 100%);
-                  }
-                }
-              `}} />
+          <section className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-6 sm:p-8 lg:p-9 shadow-xs relative overflow-hidden subtle-card-hover">
+            {/* Restrained Curved Tricolor Corner Accent */}
+            <CurvedNationalAccent variant="corner" className="opacity-75" />
+
+            {/* Clean Architectural Indian Line-Art Artwork (Replacing AI image) */}
+            <div className="absolute right-0 top-0 bottom-0 w-full sm:w-1/2 lg:w-5/12 pointer-events-none overflow-hidden rounded-r-2xl sm:rounded-r-3xl z-0 opacity-80 sm:opacity-90">
+              <IndianArchitecturalLineArt />
             </div>
 
             <div className="relative z-10 max-w-2xl space-y-3">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EAF7F0] border border-[#159A68]/20 text-[#159A68] text-[11px] font-bold uppercase tracking-wider">
+                <Sparkles className="w-3.5 h-3.5 text-[#159A68]" />
+                <span>Statutory 13-Section Formulation</span>
+              </div>
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#0B1736] tracking-tight font-serif">
                 11-Step DPR &amp; Market Advisory Builder
               </h1>
@@ -518,10 +527,9 @@ export default function RebuiltDPRBuilderPage() {
           )}
 
           {/* ========================================================================= */}
-          {/* 3. 11-STEP GUIDED HORIZONTAL WORKFLOW NAVIGATOR                           */}
+          {/* 3. WORKFLOW NAVIGATOR (Primary Categories + Business Secondary Sub-Nav)   */}
           {/* ========================================================================= */}
-          <section className="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-xs space-y-4">
-            
+          <section className="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-xs space-y-3 relative overflow-hidden">
             {/* Top Status & Jump Dropdown Bar */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
               <div className="flex items-center gap-3">
@@ -535,6 +543,9 @@ export default function RebuiltDPRBuilderPage() {
                     style={{ width: `${Math.round((currentStep / 11) * 100)}%` }}
                   />
                 </div>
+                <span className="text-[11px] font-semibold text-slate-400 hidden md:inline">
+                  {STEPS[currentStep - 1]?.name}
+                </span>
               </div>
 
               {/* Jump to Dropdown */}
@@ -557,62 +568,85 @@ export default function RebuiltDPRBuilderPage() {
               </div>
             </div>
 
-            {/* Continuous Horizontal Stepper Track */}
+            {/* Primary Category Navigation Bar */}
             <div className="overflow-x-auto pb-1 scrollbar-none">
-              <div className="flex items-center justify-between min-w-[860px] gap-1 px-1">
-                {STEPS.map((s, idx) => {
-                  const active = currentStep === s.id;
-                  const completed = currentStep > s.id;
-                  return (
-                    <React.Fragment key={s.id}>
-                      {/* Step Item */}
-                      <button
-                        type="button"
-                        onClick={() => setCurrentStep(s.id)}
-                        className={`flex flex-col items-center justify-center py-2 px-2.5 rounded-xl transition-all cursor-pointer shrink-0 ${
-                          active
-                            ? 'bg-[#EAF7F0] border border-[#159A68]/40 shadow-2xs'
-                            : 'hover:bg-slate-50'
-                        }`}
-                      >
-                        <div
-                          className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
-                            active
-                              ? 'bg-[#159A68] text-white shadow-xs'
-                              : completed
-                              ? 'bg-[#159A68] text-white'
-                              : 'bg-slate-100 text-slate-500'
-                          }`}
-                        >
-                          {completed ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : s.id}
-                        </div>
-                        <span
-                          className={`text-[11px] mt-1.5 whitespace-nowrap transition-colors ${
-                            active
-                              ? 'font-bold text-[#159A68]'
-                              : completed
-                              ? 'font-semibold text-[#0B1736]'
-                              : 'font-medium text-slate-500'
-                          }`}
-                        >
-                          {s.name}
-                        </span>
-                      </button>
+              <div className="flex items-center justify-between min-w-[760px] gap-2 px-1">
+                {PRIMARY_CATEGORIES.map((cat) => {
+                  const isBusiness = cat.id === 'business';
+                  const isActive = isBusiness
+                    ? currentStep >= 2 && currentStep <= 6
+                    : currentStep === cat.stepId;
+                  const isCompleted = isBusiness
+                    ? currentStep > 6
+                    : (cat.stepId ? currentStep > cat.stepId : false);
+                  const Icon = cat.icon;
 
-                      {/* Connecting Line Between Steps */}
-                      {idx < STEPS.length - 1 && (
-                        <div
-                          className={`h-0.5 flex-1 min-w-[8px] rounded-full transition-colors ${
-                            completed ? 'bg-[#159A68]' : 'bg-slate-200'
-                          }`}
-                        />
-                      )}
-                    </React.Fragment>
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => {
+                        if (isBusiness) {
+                          if (currentStep < 2 || currentStep > 6) {
+                            setCurrentStep(cat.defaultStep || 2);
+                          }
+                        } else if (cat.stepId) {
+                          setCurrentStep(cat.stepId);
+                        }
+                      }}
+                      className={`flex-1 py-2 px-3 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2 text-xs font-semibold border ${
+                        isActive
+                          ? 'bg-[#0B1736] text-white border-[#0B1736] shadow-2xs'
+                          : isCompleted
+                          ? 'bg-[#EAF7F0] text-[#159A68] border-[#159A68]/30 hover:bg-[#d9f1e4]'
+                          : 'bg-slate-50 text-slate-600 border-slate-200/80 hover:bg-slate-100 hover:text-[#0B1736]'
+                      }`}
+                    >
+                      <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-[#F4A340]' : isCompleted ? 'text-[#159A68]' : 'text-slate-400'}`} />
+                      <span className="whitespace-nowrap">{cat.label}</span>
+                      {isCompleted && <Check className="w-3 h-3 text-[#159A68] stroke-[3]" />}
+                    </button>
                   );
                 })}
               </div>
             </div>
 
+            {/* Secondary Navigation under Business (Market · Customers · Business Model · Operations · Marketing) */}
+            <div className="pt-2.5 border-t border-slate-100">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                  <span className={`w-2 h-2 rounded-full ${currentStep >= 2 && currentStep <= 6 ? 'bg-[#159A68]' : 'bg-slate-300'}`} />
+                  <span>Business Modules:</span>
+                </div>
+                <div className="flex items-center gap-1.5 overflow-x-auto py-0.5 scrollbar-none">
+                  {BUSINESS_SUB_NAV.map((sub) => {
+                    const isSubActive = currentStep === sub.id;
+                    const isSubDone = currentStep > sub.id;
+                    return (
+                      <button
+                        key={sub.id}
+                        type="button"
+                        onClick={() => setCurrentStep(sub.id)}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                          isSubActive
+                            ? 'bg-[#159A68] text-white shadow-2xs font-bold ring-2 ring-[#159A68]/20'
+                            : isSubDone
+                            ? 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200/60'
+                            : 'bg-slate-100 text-slate-600 hover:bg-slate-200/80 hover:text-slate-900'
+                        }`}
+                      >
+                        <span className={`w-4 h-4 rounded-full text-[10px] flex items-center justify-center font-bold ${
+                          isSubActive ? 'bg-white/25 text-white' : isSubDone ? 'bg-[#159A68] text-white' : 'bg-slate-200 text-slate-600'
+                        }`}>
+                          {isSubDone ? '✓' : sub.id}
+                        </span>
+                        <span>{sub.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
           </section>
 
           {/* ========================================================================= */}
@@ -636,8 +670,36 @@ export default function RebuiltDPRBuilderPage() {
                 </div>
               </div>
 
-              {/* Provenance Badge */}
-              <div className="self-start sm:self-center">
+              {/* Provenance Badge & Section Editorial Art */}
+              <div className="self-start sm:self-center flex items-center gap-3">
+                <DprEditorialArt
+                  type={
+                    currentStep === 1
+                      ? 'business'
+                      : currentStep === 2
+                      ? 'market'
+                      : currentStep === 3
+                      ? 'customers'
+                      : currentStep === 4
+                      ? 'business'
+                      : currentStep === 5
+                      ? 'operations'
+                      : currentStep === 6
+                      ? 'marketing'
+                      : currentStep === 7
+                      ? 'government'
+                      : currentStep === 8
+                      ? 'financial'
+                      : currentStep === 9
+                      ? 'risk'
+                      : currentStep === 10
+                      ? 'milestones'
+                      : 'financial'
+                  }
+                  width={90}
+                  height={48}
+                  className="hidden md:inline-flex opacity-85"
+                />
                 {currentStep === 1 && <ProvenanceBadge tag="USER PROVIDED" />}
                 {currentStep === 2 && (
                   <div className="flex gap-1.5">
@@ -746,6 +808,15 @@ export default function RebuiltDPRBuilderPage() {
                     onChange={(e) => setForm({ ...form, currentIncome: Number(e.target.value) })}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all bg-white"
                   />
+                </div>
+
+                <div className="col-span-1 md:col-span-2 pt-3 border-t border-slate-100 flex items-center justify-between gap-4 text-slate-500">
+                  <div className="flex items-center gap-3">
+                    <DprEditorialArt type="location" width={80} height={42} className="hidden sm:inline-flex opacity-75 shrink-0" />
+                    <span className="text-[11px] leading-relaxed">
+                      Baseline parameters calibrate district Udyam density, target consumer demographics, and statutory capital structuring.
+                    </span>
+                  </div>
                 </div>
               </div>
             )}
@@ -1308,7 +1379,10 @@ export default function RebuiltDPRBuilderPage() {
 
                       {/* Operational Risks Table */}
                       <div className="space-y-3">
-                        <h3 className="text-xs font-bold text-[#0B1736] uppercase tracking-wider">Commercial &amp; Operational Risks</h3>
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-xs font-bold text-[#0B1736] uppercase tracking-wider">Commercial &amp; Operational Risks</h3>
+                          <DprEditorialArt type="risk" width={80} height={38} className="hidden sm:inline-flex opacity-75" />
+                        </div>
                         <div className="divide-y divide-slate-100 border border-slate-200/80 rounded-xl overflow-hidden bg-white shadow-2xs">
                           {matrix.map((r: any, idx: number) => (
                             <div key={idx} className="p-3.5 text-xs space-y-1">
@@ -1357,9 +1431,12 @@ export default function RebuiltDPRBuilderPage() {
 
                   return (
                     <div className="space-y-3">
-                      <h3 className="text-xs font-bold text-[#0B1736] uppercase tracking-wider">
-                        Month 1 to 6 Implementation Timeline
-                      </h3>
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-xs font-bold text-[#0B1736] uppercase tracking-wider">
+                          Month 1 to 6 Implementation Timeline
+                        </h3>
+                        <DprEditorialArt type="milestones" width={80} height={38} className="hidden sm:inline-flex opacity-75" />
+                      </div>
                       <div className="divide-y divide-slate-100 border border-slate-200/80 rounded-xl overflow-hidden bg-white shadow-2xs">
                         {timeline.map((m: any) => (
                           <div key={m.month} className="p-3.5 flex items-start gap-3.5 text-xs">

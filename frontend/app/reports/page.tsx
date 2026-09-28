@@ -89,7 +89,7 @@ export default function InsightsAndReportsPage() {
       : reportList.filter((r) => r.category === selectedTab);
 
   return (
-    <div className="min-h-screen bg-[#F7F8F5] text-[#0B1736] flex flex-col font-sans selection:bg-[#159A68] selection:text-white">
+    <div className="min-h-screen bg-[#F4F7FB] text-[#0B1736] flex flex-col font-sans selection:bg-[#159A68] selection:text-white">
       <Navbar />
 
       <div className="flex-1 flex w-full">

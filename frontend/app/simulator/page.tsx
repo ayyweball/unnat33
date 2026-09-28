@@ -326,7 +326,7 @@ function WhatIfSimulatorContent() {
     : [];
 
   return (
-    <div className="min-h-screen bg-[#F7F8F5] text-[#0B1736] flex flex-col font-sans selection:bg-[#159A68] selection:text-white">
+    <div className="min-h-screen bg-[#F4F7FB] text-[#0B1736] flex flex-col font-sans selection:bg-[#159A68] selection:text-white">
       <Navbar />
 
       <div className="flex-1 flex w-full min-w-0">
@@ -1183,7 +1183,7 @@ export default function WhatIfSimulatorPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex h-screen bg-[#FDFBF7] items-center justify-center">
+        <div className="flex h-screen bg-[#F4F7FB] items-center justify-center">
           <Loader2 className="w-8 h-8 text-[#159A68] animate-spin" />
         </div>
       }

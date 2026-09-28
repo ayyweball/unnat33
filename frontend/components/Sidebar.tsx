@@ -33,6 +33,29 @@ export default function Sidebar() {
   } = useAppStore();
 
   const sidebarRef = useRef<HTMLElement>(null);
+  const hoverTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Hover expansion handlers with debounce to prevent accidental triggering/flickering
+  const handleMouseEnter = () => {
+    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+    hoverTimerRef.current = setTimeout(() => {
+      setSidebarCollapsed(false);
+    }, 140); // 140ms intentional hover delay
+  };
+
+  const handleMouseLeave = () => {
+    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+    hoverTimerRef.current = setTimeout(() => {
+      setSidebarCollapsed(true);
+    }, 240); // 240ms grace period prevents flickering
+  };
+
+  // Clean up timer on unmount
+  useEffect(() => {
+    return () => {
+      if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+    };
+  }, []);
 
   // Restore persisted collapse state on client mount
   useEffect(() => {
@@ -82,6 +105,8 @@ export default function Sidebar() {
       <aside
         ref={sidebarRef}
         aria-label="Global Sidebar Navigation"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         className={`bg-white border-r border-slate-200/80 min-h-[calc(100vh-4rem)] flex flex-col justify-between hidden md:flex shrink-0 select-none relative z-30 transition-[width] duration-300 ease-in-out ${
           sidebarCollapsed ? 'w-[70px]' : 'w-[275px]'
         }`}

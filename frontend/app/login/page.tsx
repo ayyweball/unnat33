@@ -253,7 +253,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen bg-[#F7F8F5] flex flex-col font-sans">
+    <div className="min-h-screen bg-[#F4F7FB] flex flex-col font-sans">
       <Navbar />
       <main className="flex-1 flex items-center justify-center p-4 py-12">
         <Suspense

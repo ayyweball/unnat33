@@ -256,7 +256,7 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F7F8F5] text-[#0B1736] flex flex-col font-sans selection:bg-[#159A68] selection:text-white">
+    <div className="min-h-screen bg-[#F4F7FB] text-[#0B1736] flex flex-col font-sans selection:bg-[#159A68] selection:text-white">
       <Navbar />
 
       <div className="flex-1 flex w-full min-w-0">
@@ -274,7 +274,7 @@ export default function DashboardPage() {
           {/* ========================================================================= */}
           {/* 1. DASHBOARD HERO BANNER (Direct Reference Composition & Visual Continuity) */}
           {/* ========================================================================= */}
-          <section className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-6 sm:p-8 lg:p-10 shadow-xs relative overflow-hidden">
+          <section className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-6 sm:p-8 lg:p-10 shadow-xs relative overflow-hidden subtle-card-hover">
             {/* Dashboard Hero Visual Area */}
             <div className="absolute right-0 top-0 bottom-0 w-full sm:w-3/5 lg:w-1/2 pointer-events-none overflow-hidden rounded-r-2xl sm:rounded-r-3xl z-0 opacity-25 sm:opacity-100 transition-opacity">
               <img

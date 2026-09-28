@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
+import AshokaLionEmblem from '@/components/AshokaLionEmblem';
+import CurvedNationalAccent from '@/components/CurvedNationalAccent';
 import {
   FileText,
   Building2,
@@ -73,13 +75,17 @@ export default function SharedReportViewPage({ params }: { params: { token: stri
   const isStructuredDPR = !!(dpr.executive_summary && dpr.capital_structure);
 
   return (
-    <div className="min-h-screen bg-[#F7F8F5] flex flex-col font-sans text-[#0B1736]">
+    <div className="min-h-screen bg-[#F4F7FB] flex flex-col font-sans text-[#0B1736]">
       <Navbar />
 
       <main className="max-w-4xl mx-auto p-4 md:p-6 space-y-6 w-full">
         {/* Banner Header */}
-        <div className="bg-white p-6 rounded-2xl border border-[#E2E8F0] shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex items-start gap-4">
+        <div className="bg-white p-6 rounded-2xl border border-[#E2E8F0] shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative overflow-hidden">
+          <div className="print:hidden">
+            <CurvedNationalAccent variant="corner" className="opacity-80" />
+          </div>
+
+          <div className="flex items-start gap-4 relative z-10">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.png" alt="UnnatE" className="h-12 w-auto object-contain shrink-0 hidden sm:block mt-1" />
             <div>
@@ -98,10 +104,16 @@ export default function SharedReportViewPage({ params }: { params: { token: stri
             </div>
           </div>
 
-          <div className="bg-[#F8FAFC] px-4 py-3 rounded-xl border border-[#E2E8F0] text-center">
-            <span className="text-[10px] font-bold uppercase text-[#64748B]">Scheme Alignment</span>
-            <div className="text-sm font-extrabold text-[#0B1736] mt-0.5">
-              {dpr.executive_summary?.recommended_program_name || dpr.government_support?.program_name || 'Statutory Scheme'}
+          <div className="flex items-center gap-3 shrink-0 relative z-10">
+            <div className="hidden md:flex flex-col items-center justify-center p-2 rounded-xl bg-slate-50 border border-slate-200/80 shrink-0">
+              <AshokaLionEmblem size={36} className="text-[#0B1736]" />
+            </div>
+
+            <div className="bg-[#F8FAFC] px-4 py-3 rounded-xl border border-[#E2E8F0] text-center">
+              <span className="text-[10px] font-bold uppercase text-[#64748B]">Scheme Alignment</span>
+              <div className="text-sm font-extrabold text-[#0B1736] mt-0.5">
+                {dpr.executive_summary?.recommended_program_name || dpr.government_support?.program_name || 'Statutory Scheme'}
+              </div>
             </div>
           </div>
         </div>

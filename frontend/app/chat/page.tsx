@@ -214,7 +214,7 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F8F5] flex flex-col font-sans">
+    <div className="min-h-screen bg-[#F4F7FB] flex flex-col font-sans">
       <Navbar />
 
       <div className="flex-1 flex max-w-[1520px] w-full mx-auto">

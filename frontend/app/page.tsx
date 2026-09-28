@@ -70,7 +70,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F7F8F5] text-[#0B1736] font-sans selection:bg-[#159A68] selection:text-white">
+    <div className="min-h-screen flex flex-col bg-[#F4F7FB] text-[#0B1736] font-sans selection:bg-[#159A68] selection:text-white">
       <Navbar />
 
       {/* ========================================================================= */}
@@ -78,7 +78,7 @@ export default function LandingPage() {
       {/* ========================================================================= */}
       <section
         ref={heroRef}
-        className="relative overflow-hidden min-h-[560px] lg:min-h-[580px]"
+        className="relative overflow-hidden min-h-[560px] lg:min-h-[580px] bg-gradient-to-b from-[#EEF4FB] via-[#F4F7FB] to-white"
       >
         {/* Parallax background image — shifted upward by 80px */}
         <motion.div
@@ -96,12 +96,48 @@ export default function LandingPage() {
           />
         </motion.div>
 
-        {/* Overlays */}
+        {/* Overlays: soft light-blue/cool-white palette */}
         <div className="absolute inset-0 pointer-events-none select-none z-0">
-          {/* Right fade: keep left (woman) clear, fade right for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent via-40% to-white/75 lg:to-white/82" />
-          {/* Bottom fade: strong white so feature cards are legible */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent via-50% to-white" />
+          {/* Right fade: keep left (woman) clear, fade right into cool-white/light-blue for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent via-35% to-[#EEF4FB]/85 lg:to-[#F4F8FB]/95" />
+          {/* Bottom fade: soft cool-white transition */}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent via-50% to-[#F4F7FB]" />
+        </div>
+
+        {/* Subtle Saffron/White/Green Curved Corner Accent (Top-Right) */}
+        <div className="absolute top-0 right-0 w-36 sm:w-48 h-36 sm:h-48 overflow-hidden pointer-events-none select-none z-10 opacity-70" aria-hidden="true">
+          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+            <path d="M100 0 L0 0 C30 15, 70 45, 100 85 Z" fill="#0B1736" fillOpacity="0.04" />
+            <path d="M100 0 L35 0 C55 25, 80 50, 100 65 Z" fill="#F4A340" fillOpacity="0.3" />
+            <path d="M100 15 C85 35, 65 48, 50 0 L56 0 C70 40, 88 28, 100 10 Z" fill="#FFFFFF" fillOpacity="0.8" />
+            <path d="M100 0 L68 0 C80 22, 90 32, 100 32 Z" fill="#159A68" fillOpacity="0.35" />
+          </svg>
+        </div>
+
+        {/* Restrained Indian Architectural Line-Art in Unused Background Space */}
+        <div className="absolute right-4 lg:right-12 top-6 lg:top-10 pointer-events-none select-none z-0 opacity-12 sm:opacity-15 w-64 lg:w-80 h-44 lg:h-56 hidden sm:block" aria-hidden="true">
+          <svg viewBox="0 0 280 160" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+            {/* Plinth Base */}
+            <line x1="20" y1="145" x2="260" y2="145" stroke="#0B1736" strokeWidth="1.2" strokeLinecap="round" />
+            <line x1="32" y1="141" x2="248" y2="141" stroke="#0B1736" strokeWidth="0.8" />
+            <line x1="44" y1="137" x2="236" y2="137" stroke="#159A68" strokeWidth="0.8" strokeOpacity="0.8" />
+            {/* Colonnade Pillars */}
+            {[52, 76, 100, 124, 156, 180, 204, 228].map((px) => (
+              <rect key={px} x={px} y="75" width="7" height="62" stroke="#0B1736" strokeWidth="0.8" fill="#FFFFFF" fillOpacity="0.5" />
+            ))}
+            {/* Architrave */}
+            <rect x="42" y="66" width="196" height="9" stroke="#0B1736" strokeWidth="1" fill="#EEF4FB" />
+            <line x1="42" y1="70" x2="238" y2="70" stroke="#F4A340" strokeWidth="0.8" />
+            {/* Pediment */}
+            <polygon points="42,66 140,32 238,66" stroke="#0B1736" strokeWidth="1.1" fill="#FFFFFF" fillOpacity="0.5" />
+            {/* Ashoka Wheel Insignia */}
+            <circle cx="140" cy="49" r="6" stroke="#159A68" strokeWidth="0.8" />
+            <circle cx="140" cy="49" r="2" fill="#159A68" />
+            {/* Central Dome */}
+            <path d="M110,32 C110,12, 170,12, 170,32" stroke="#0B1736" strokeWidth="0.9" fill="#EEF4FB" fillOpacity="0.6" />
+            <line x1="140" y1="12" x2="140" y2="4" stroke="#F4A340" strokeWidth="1.3" strokeLinecap="round" />
+            <circle cx="140" cy="3" r="1.5" fill="#F4A340" />
+          </svg>
         </div>
 
         {/* Hero Content — upper-right, matching reference badge position */}
@@ -155,14 +191,14 @@ export default function LandingPage() {
                 </Link>
                 <Link
                   href={user ? '/advisory/schemes' : '/login?redirect=/advisory/schemes'}
-                  className="h-11 inline-flex items-center justify-center gap-2 px-5 rounded-[10px] bg-white hover:bg-[#F7F8F5] text-[#0B1736] text-xs font-semibold border border-[#D9DEE5] hover:border-slate-300 shadow-sm transition-all duration-200 cursor-pointer whitespace-nowrap"
+                  className="h-11 inline-flex items-center justify-center gap-2 px-5 rounded-[10px] bg-white hover:bg-[#F4F7FB] text-[#0B1736] text-xs font-semibold border border-[#D9DEE5] hover:border-slate-300 shadow-sm transition-all duration-200 cursor-pointer whitespace-nowrap"
                 >
                   <Landmark className="w-4 h-4 text-[#159A68]" />
                   <span>{language === 'hi' ? 'सरकारी योजनाएं' : 'Explore Schemes'}</span>
                 </Link>
                 <Link
                   href="/simulator"
-                  className="h-11 inline-flex items-center justify-center gap-2 px-5 rounded-[10px] bg-white hover:bg-[#F7F8F5] text-[#0B1736] text-xs font-semibold border border-[#D9DEE5] hover:border-slate-300 shadow-sm transition-all duration-200 cursor-pointer whitespace-nowrap"
+                  className="h-11 inline-flex items-center justify-center gap-2 px-5 rounded-[10px] bg-white hover:bg-[#F4F7FB] text-[#0B1736] text-xs font-semibold border border-[#D9DEE5] hover:border-slate-300 shadow-sm transition-all duration-200 cursor-pointer whitespace-nowrap"
                 >
                   <Sliders className="w-4 h-4 text-[#159A68]" />
                   <span>{language === 'hi' ? 'व्हाट-इफ सिम्युलेटर' : 'What-If Simulator'}</span>
@@ -243,7 +279,7 @@ export default function LandingPage() {
       {/* ========================================================================= */}
       {/* 4. BUILT FOR REAL-WORLD MICRO & RURAL ENTERPRISES */}
       {/* ========================================================================= */}
-      <section id="entrepreneurs" className="py-20 sm:py-28 bg-[#F7F8F5] border-b border-slate-200/80">
+      <section id="entrepreneurs" className="py-20 sm:py-28 bg-[#F4F7FB] border-b border-slate-200/80">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-20">
@@ -392,7 +428,7 @@ export default function LandingPage() {
           </div>
 
           {/* Unified Intelligence Panel with 4 Data Columns */}
-          <div className="bg-[#F7F8F5] rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
+          <div className="bg-[#F4F7FB] rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/80">
               
               {/* Column 1 */}
@@ -464,30 +500,68 @@ export default function LandingPage() {
       {/* ========================================================================= */}
       {/* 6. STRONG FINAL CTA */}
       {/* ========================================================================= */}
-      <section className="py-24 sm:py-32 bg-[#0B1736] text-white relative overflow-hidden">
-        {/* Subtle Atmospheric Light & Saffron Accents */}
+      <section className="py-24 sm:py-32 bg-gradient-to-b from-[#EEF4FB] via-[#F4F8FC] to-[#E5EFF9] text-[#0B1736] border-t border-b border-slate-200/90 relative overflow-hidden">
+        {/* Subtle Atmospheric Light & Saffron/Green Accents */}
         <div
           aria-hidden="true"
-          className="absolute -left-24 -bottom-24 w-96 h-96 rounded-full bg-[#159A68]/15 blur-3xl pointer-events-none"
+          className="absolute -left-24 -bottom-24 w-96 h-96 rounded-full bg-[#159A68]/10 blur-3xl pointer-events-none"
         />
         <div
           aria-hidden="true"
           className="absolute -right-24 -top-24 w-96 h-96 rounded-full bg-[#F4A340]/10 blur-3xl pointer-events-none"
         />
 
+        {/* Subtle Saffron/White/Green Curved Corner Accent (Top-Right) */}
+        <div className="absolute top-0 right-0 w-36 sm:w-52 h-36 sm:h-52 overflow-hidden pointer-events-none select-none z-0 opacity-70" aria-hidden="true">
+          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+            <path d="M100 0 L0 0 C30 15, 70 45, 100 85 Z" fill="#0B1736" fillOpacity="0.03" />
+            <path d="M100 0 L35 0 C55 25, 80 50, 100 65 Z" fill="#F4A340" fillOpacity="0.3" />
+            <path d="M100 15 C85 35, 65 48, 50 0 L56 0 C70 40, 88 28, 100 10 Z" fill="#FFFFFF" fillOpacity="0.8" />
+            <path d="M100 0 L68 0 C80 22, 90 32, 100 32 Z" fill="#159A68" fillOpacity="0.35" />
+          </svg>
+        </div>
+
+        {/* Subtle Curved Accent (Bottom-Left) */}
+        <div className="absolute bottom-0 left-0 w-32 sm:w-44 h-32 sm:h-44 overflow-hidden pointer-events-none select-none z-0 opacity-60" aria-hidden="true">
+          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+            <path d="M0 100 L100 100 C70 85, 30 55, 0 15 Z" fill="#0B1736" fillOpacity="0.03" />
+            <path d="M0 100 L65 100 C45 75, 20 50, 0 35 Z" fill="#159A68" fillOpacity="0.25" />
+            <path d="M0 85 C15 65, 35 52, 50 100 L44 100 C30 60, 12 72, 0 90 Z" fill="#FFFFFF" fillOpacity="0.8" />
+            <path d="M0 100 L32 100 C20 78, 10 68, 0 68 Z" fill="#F4A340" fillOpacity="0.25" />
+          </svg>
+        </div>
+
+        {/* Restrained Indian Architectural Line-Art Watermark in Unused Space */}
+        <div className="absolute left-1/2 -translate-x-1/2 top-10 pointer-events-none select-none z-0 opacity-10 w-96 sm:w-[500px] h-60 hidden sm:block" aria-hidden="true">
+          <svg viewBox="0 0 320 160" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+            <line x1="20" y1="145" x2="300" y2="145" stroke="#0B1736" strokeWidth="1.2" strokeLinecap="round" />
+            <line x1="40" y1="140" x2="280" y2="140" stroke="#0B1736" strokeWidth="0.8" />
+            <line x1="60" y1="136" x2="260" y2="136" stroke="#159A68" strokeWidth="0.8" strokeOpacity="0.7" />
+            {[60, 88, 116, 144, 176, 204, 232, 260].map((px) => (
+              <rect key={px} x={px} y="76" width="8" height="60" stroke="#0B1736" strokeWidth="0.8" fill="#FFFFFF" fillOpacity="0.4" />
+            ))}
+            <rect x="48" y="66" width="224" height="10" stroke="#0B1736" strokeWidth="1" fill="#EEF4FB" />
+            <polygon points="48,66 160,28 272,66" stroke="#0B1736" strokeWidth="1.1" fill="#FFFFFF" fillOpacity="0.4" />
+            <circle cx="160" cy="46" r="7" stroke="#159A68" strokeWidth="0.8" />
+            <circle cx="160" cy="46" r="2.2" fill="#159A68" />
+            <path d="M125 28 C125 6, 195 6, 195 28" stroke="#0B1736" strokeWidth="0.9" fill="#EEF4FB" fillOpacity="0.5" />
+            <line x1="160" y1="6" x2="160" y2="0" stroke="#F4A340" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+        </div>
+
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[#F4A340] text-xs font-black tracking-wider uppercase shadow-2xs">
+          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 border border-slate-200/90 text-[#159A68] text-xs font-black tracking-wider uppercase shadow-2xs">
             <Sparkles className="w-3.5 h-3.5 text-[#F4A340]" />
             <span>{language === 'hi' ? 'आज ही शुरुआत करें' : 'Start Your Enterprise Journey'}</span>
           </span>
-          <h2 className="text-3xl sm:text-5xl lg:text-[3.25rem] font-black tracking-tight leading-[1.12]">
+          <h2 className="text-3xl sm:text-5xl lg:text-[3.25rem] font-black text-[#0B1736] tracking-tight leading-[1.12]">
             {language === 'hi' ? (
               <>आपका अगला व्यावसायिक निर्णय<br />बेहतर जानकारी से शुरू होता है।</>
             ) : (
               <>Your next business decision<br />starts with better information.</>
             )}
           </h2>
-          <p className="text-sm sm:text-base text-slate-300 max-w-xl mx-auto leading-relaxed font-normal">
+          <p className="text-sm sm:text-base text-slate-600 max-w-xl mx-auto leading-relaxed font-normal">
             {language === 'hi'
               ? 'अपने बाजार को समझें। सही सहायता प्राप्त करें। आत्मविश्वास के साथ निर्माण करें।'
               : 'Understand your market. Find the right support. Build with confidence.'}
@@ -502,7 +576,7 @@ export default function LandingPage() {
             </Link>
             <Link
               href={user ? '/advisory/schemes' : '/login?redirect=/advisory/schemes'}
-              className="h-12 w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs border border-white/20 transition-colors duration-200 cursor-pointer"
+              className="h-12 w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 rounded-xl bg-white hover:bg-[#F4F7FB] text-[#0B1736] font-bold text-xs border border-[#D9DEE5] hover:border-slate-300 shadow-xs transition-colors duration-200 cursor-pointer"
             >
               <span>{language === 'hi' ? 'सरकारी योजनाएं देखें' : 'Review Government Schemes'}</span>
             </Link>
@@ -514,15 +588,52 @@ export default function LandingPage() {
       {/* ========================================================================= */}
       {/* 7. INSTITUTIONAL PUBLIC INFRASTRUCTURE FOOTER */}
       {/* ========================================================================= */}
-      <footer id="about" className="bg-[#0B1736] text-slate-300 pt-12 pb-8 border-t border-slate-800">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <footer id="about" className="relative overflow-hidden bg-[#F0F4F9] text-slate-700 pt-12 pb-8 border-t border-slate-200/90">
+        
+        {/* Top Edge Tricolor Ribbon Accent */}
+        <div className="absolute top-0 inset-x-0 h-1 overflow-hidden pointer-events-none select-none z-10" aria-hidden="true">
+          <div className="w-full h-full flex">
+            <div className="w-1/3 bg-[#F4A340]" />
+            <div className="w-1/3 bg-white" />
+            <div className="w-1/3 bg-[#159A68]" />
+          </div>
+        </div>
+
+        {/* Subtle Saffron/White/Green Curved Corner Accent */}
+        <div className="absolute top-0 right-0 w-32 sm:w-44 h-32 sm:h-44 overflow-hidden pointer-events-none select-none z-0 opacity-50" aria-hidden="true">
+          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+            <path d="M100 0 L0 0 C30 15, 70 45, 100 85 Z" fill="#0B1736" fillOpacity="0.03" />
+            <path d="M100 0 L35 0 C55 25, 80 50, 100 65 Z" fill="#F4A340" fillOpacity="0.25" />
+            <path d="M100 15 C85 35, 65 48, 50 0 L56 0 C70 40, 88 28, 100 10 Z" fill="#FFFFFF" fillOpacity="0.8" />
+            <path d="M100 0 L68 0 C80 22, 90 32, 100 32 Z" fill="#159A68" fillOpacity="0.25" />
+          </svg>
+        </div>
+
+        {/* Restrained Indian Architectural Line-Art in Unused Space */}
+        <div className="absolute right-6 bottom-4 pointer-events-none select-none z-0 opacity-8 sm:opacity-10 w-56 h-36 hidden md:block" aria-hidden="true">
+          <svg viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+            <line x1="10" y1="110" x2="190" y2="110" stroke="#0B1736" strokeWidth="1.2" strokeLinecap="round" />
+            <line x1="20" y1="106" x2="180" y2="106" stroke="#0B1736" strokeWidth="0.8" />
+            <line x1="30" y1="102" x2="170" y2="102" stroke="#159A68" strokeWidth="0.8" />
+            {[40, 65, 90, 115, 140, 165].map((px) => (
+              <rect key={px} x={px} y="56" width="6" height="46" stroke="#0B1736" strokeWidth="0.8" fill="#FFFFFF" fillOpacity="0.6" />
+            ))}
+            <rect x="30" y="48" width="140" height="8" stroke="#0B1736" strokeWidth="1" fill="#EEF4FB" />
+            <polygon points="30,48 100,22 170,48" stroke="#0B1736" strokeWidth="1" fill="#FFFFFF" fillOpacity="0.5" />
+            <circle cx="100" cy="35" r="4.5" stroke="#159A68" strokeWidth="0.8" />
+            <path d="M80 22 C80 8, 120 8, 120 22" stroke="#0B1736" strokeWidth="0.8" fill="#EEF4FB" />
+            <line x1="100" y1="8" x2="100" y2="2" stroke="#F4A340" strokeWidth="1.2" strokeLinecap="round" />
+          </svg>
+        </div>
+
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Main 4-Column Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 pb-10 border-b border-white/10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 pb-10 border-b border-slate-200/80">
             
             {/* Column 1: Brand Column (~30-33%) */}
             <div className="sm:col-span-2 lg:col-span-4 space-y-3.5">
-              <Link href="/" className="inline-flex items-center bg-white px-3 py-1.5 rounded-xl shadow-xs">
+              <Link href="/" className="inline-flex items-center bg-white px-3 py-1.5 rounded-xl shadow-xs border border-slate-200/70">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/logo.png"
@@ -531,38 +642,38 @@ export default function LandingPage() {
                 />
               </Link>
 
-              <p className="text-[11px] font-bold tracking-widest text-[#F4A340] uppercase">
+              <p className="text-[11px] font-bold tracking-widest text-[#D97706] uppercase">
                 PLAN • GROW • SUCCEED
               </p>
 
-              <p className="text-xs text-slate-300/90 leading-relaxed font-normal max-w-sm">
+              <p className="text-xs text-slate-600 leading-relaxed font-normal max-w-sm">
                 AI-driven business advisory and financial structuring for Indian micro and rural entrepreneurs.
               </p>
             </div>
 
             {/* Column 2: Platform */}
             <div className="lg:col-span-2 space-y-3 text-xs">
-              <span className="font-bold text-white uppercase tracking-wider block mb-1">
+              <span className="font-bold text-[#0B1736] uppercase tracking-wider block mb-1">
                 PLATFORM
               </span>
               <ul className="space-y-2.5">
                 <li>
-                  <Link href="#how-it-works" className="hover:text-[#159A68] transition-colors duration-150">
+                  <Link href="#how-it-works" className="text-slate-600 hover:text-[#159A68] transition-colors duration-150">
                     How It Works
                   </Link>
                 </li>
                 <li>
-                  <Link href="#analysis" className="hover:text-[#159A68] transition-colors duration-150">
+                  <Link href="#analysis" className="text-slate-600 hover:text-[#159A68] transition-colors duration-150">
                     Business Advisory
                   </Link>
                 </li>
                 <li>
-                  <Link href="/dashboard" className="hover:text-[#159A68] transition-colors duration-150">
+                  <Link href="/dashboard" className="text-slate-600 hover:text-[#159A68] transition-colors duration-150">
                     Advisory Dashboard
                   </Link>
                 </li>
                 <li>
-                  <Link href="#entrepreneurs" className="hover:text-[#159A68] transition-colors duration-150">
+                  <Link href="#entrepreneurs" className="text-slate-600 hover:text-[#159A68] transition-colors duration-150">
                     Target Enterprises
                   </Link>
                 </li>
@@ -571,37 +682,37 @@ export default function LandingPage() {
 
             {/* Column 3: Resources */}
             <div className="lg:col-span-3 space-y-3 text-xs">
-              <span className="font-bold text-white uppercase tracking-wider block mb-1">
+              <span className="font-bold text-[#0B1736] uppercase tracking-wider block mb-1">
                 RESOURCES
               </span>
               <ul className="space-y-2.5">
                 <li>
-                  <Link href="/advisory/schemes" className="hover:text-[#159A68] transition-colors duration-150">
+                  <Link href="/advisory/schemes" className="text-slate-600 hover:text-[#159A68] transition-colors duration-150">
                     Scheme Matcher
                   </Link>
                 </li>
                 <li>
-                  <Link href="/dashboard/market-analysis" className="hover:text-[#159A68] transition-colors duration-150">
+                  <Link href="/dashboard/market-analysis" className="text-slate-600 hover:text-[#159A68] transition-colors duration-150">
                     Market Analysis
                   </Link>
                 </li>
                 <li>
-                  <Link href="/advisory/financial" className="hover:text-[#159A68] transition-colors duration-150">
+                  <Link href="/advisory/financial" className="text-slate-600 hover:text-[#159A68] transition-colors duration-150">
                     Financing Options
                   </Link>
                 </li>
                 <li>
-                  <Link href="/advisory/business-plan" className="hover:text-[#159A68] transition-colors duration-150">
+                  <Link href="/advisory/business-plan" className="text-slate-600 hover:text-[#159A68] transition-colors duration-150">
                     DPR Builder
                   </Link>
                 </li>
                 <li>
-                  <Link href="/reports" className="hover:text-[#159A68] transition-colors duration-150">
+                  <Link href="/reports" className="text-slate-600 hover:text-[#159A68] transition-colors duration-150">
                     Insights &amp; Reports
                   </Link>
                 </li>
                 <li>
-                  <Link href="/simulator" className="hover:text-[#159A68] transition-colors duration-150">
+                  <Link href="/simulator" className="text-slate-600 hover:text-[#159A68] transition-colors duration-150">
                     What-If Simulator
                   </Link>
                 </li>
@@ -610,27 +721,27 @@ export default function LandingPage() {
 
             {/* Column 4: About */}
             <div className="lg:col-span-3 space-y-3 text-xs">
-              <span className="font-bold text-white uppercase tracking-wider block mb-1">
+              <span className="font-bold text-[#0B1736] uppercase tracking-wider block mb-1">
                 ABOUT
               </span>
               <ul className="space-y-2.5">
                 <li>
-                  <Link href="#about" className="hover:text-[#159A68] transition-colors duration-150">
+                  <Link href="#about" className="text-slate-600 hover:text-[#159A68] transition-colors duration-150">
                     About UnnatE
                   </Link>
                 </li>
                 <li>
-                  <Link href="mailto:support@unnate.in" className="hover:text-[#159A68] transition-colors duration-150">
+                  <Link href="mailto:support@unnate.in" className="text-slate-600 hover:text-[#159A68] transition-colors duration-150">
                     Contact
                   </Link>
                 </li>
                 <li>
-                  <Link href="#about" className="hover:text-[#159A68] transition-colors duration-150">
+                  <Link href="#about" className="text-slate-600 hover:text-[#159A68] transition-colors duration-150">
                     Privacy Policy
                   </Link>
                 </li>
                 <li>
-                  <Link href="#about" className="hover:text-[#159A68] transition-colors duration-150">
+                  <Link href="#about" className="text-slate-600 hover:text-[#159A68] transition-colors duration-150">
                     Terms of Use
                   </Link>
                 </li>
@@ -640,10 +751,10 @@ export default function LandingPage() {
           </div>
 
           {/* Compact Understated CTA Strip */}
-          <div className="py-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-white/10">
+          <div className="py-5 px-5 sm:px-6 rounded-2xl bg-white/80 border border-slate-200/80 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-4 my-6">
             <div className="flex items-center gap-2.5">
               <span className="w-2 h-2 rounded-full bg-[#159A68]" />
-              <span className="text-sm font-semibold text-white">Ready to build your business?</span>
+              <span className="text-sm font-semibold text-[#0B1736]">Ready to build your business?</span>
             </div>
             <Link
               href={user ? '/dashboard' : '/login?redirect=/dashboard'}
@@ -655,9 +766,9 @@ export default function LandingPage() {
           </div>
 
           {/* Bottom Bar: Copyright & Tagline */}
-          <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-3">
+          <div className="pt-4 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-3">
             <p>© 2026 UnnatE. Built for Indian Micro and Rural Entrepreneurs.</p>
-            <p className="text-slate-400 font-medium">Empowering local enterprise.</p>
+            <p className="text-slate-500 font-medium">Empowering local enterprise.</p>
           </div>
         </div>
       </footer>

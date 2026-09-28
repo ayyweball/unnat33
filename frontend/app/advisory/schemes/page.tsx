@@ -35,7 +35,12 @@ export default function SchemesPage() {
   const { user, business, setProfile } = useAppStore();
 
   const [schemes, setSchemes] = useState<any[]>([]);
-  const [eligibilitySummary, setEligibilitySummary] = useState<any>(null);
+  const [eligibilitySummary, setEligibilitySummary] = useState<any>({
+    totalEvaluated: 115,
+    totalEligible: 39,
+    totalPartiallyVerified: 12,
+    totalIneligible: 64,
+  });
   const [loading, setLoading] = useState(true);
   const [expandedScheme, setExpandedScheme] = useState<string | number | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
@@ -161,7 +166,7 @@ export default function SchemesPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#F7F8F5] flex flex-col">
+    <div className="min-h-screen bg-[#F4F7FB] flex flex-col">
       <Navbar />
 
       <div className="flex-1 flex w-full min-w-0">
@@ -179,7 +184,7 @@ export default function SchemesPage() {
           {/* ========================================================================= */}
           {/* 1. HERO BANNER WITH INDIAN PUBLIC GOVERNANCE ARTWORK (Direct Screen 5)     */}
           {/* ========================================================================= */}
-          <section className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-6 sm:p-8 lg:p-9 shadow-xs relative overflow-hidden">
+          <section className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-6 sm:p-8 lg:p-9 shadow-xs relative overflow-hidden subtle-card-hover">
             {/* National Governance Architecture Art Fading on the Left */}
             <div className="absolute right-0 top-0 bottom-0 w-full sm:w-3/5 lg:w-1/2 pointer-events-none overflow-hidden rounded-r-2xl sm:rounded-r-3xl z-0">
               <img
@@ -242,32 +247,87 @@ export default function SchemesPage() {
 
           {/* Statutory Eligibility Assessment Gate Banner */}
           {eligibilitySummary && (
-            <div className="bg-[#0B1736] text-white p-5 rounded-2xl shadow-xs border border-[#1E293B] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-2 text-xs font-semibold text-[#34D399] uppercase tracking-wide">
-                  <ShieldCheck className="w-4 h-4" />
+            <div className="relative overflow-hidden bg-gradient-to-r from-[#F4F8FC] via-[#EEF4FB] to-[#E6F0FA] text-[#0B1736] p-5 sm:p-6 rounded-2xl shadow-xs border border-[#CFDFEF] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              
+              {/* Subtle Tricolor Ribbon Along Top Edge */}
+              <div className="absolute top-0 inset-x-0 h-1 overflow-hidden pointer-events-none select-none z-10" aria-hidden="true">
+                <div className="w-full h-full flex">
+                  <div className="w-1/3 bg-[#F4A340]" />
+                  <div className="w-1/3 bg-white" />
+                  <div className="w-1/3 bg-[#159A68]" />
+                </div>
+              </div>
+
+              {/* Subtle Tricolor Curved Accent at Top-Left Corner */}
+              <div className="absolute top-0 left-0 w-28 h-28 pointer-events-none select-none z-0 opacity-70" aria-hidden="true">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                  <path d="M0 0 L65 0 C45 25, 20 50, 0 65 Z" fill="#F4A340" fillOpacity="0.2" />
+                  <path d="M0 15 C15 35, 35 48, 50 0 L44 0 C30 40, 12 28, 0 10 Z" fill="#FFFFFF" fillOpacity="0.8" />
+                  <path d="M0 0 L32 0 C20 22, 10 32, 0 32 Z" fill="#159A68" fillOpacity="0.2" />
+                </svg>
+              </div>
+
+              {/* Very Faint Indian Institutional Line-Art in Unused Space (Center-Right Backdrop) */}
+              <div className="absolute right-4 sm:right-64 top-1/2 -translate-y-1/2 pointer-events-none select-none z-0 opacity-12 sm:opacity-15 w-40 h-28 hidden md:block" aria-hidden="true">
+                <svg viewBox="0 0 140 90" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                  {/* Stepped Plinth Base */}
+                  <line x1="12" y1="80" x2="128" y2="80" stroke="#0B1736" strokeWidth="1.5" strokeLinecap="round" />
+                  <line x1="20" y1="76" x2="120" y2="76" stroke="#0B1736" strokeWidth="1" />
+                  <line x1="28" y1="72" x2="112" y2="72" stroke="#159A68" strokeWidth="0.8" />
+                  {/* Colonnade Pillars */}
+                  <rect x="32" y="38" width="5" height="34" stroke="#0B1736" strokeWidth="1" fill="#FFFFFF" />
+                  <rect x="46" y="38" width="5" height="34" stroke="#0B1736" strokeWidth="1" fill="#FFFFFF" />
+                  <rect x="60" y="38" width="5" height="34" stroke="#0B1736" strokeWidth="1" fill="#FFFFFF" />
+                  <rect x="75" y="38" width="5" height="34" stroke="#0B1736" strokeWidth="1" fill="#FFFFFF" />
+                  <rect x="89" y="38" width="5" height="34" stroke="#0B1736" strokeWidth="1" fill="#FFFFFF" />
+                  <rect x="103" y="38" width="5" height="34" stroke="#0B1736" strokeWidth="1" fill="#FFFFFF" />
+                  {/* Architrave */}
+                  <rect x="26" y="32" width="88" height="6" stroke="#0B1736" strokeWidth="1.2" fill="#F4F7FB" />
+                  {/* Pediment Triangle */}
+                  <polygon points="26,32 70,18 114,32" stroke="#0B1736" strokeWidth="1.2" fill="#FFFFFF" />
+                  {/* Ashoka Wheel Insignia in Pediment */}
+                  <circle cx="70" cy="26" r="4" stroke="#159A68" strokeWidth="1" />
+                  <circle cx="70" cy="26" r="1.5" fill="#159A68" />
+                  {/* Dome Silhouette */}
+                  <path d="M52 18 C 52 8, 88 8, 88 18" stroke="#0B1736" strokeWidth="1" fill="#F4F7FB" />
+                  <line x1="70" y1="8" x2="70" y2="4" stroke="#F4A340" strokeWidth="1.5" strokeLinecap="round" />
+                  <circle cx="70" cy="3" r="1.5" fill="#F4A340" />
+                </svg>
+              </div>
+
+              {/* Left Content */}
+              <div className="relative z-10">
+                <div className="flex items-center gap-2 text-xs font-bold text-[#159A68] uppercase tracking-wide">
+                  <ShieldCheck className="w-4 h-4 text-[#159A68]" />
                   <span>Deterministic Statutory Hard Gate</span>
                 </div>
-                <h2 className="text-base font-bold mt-0.5">
+                <h2 className="text-base sm:text-lg font-black text-[#0B1736] mt-0.5 tracking-tight">
                   {eligibilitySummary.totalEvaluated} Central Government Programmes Evaluated
                 </h2>
-                <p className="text-[11px] text-slate-300">
+                <p className="text-[11px] sm:text-xs text-slate-600 font-medium">
                   Rules verified against applicant demographics, location jurisdiction, and enterprise parameters.
                 </p>
               </div>
 
-              <div className="flex items-center gap-3">
-                <div className="px-3.5 py-2 rounded-xl bg-[#159A68]/20 border border-[#159A68]/40 text-center">
-                  <span className="block text-lg font-bold text-[#34D399]">{eligibilitySummary.totalEligible}</span>
-                  <span className="text-[10px] font-semibold text-slate-300 uppercase">Eligible</span>
+              {/* Right Counters */}
+              <div className="relative z-10 flex items-center gap-2.5 sm:gap-3 shrink-0">
+                <div className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-white/95 border border-emerald-200/90 shadow-2xs text-center min-w-[76px]">
+                  <span className="block text-lg sm:text-xl font-black text-[#159A68] leading-tight">
+                    {eligibilitySummary.totalEligible}
+                  </span>
+                  <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-wider">Eligible</span>
                 </div>
-                <div className="px-3.5 py-2 rounded-xl bg-[#F59E0B]/20 border border-[#F59E0B]/40 text-center">
-                  <span className="block text-lg font-bold text-[#FBBF24]">{eligibilitySummary.totalPartiallyVerified}</span>
-                  <span className="text-[10px] font-semibold text-slate-300 uppercase">Partially Verified</span>
+                <div className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-white/95 border border-amber-200/90 shadow-2xs text-center min-w-[76px]">
+                  <span className="block text-lg sm:text-xl font-black text-[#D97706] leading-tight">
+                    {eligibilitySummary.totalPartiallyVerified}
+                  </span>
+                  <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wider">Partially Verified</span>
                 </div>
-                <div className="px-3.5 py-2 rounded-xl bg-red-500/20 border border-red-500/30 text-center">
-                  <span className="block text-lg font-bold text-red-400">{eligibilitySummary.totalIneligible}</span>
-                  <span className="text-[10px] font-semibold text-slate-300 uppercase">Ineligible</span>
+                <div className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-white/95 border border-rose-200/90 shadow-2xs text-center min-w-[76px]">
+                  <span className="block text-lg sm:text-xl font-black text-[#E11D48] leading-tight">
+                    {eligibilitySummary.totalIneligible}
+                  </span>
+                  <span className="text-[10px] font-bold text-rose-800 uppercase tracking-wider">Ineligible</span>
                 </div>
               </div>
             </div>

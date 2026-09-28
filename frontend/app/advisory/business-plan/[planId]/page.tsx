@@ -8,6 +8,9 @@ import Sidebar from '@/components/Sidebar';
 import ShareModal from '@/components/ShareModal';
 import { useLanguage } from '@/lib/i18n/useLanguage';
 import { useAppStore } from '@/lib/store';
+import AshokaLionEmblem from '@/components/AshokaLionEmblem';
+import CurvedNationalAccent from '@/components/CurvedNationalAccent';
+import DprEditorialArt from '@/components/DprEditorialArt';
 import {
   TrendingUp,
   Calendar,
@@ -382,7 +385,7 @@ export default function BusinessPlanResultsPage({ params }: { params: { planId: 
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F7F8F5] flex flex-col">
+      <div className="min-h-screen bg-[#F4F7FB] flex flex-col">
         <Navbar />
         <div className="flex-1 flex flex-col items-center justify-center p-8 text-[#64748B] gap-3">
           <Loader2 className="w-9 h-9 text-[#159A68] animate-spin" />
@@ -395,7 +398,7 @@ export default function BusinessPlanResultsPage({ params }: { params: { planId: 
 
   if (error || !dpr) {
     return (
-      <div className="min-h-screen bg-[#F7F8F5] flex flex-col">
+      <div className="min-h-screen bg-[#F4F7FB] flex flex-col">
         <Navbar />
         <div className="flex-1 flex flex-col items-center justify-center p-8">
           <div className="bg-white p-8 rounded-2xl border border-red-200 text-center max-w-md shadow-xs space-y-3">
@@ -422,7 +425,7 @@ export default function BusinessPlanResultsPage({ params }: { params: { planId: 
   const ia = dpr.illustrative_assumptions;
 
   return (
-    <div className="min-h-screen bg-[#F7F8F5] flex flex-col font-sans text-[#0B1736] antialiased">
+    <div className="min-h-screen bg-[#F4F7FB] flex flex-col font-sans text-[#0B1736] antialiased">
       {/* Navbar (Hidden during printing) */}
       <div className="print:hidden">
         <Navbar />
@@ -497,15 +500,22 @@ export default function BusinessPlanResultsPage({ params }: { params: { planId: 
           {/* ------------------------------------------------------------- */}
           {/* Executive Header Banner */}
           {/* ------------------------------------------------------------- */}
-          <div className="bg-white p-6 md:p-8 rounded-2xl border border-[#E2E8F0] shadow-xs space-y-6">
-            <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 border-b border-[#E2E8F0] pb-6">
+          <div className="bg-white p-6 md:p-8 rounded-2xl border border-[#E2E8F0] shadow-xs space-y-6 relative overflow-hidden subtle-card-hover">
+            {/* Subtle Curved Tricolor Accent in Top-Right Corner */}
+            <CurvedNationalAccent variant="corner" className="opacity-80" />
+
+            <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 border-b border-[#E2E8F0] pb-6 relative z-10">
               <div className="flex items-start gap-4">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/logo.png" alt="UnnatE" className="h-12 w-auto object-contain shrink-0 hidden sm:block mt-1" />
+                <div className="flex items-center gap-2.5 shrink-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/logo.png" alt="UnnatE" className="h-11 w-auto object-contain shrink-0 hidden sm:block" />
+                  <div className="hidden sm:block w-px h-10 bg-slate-200" />
+                  <AshokaLionEmblem size={44} className="text-[#0B1736] shrink-0 hidden sm:flex" />
+                </div>
                 <div className="space-y-1.5">
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#EAF7F0] text-[#159A68] rounded-full text-[10px] font-bold uppercase tracking-wider border border-[#159A68]/20">
                     <ShieldCheck className="w-3.5 h-3.5 text-[#159A68]" />
-                    <span>Official Detailed Project Report (DPR) • Bank & Ministry Ready</span>
+                    <span>Official Detailed Project Report (DPR) • Bank &amp; Ministry Ready</span>
                   </div>
                   <h1 className="text-2xl md:text-3xl font-black text-[#0B1736] tracking-tight capitalize">
                     {dpr.project_name}
@@ -638,7 +648,10 @@ export default function BusinessPlanResultsPage({ params }: { params: { planId: 
                 </div>
                 <h2 className="text-base font-bold text-slate-900 uppercase">Executive Summary</h2>
               </div>
-              <ProvenanceBadge tag={dpr.executive_summary.provenance} />
+              <div className="flex items-center gap-3">
+                <DprEditorialArt type="business" width={90} height={46} className="hidden sm:inline-flex opacity-80" />
+                <ProvenanceBadge tag={dpr.executive_summary.provenance} />
+              </div>
             </div>
 
             {/* Quick Metrics Table */}
@@ -684,7 +697,10 @@ export default function BusinessPlanResultsPage({ params }: { params: { planId: 
                 </div>
                 <h2 className="text-base font-bold text-slate-900 uppercase">Business Model & Value Proposition</h2>
               </div>
-              <ProvenanceBadge tag={dpr.business_model.provenance} />
+              <div className="flex items-center gap-3">
+                <DprEditorialArt type="business" width={90} height={46} className="hidden sm:inline-flex opacity-80" />
+                <ProvenanceBadge tag={dpr.business_model.provenance} />
+              </div>
             </div>
 
             {/* Value Proposition Callout */}
@@ -765,7 +781,10 @@ export default function BusinessPlanResultsPage({ params }: { params: { planId: 
                 </div>
                 <h2 className="text-base font-bold text-slate-900 uppercase">Market Analysis & District MSME Structure</h2>
               </div>
-              <ProvenanceBadge tag={dpr.market_analysis.provenance} />
+              <div className="flex items-center gap-3">
+                <DprEditorialArt type="market" width={90} height={46} className="hidden sm:inline-flex opacity-80" />
+                <ProvenanceBadge tag={dpr.market_analysis.provenance} />
+              </div>
             </div>
 
             {/* A. District MSME Census Cards */}
@@ -969,7 +988,10 @@ export default function BusinessPlanResultsPage({ params }: { params: { planId: 
                 </div>
                 <h2 className="text-base font-bold text-slate-900 uppercase">Customer Segments & Demand Channels</h2>
               </div>
-              <ProvenanceBadge tag={dpr.customer_segments.provenance} />
+              <div className="flex items-center gap-3">
+                <DprEditorialArt type="customers" width={90} height={46} className="hidden sm:inline-flex opacity-80" />
+                <ProvenanceBadge tag={dpr.customer_segments.provenance} />
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -1017,7 +1039,10 @@ export default function BusinessPlanResultsPage({ params }: { params: { planId: 
                 </div>
                 <h2 className="text-base font-bold text-slate-900 uppercase">Indicative Competition Assessment</h2>
               </div>
-              <ProvenanceBadge tag={dpr.competition.provenance} />
+              <div className="flex items-center gap-3">
+                <DprEditorialArt type="marketing" width={90} height={46} className="hidden sm:inline-flex opacity-80" />
+                <ProvenanceBadge tag={dpr.competition.provenance} />
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
@@ -1073,7 +1098,10 @@ export default function BusinessPlanResultsPage({ params }: { params: { planId: 
                 </div>
                 <h2 className="text-base font-bold text-slate-900 uppercase">Location Analysis & Infrastructure Suitability</h2>
               </div>
-              <ProvenanceBadge tag={dpr.location_analysis.provenance} />
+              <div className="flex items-center gap-3">
+                <DprEditorialArt type="location" width={90} height={46} className="hidden sm:inline-flex opacity-80" />
+                <ProvenanceBadge tag={dpr.location_analysis.provenance} />
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
@@ -1115,7 +1143,10 @@ export default function BusinessPlanResultsPage({ params }: { params: { planId: 
                 </div>
                 <h2 className="text-base font-bold text-slate-900 uppercase">Operations & Production Plan</h2>
               </div>
-              <ProvenanceBadge tag={dpr.operations_plan.provenance} />
+              <div className="flex items-center gap-3">
+                <DprEditorialArt type="operations" width={90} height={46} className="hidden sm:inline-flex opacity-80" />
+                <ProvenanceBadge tag={dpr.operations_plan.provenance} />
+              </div>
             </div>
 
             {/* Workflow sequence */}
@@ -1192,7 +1223,10 @@ export default function BusinessPlanResultsPage({ params }: { params: { planId: 
                 </div>
                 <h2 className="text-base font-bold text-slate-900 uppercase">Marketing & Distribution Strategy</h2>
               </div>
-              <ProvenanceBadge tag={dpr.marketing_strategy.provenance} />
+              <div className="flex items-center gap-3">
+                <DprEditorialArt type="marketing" width={90} height={46} className="hidden sm:inline-flex opacity-80" />
+                <ProvenanceBadge tag={dpr.marketing_strategy.provenance} />
+              </div>
             </div>
 
             <div className="p-4 rounded-2xl bg-indigo-50/60 border border-indigo-200 text-xs">
@@ -1243,12 +1277,18 @@ export default function BusinessPlanResultsPage({ params }: { params: { planId: 
                 </div>
                 <h2 className="text-base font-bold text-slate-900 uppercase">Government Scheme Support & Statutory Eligibility</h2>
               </div>
-              <ProvenanceBadge tag={gs.provenance} />
+              <div className="flex items-center gap-3">
+                <DprEditorialArt type="government" width={90} height={46} className="hidden sm:inline-flex opacity-80" />
+                <ProvenanceBadge tag={gs.provenance} />
+              </div>
             </div>
 
             {/* Scheme banner */}
-            <div className="p-5 rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
+            <div className="p-5 rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative overflow-hidden">
+              <div className="print:hidden">
+                <CurvedNationalAccent variant="corner" className="opacity-30" />
+              </div>
+              <div className="relative z-10">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
                   {gs.program_code}
                 </span>
@@ -1329,7 +1369,10 @@ export default function BusinessPlanResultsPage({ params }: { params: { planId: 
                 </div>
                 <h2 className="text-base font-bold text-slate-900 uppercase">Authoritative Capital Structure & Debt Service</h2>
               </div>
-              <ProvenanceBadge tag={cs.provenance} />
+              <div className="flex items-center gap-3">
+                <DprEditorialArt type="financial" width={90} height={46} className="hidden sm:inline-flex opacity-80" />
+                <ProvenanceBadge tag={cs.provenance} />
+              </div>
             </div>
 
             {/* Donut Chart + Slices Table */}
@@ -1473,7 +1516,10 @@ export default function BusinessPlanResultsPage({ params }: { params: { planId: 
                 </div>
                 <h2 className="text-base font-bold text-slate-900 uppercase">Financial Assumptions & Debt Service Schedule</h2>
               </div>
-              <ProvenanceBadge tag={fa.provenance} />
+              <div className="flex items-center gap-3">
+                <DprEditorialArt type="financial" width={90} height={46} className="hidden sm:inline-flex opacity-80" />
+                <ProvenanceBadge tag={fa.provenance} />
+              </div>
             </div>
 
             {/* Benchmark interest rate card */}
@@ -1616,7 +1662,10 @@ export default function BusinessPlanResultsPage({ params }: { params: { planId: 
                 </div>
                 <h2 className="text-base font-bold text-slate-900 uppercase">Risk Analysis & Weather Activity Impact</h2>
               </div>
-              <ProvenanceBadge tag={ra.provenance} />
+              <div className="flex items-center gap-3">
+                <DprEditorialArt type="risk" width={90} height={46} className="hidden sm:inline-flex opacity-80" />
+                <ProvenanceBadge tag={ra.provenance} />
+              </div>
             </div>
 
             {/* Dedicated Weather / Business Activity Intelligence Subsection */}
@@ -1722,7 +1771,10 @@ export default function BusinessPlanResultsPage({ params }: { params: { planId: 
                 </div>
                 <h2 className="text-base font-bold text-slate-900 uppercase">Project Implementation Roadmap (Months 1–6)</h2>
               </div>
-              <ProvenanceBadge tag={dpr.implementation_plan.provenance} />
+              <div className="flex items-center gap-3">
+                <DprEditorialArt type="milestones" width={90} height={46} className="hidden sm:inline-flex opacity-80" />
+                <ProvenanceBadge tag={dpr.implementation_plan.provenance} />
+              </div>
             </div>
 
             {/* Visual Milestones Stepper */}

@@ -52,6 +52,8 @@ import {
   ManufacturingTechnologyContext,
   ManufacturingReportSection,
 } from '@/components/ManufacturingStrategicContext';
+import AshokaLionEmblem from '@/components/AshokaLionEmblem';
+import CurvedNationalAccent from '@/components/CurvedNationalAccent';
 
 function toTitleCase(str: string): string {
   if (!str) return '';
@@ -345,7 +347,7 @@ function MarketAnalysisContent() {
       : `District Market Potential Report: ${selectedDistrict}, ${selectedState}`;
 
     return (
-      <div className="min-h-screen bg-[#F7F8F5] text-[#0B1736] flex flex-col font-sans selection:bg-[#159A68] selection:text-white print:bg-white print:p-0">
+      <div className="min-h-screen bg-[#F4F7FB] text-[#0B1736] flex flex-col font-sans selection:bg-[#159A68] selection:text-white print:bg-white print:p-0">
         <div className="print:hidden">
           <Navbar />
         </div>
@@ -378,19 +380,31 @@ function MarketAnalysisContent() {
             </div>
 
             {/* Official Report Document Container */}
-            <div className="bg-white rounded-2xl border border-slate-200/90 p-8 sm:p-12 shadow-sm space-y-8 print:border-none print:shadow-none print:p-0">
+            <div className="bg-white rounded-2xl border border-slate-200/90 p-8 sm:p-12 shadow-sm space-y-8 print:border-none print:shadow-none print:p-0 relative overflow-hidden">
+              <div className="print:hidden">
+                <CurvedNationalAccent variant="corner" className="opacity-80" />
+              </div>
+
               {/* Document Header */}
-              <div className="border-b-2 border-[#159A68] pb-6 space-y-3">
-                <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
-                  <span>UNNATE RESEARCH &amp; MARKET INTELLIGENCE</span>
-                  <span>CONFIDENTIAL &amp; STATUTORY BENCHMARK</span>
+              <div className="border-b-2 border-[#159A68] pb-6 space-y-3 relative z-10">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="space-y-3 flex-1">
+                    <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                      <span>UNNATE RESEARCH &amp; MARKET INTELLIGENCE</span>
+                      <span>CONFIDENTIAL &amp; STATUTORY BENCHMARK</span>
+                    </div>
+                    <h1 className="text-2xl sm:text-3xl font-black text-[#0B1736] font-serif tracking-tight">
+                      {reportTitle}
+                    </h1>
+                    <p className="text-xs sm:text-sm text-slate-600">
+                      Synthesized from official Ministry of MSME Udyam Census, MoSPI HCES 2022-23 benchmarks, PwC Voice of the Consumer (2025) evidence, and scikit-learn dimensional market archetypes.
+                    </p>
+                  </div>
+                  <div className="hidden sm:flex flex-col items-center justify-center p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 shrink-0">
+                    <AshokaLionEmblem size={44} className="text-[#0B1736]" />
+                    <span className="text-[8px] font-bold uppercase tracking-wider text-slate-400 mt-1">Official Reference</span>
+                  </div>
                 </div>
-                <h1 className="text-2xl sm:text-3xl font-black text-[#0B1736] font-serif tracking-tight">
-                  {reportTitle}
-                </h1>
-                <p className="text-xs sm:text-sm text-slate-600">
-                  Synthesized from official Ministry of MSME Udyam Census, MoSPI HCES 2022-23 benchmarks, PwC Voice of the Consumer (2025) evidence, and scikit-learn dimensional market archetypes.
-                </p>
                 <div className="flex flex-wrap gap-2 pt-2">
                   <span className="px-3 py-1 rounded-full bg-[#EAF7F0] text-[#159A68] text-xs font-bold">
                     District: {selectedDistrict} ({selectedState})
@@ -651,7 +665,7 @@ function MarketAnalysisContent() {
   // STANDARD INTERACTIVE MARKET ANALYSIS VIEW
   // =========================================================================
   return (
-    <div className="min-h-screen bg-[#F7F8F5] text-[#0B1736] flex flex-col font-sans selection:bg-[#159A68] selection:text-white">
+    <div className="min-h-screen bg-[#F4F7FB] text-[#0B1736] flex flex-col font-sans selection:bg-[#159A68] selection:text-white">
       <Navbar />
 
       <div className="flex-1 flex w-full">
@@ -668,7 +682,7 @@ function MarketAnalysisContent() {
           {/* ========================================================================= */}
           {/* 1. PAGE INTRO                                                             */}
           {/* ========================================================================= */}
-          <section className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-6 sm:p-8 lg:p-9 shadow-xs relative overflow-hidden">
+          <section className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200/80 p-6 sm:p-8 lg:p-9 shadow-xs relative overflow-hidden subtle-card-hover">
             <div className="absolute right-0 top-0 bottom-0 w-full sm:w-3/5 lg:w-1/2 pointer-events-none overflow-hidden rounded-r-2xl sm:rounded-r-3xl z-0">
               <img
                 src="/market-textile.jpg"
