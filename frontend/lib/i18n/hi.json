@@ -90,5 +90,25 @@
     "experienceLevel": "अनुभव का स्तर",
     "submit": "जमा करें",
     "verifyOtp": "ओटीपी सत्यापित करें"
+  },
+  "common": {
+    "exploreYourBusiness": "अपने व्यवसाय को जानें",
+    "exploreSchemes": "सरकारी योजनाएं",
+    "whatIfSimulator": "व्हाट-इफ सिम्युलेटर",
+    "startYourAnalysis": "व्यावसायिक विश्लेषण शुरू करें",
+    "eligible": "पात्र",
+    "partiallyVerified": "आंशिक रूप से सत्यापित",
+    "ineligible": "अपात्र",
+    "applyFilter": "फ़िल्टर लागू करें",
+    "generateDpr": "डीपीआर बनाएं",
+    "downloadPdf": "पीडीएफ डाउनलोड करें",
+    "loading": "लोड हो रहा है...",
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "back": "वापस",
+    "next": "अगला",
+    "retry": "पुनः प्रयास करें",
+    "viewDetails": "विवरण देखें",
+    "search": "खोजें"
   }
 }

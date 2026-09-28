@@ -90,5 +90,25 @@
     "experienceLevel": "Experience Level",
     "submit": "Submit",
     "verifyOtp": "Verify OTP"
+  },
+  "common": {
+    "exploreYourBusiness": "Explore Your Business",
+    "exploreSchemes": "Explore Schemes",
+    "whatIfSimulator": "What-If Simulator",
+    "startYourAnalysis": "Start Your Analysis",
+    "eligible": "Eligible",
+    "partiallyVerified": "Partially Verified",
+    "ineligible": "Ineligible",
+    "applyFilter": "Apply Filter",
+    "generateDpr": "Generate DPR",
+    "downloadPdf": "Download PDF",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "next": "Next",
+    "retry": "Retry",
+    "viewDetails": "View Details",
+    "search": "Search"
   }
 }

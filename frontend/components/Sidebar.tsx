@@ -88,7 +88,7 @@ export default function Sidebar() {
   const menuItems = [
     { id: 'dashboard', href: '/dashboard', label: t('nav.dashboard'), icon: LayoutDashboard },
     { id: 'profile', href: '/dashboard/profile', label: t('nav.businessProfile'), icon: Building2 },
-    { id: 'simulator', href: '/simulator', label: 'What-If Simulator', icon: Sliders },
+    { id: 'simulator', href: '/simulator', label: t('common.whatIfSimulator') || 'What-If Simulator', icon: Sliders },
     { id: 'market', href: '/dashboard/market-analysis', label: t('nav.marketAnalysis'), icon: BarChart3 },
     { id: 'schemes', href: '/advisory/schemes', label: t('nav.governmentSchemes'), icon: Landmark },
     { id: 'financial', href: '/advisory/financial', label: t('nav.financialOptions'), icon: BadgeIndianRupee },
