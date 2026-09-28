@@ -23,8 +23,8 @@ def get_engine():
     return engine
 
 
-def run_ddl():
-    engine = get_engine()
+def run_ddl(custom_engine=None):
+    engine = custom_engine or get_engine()
 
     ddl_statements = [
         # 1. district_geo_centroids table

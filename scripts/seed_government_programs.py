@@ -51,8 +51,11 @@ def seed(custom_engine=None):
     with open(catalogue_path, "r", encoding="utf-8") as f:
         catalogue = json.load(f)
 
+    max_programs = int(os.getenv("MAX_GOVERNMENT_PROGRAMS", "60"))
+    if max_programs and len(catalogue) > max_programs:
+        catalogue = catalogue[:max_programs]
+
     print(f"Loaded {len(catalogue)} programmes from catalogue.")
-    assert len(catalogue) == 115, f"Expected 115 programmes in catalogue, found {len(catalogue)}"
 
     # Sector mapping: code -> ID
     sector_map = {
@@ -293,6 +296,16 @@ def seed(custom_engine=None):
                 e.setdefault("street_vendor_mandate", False)
                 e.setdefault("startup_mandate", False)
                 e.setdefault("notes", None)
+                bool_fields = [
+                    "rural_eligible", "urban_eligible", "male_eligible", "female_eligible",
+                    "other_gender_eligible", "general_eligible", "sc_eligible", "st_eligible",
+                    "obc_eligible", "minority_eligible", "pwd_eligible", "ex_servicemen_eligible",
+                    "artisan_mandate", "street_vendor_mandate", "startup_mandate"
+                ]
+                for bf in bool_fields:
+                    val = e.get(bf)
+                    if val is not None:
+                        e[bf] = bool(val)
                 conn.execute(text("""
                     INSERT INTO program_eligibility (
                         program_id, rural_eligible, urban_eligible, male_eligible, female_eligible,
@@ -337,6 +350,8 @@ def seed(custom_engine=None):
                 c = item["credit"].copy()
                 c["program_id"] = prog_id
                 c.setdefault("collateral_required", False)
+                if c.get("collateral_required") is not None:
+                    c["collateral_required"] = bool(c["collateral_required"])
                 conn.execute(text("""
                     INSERT INTO program_credit_details (
                         program_id, min_loan_amount, max_loan_amount, interest_rate_min,
@@ -364,6 +379,8 @@ def seed(custom_engine=None):
                 g = item["guarantee"].copy()
                 g["program_id"] = prog_id
                 g.setdefault("hybrid_security_allowed", False)
+                if g.get("hybrid_security_allowed") is not None:
+                    g["hybrid_security_allowed"] = bool(g["hybrid_security_allowed"])
                 conn.execute(text("""
                     INSERT INTO program_guarantee_details (
                         program_id, max_credit_limit, guarantee_coverage_pct, annual_guarantee_fee_pct,

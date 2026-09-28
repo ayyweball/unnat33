@@ -22,8 +22,9 @@ from pathlib import Path
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text
 
-def run_ddl():
+def run_ddl(custom_engine=None):
     from app.db.database import engine
+    target_engine = custom_engine or engine
 
     ddl_statements = [
         # 1. Master government_programs table
@@ -143,7 +144,9 @@ def run_ddl():
         );
         """,
 
-        # 7. Unified sector view
+        # 7. Unified sector view (Drop table if Base.metadata created placeholder table)
+        "DROP TABLE IF EXISTS v_unified_program_sectors CASCADE;",
+        "DROP TABLE IF EXISTS v_unified_program_eligibility CASCADE;",
         """
         CREATE OR REPLACE VIEW v_unified_program_sectors AS
         SELECT 
@@ -225,7 +228,7 @@ def run_ddl():
     ]
 
     print("Executing Phase 1 DDL non-destructively in a single transaction...")
-    with engine.begin() as conn:
+    with target_engine.begin() as conn:
         for stmt in ddl_statements:
             conn.execute(text(stmt))
 

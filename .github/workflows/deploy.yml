@@ -42,6 +42,13 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-cov
 
+      - name: Initialize Database Schema and Seeds
+        env:
+          DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/goi_schemes
+          PYTHONPATH: .
+        run: |
+          python scripts/init_test_db.py
+
       - name: Run Backend Pytest Suite
         env:
           DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/goi_schemes
