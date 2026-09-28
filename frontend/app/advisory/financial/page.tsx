@@ -32,9 +32,10 @@ function FinancialAdvisorForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const initialProgramId = searchParams.get('programId');
+  const initialProgramId = searchParams.get('programId') || searchParams.get('schemeId');
   const initialProgramCode = searchParams.get('programCode');
-  const initialLoan = searchParams.get('loanNeeded');
+  const initialLoan = searchParams.get('loanNeeded') || searchParams.get('amount') || searchParams.get('requestedLoan');
+  const initialProjectCost = searchParams.get('projectCost');
 
   const [availablePrograms, setAvailablePrograms] = useState<any[]>([]);
   const [loadingPrograms, setLoadingPrograms] = useState(false);
@@ -46,7 +47,7 @@ function FinancialAdvisorForm() {
     monthlyExpenses: 0,
     existingLoans: [] as { name: string; emi: number }[],
     creditHistory: 'Good Track Record',
-    projectCost: initialLoan ? parseInt(initialLoan) : 0,
+    projectCost: initialProjectCost ? parseInt(initialProjectCost) : (initialLoan ? parseInt(initialLoan) : 0),
     loanNeeded: initialLoan ? parseInt(initialLoan) : 0,
     purpose: 'Equipment & Machinery Purchase',
     preferredTenure: 60,
@@ -66,7 +67,7 @@ function FinancialAdvisorForm() {
           const b = data.business;
           const income = b.monthlyIncome || (b.annualIncome ? Math.round(b.annualIncome / 12) : 0);
           const expenses = b.monthlyExpenses || 0;
-          const pCost = initialLoan ? parseInt(initialLoan) : (b.projectCost || b.estimatedCapital || 0);
+          const pCost = initialProjectCost ? parseInt(initialProjectCost) : (initialLoan ? parseInt(initialLoan) : (b.projectCost || b.estimatedCapital || 0));
           const lNeeded = initialLoan ? parseInt(initialLoan) : (b.requestedFinancing || b.projectCost || 0);
           const loans =
             b.existingMonthlyEmi && b.existingMonthlyEmi > 0
@@ -88,29 +89,67 @@ function FinancialAdvisorForm() {
         console.warn('Could not load profile for financial advisor:', e);
         setProfileLoaded(true);
       });
-  }, [initialLoan]);
+  }, [initialLoan, initialProjectCost]);
 
   // Fetch available authoritative programmes to allow selection or switching
   useEffect(() => {
     setLoadingPrograms(true);
-    fetch('/api/schemes?limit=60')
+    fetch('/api/schemes')
       .then((res) => res.json())
       .then((data) => {
         if (data.programs) {
           setAvailablePrograms(data.programs);
-          // If no program selected from URL, default to first available program
+          // Sync with URL parameters or select best program matching loan target
+          if (initialProgramId) {
+            const match = data.programs.find((p: any) => p.id === parseInt(initialProgramId) || p.legacy_scheme_id === parseInt(initialProgramId));
+            if (match) {
+              setForm((prev) => ({
+                ...prev,
+                programId: match.id,
+                programCode: match.program_code,
+              }));
+              return;
+            }
+          }
+          if (initialProgramCode) {
+            const match = data.programs.find((p: any) => p.program_code === initialProgramCode);
+            if (match) {
+              setForm((prev) => ({
+                ...prev,
+                programId: match.id,
+                programCode: match.program_code,
+              }));
+              return;
+            }
+          }
+          // If no program selected from URL, choose a matching program based on loan target
           if (!form.programId && !form.programCode && data.programs.length > 0) {
+            const loanTarget = form.loanNeeded || (form.projectCost ? form.projectCost * 0.9 : 0);
+            let candidate: any = null;
+            if (loanTarget > 0) {
+              candidate = data.programs.find((p: any) => {
+                const max = p.credit_details?.max_loan_amount ?? p.max_loan_amount;
+                const min = p.credit_details?.min_loan_amount ?? p.min_loan_amount ?? 0;
+                return (max == null || max >= loanTarget) && (min <= loanTarget);
+              });
+            }
+            if (!candidate) {
+              candidate = data.programs.find((p: any) => p.program_code === 'STANDUP_INDIA')
+                || data.programs.find((p: any) => p.program_code === 'PMEGP_NEW')
+                || data.programs.find((p: any) => p.program_code === 'PM_MUDRA_TARUN')
+                || data.programs[0];
+            }
             setForm((prev) => ({
               ...prev,
-              programId: data.programs[0].id,
-              programCode: data.programs[0].program_code,
+              programId: candidate.id,
+              programCode: candidate.program_code,
             }));
           }
         }
       })
       .catch((e) => console.warn('Could not load programmes for selector:', e))
       .finally(() => setLoadingPrograms(false));
-  }, []);
+  }, [initialProgramId, initialProgramCode]);
 
   const addLoan = () => {
     setForm({
@@ -184,7 +223,7 @@ function FinancialAdvisorForm() {
     <div className="min-h-screen bg-[#F7F8F5] text-[#0B1736] flex flex-col font-sans selection:bg-[#159A68] selection:text-white">
       <Navbar />
 
-      <div className="flex-1 flex w-full">
+      <div className="flex-1 flex w-full min-w-0">
         <Sidebar />
 
         <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 max-w-[1550px] w-full min-w-0 space-y-6 sm:space-y-7">
@@ -538,6 +577,21 @@ function FinancialAdvisorForm() {
                     {selectedProgramObj.benefit_summary || selectedProgramObj.description}
                   </p>
                 )}
+
+                {selectedProgramObj && (() => {
+                  const maxCap = selectedProgramObj.credit_details?.max_loan_amount ?? selectedProgramObj.max_loan_amount;
+                  if (maxCap && form.loanNeeded > maxCap) {
+                    return (
+                      <div className="mt-2.5 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-start gap-2">
+                        <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                        <div>
+                          <span className="font-bold">Statutory Limit Notice:</span> {selectedProgramObj.program_name} has an official loan ceiling of ₹{Number(maxCap).toLocaleString('en-IN')}. For your requested loan of ₹{form.loanNeeded.toLocaleString('en-IN')}, bank debt under this specific scheme will be capped at the ceiling.
+                        </div>
+                      </div>
+                    );
+                  }
+                  return null;
+                })()}
               </div>
             </div>
 

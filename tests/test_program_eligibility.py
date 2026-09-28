@@ -34,10 +34,10 @@ from app.services.eligibility_service import eligibility_service
 # A. FULL COVERAGE & INTEGRITY TESTS
 # ==============================================================================
 
-def test_program_eligibility_evaluates_exactly_60_programs(client: TestClient, db_session: Session):
-    """Verify that evaluate-eligibility evaluates all 60 government programmes dynamically from DB."""
+def test_program_eligibility_evaluates_exactly_115_programs(client: TestClient, db_session: Session):
+    """Verify that evaluate-eligibility evaluates all 115 government programmes dynamically from DB."""
     total_in_db = db_session.query(GovernmentProgram).count()
-    assert total_in_db == 60, f"Expected 60 government programmes in DB, found {total_in_db}"
+    assert total_in_db == 115, f"Expected 115 government programmes in DB, found {total_in_db}"
 
     profile = {
         "age": 30,
@@ -54,7 +54,7 @@ def test_program_eligibility_evaluates_exactly_60_programs(client: TestClient, d
     assert response.status_code == status.HTTP_200_OK
 
     data = response.json()
-    assert data["total_evaluated"] == 60
+    assert data["total_evaluated"] == 115
     assert data["total_evaluated"] == total_in_db
 
 
@@ -79,8 +79,8 @@ def test_no_duplicate_program_ids_in_response(client: TestClient):
         for p in data[category]:
             all_ids.append(p["program_id"])
 
-    assert len(all_ids) == 60
-    assert len(set(all_ids)) == 60, "Duplicate program IDs found in eligibility evaluation response"
+    assert len(all_ids) == 115
+    assert len(set(all_ids)) == 115, "Duplicate program IDs found in eligibility evaluation response"
 
 
 def test_every_program_appears_exactly_once(client: TestClient):
@@ -530,16 +530,16 @@ def test_guarantee_amount_above_max_fails(client: TestClient):
 # ==============================================================================
 
 def test_actionability_counts_exact_aggregation(client: TestClient):
-    """Verify that actionability counts aggregate across all evaluated programmes and sum to 60."""
+    """Verify that actionability counts aggregate across all evaluated programmes and sum to 115."""
     profile = {"age": 30, "gender": "Male", "sector": "Manufacturing"}
     response = client.post("/api/v1/programs/evaluate-eligibility", json=profile)
     assert response.status_code == status.HTTP_200_OK
 
     data = response.json()
-    assert data["directly_recommendable_count"] == 28
-    assert data["component_recommendable_count"] == 27
+    assert data["directly_recommendable_count"] == 81
+    assert data["component_recommendable_count"] == 28
     assert data["platform_count"] == 2
-    assert data["framework_count"] == 3
+    assert data["framework_count"] == 4
 
     total_actionability = (
         data["directly_recommendable_count"]
@@ -547,7 +547,7 @@ def test_actionability_counts_exact_aggregation(client: TestClient):
         + data["platform_count"]
         + data["framework_count"]
     )
-    assert total_actionability == 60
+    assert total_actionability == 115
 
 
 def test_platform_and_framework_actionability_types(client: TestClient):

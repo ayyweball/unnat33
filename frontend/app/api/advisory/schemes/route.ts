@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { findMatchingSchemes } from '@/lib/vector';
+import { resolvePrimaryBusiness } from '@/lib/business-resolver';
 import { FALLBACK_USER, FALLBACK_BUSINESS, evaluateFallbackSchemes } from '@/lib/fallback-data';
 
 export async function POST(req: Request) {
@@ -35,7 +36,7 @@ export async function POST(req: Request) {
       if (user?.id) {
         [dbUser, dbBusiness] = await Promise.all([
           prisma.user.findUnique({ where: { id: user.id } }).catch(() => null),
-          prisma.business.findFirst({ where: { userId: user.id }, orderBy: { createdAt: 'desc' } }).catch(() => null),
+          resolvePrimaryBusiness(user.id, body.businessId).catch(() => null),
         ]);
       }
     } catch (dbErr) {

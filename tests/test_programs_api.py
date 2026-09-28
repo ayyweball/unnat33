@@ -21,33 +21,33 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 
 
-def test_get_all_programs_count_60(client: TestClient):
-    """Verify GET /api/v1/programs returns exactly 60 programmes."""
-    response = client.get("/api/v1/programs?limit=100")
+def test_get_all_programs_count_115(client: TestClient):
+    """Verify GET /api/v1/programs returns exactly 115 programmes."""
+    response = client.get("/api/v1/programs?limit=200")
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
     assert isinstance(data, list)
-    assert len(data) == 60
+    assert len(data) == 115
 
 
 def test_no_duplicate_program_codes_or_ids(client: TestClient):
-    """Verify all 60 programmes have unique IDs and unique programme codes."""
-    response = client.get("/api/v1/programs?limit=100")
+    """Verify all 115 programmes have unique IDs and unique programme codes."""
+    response = client.get("/api/v1/programs?limit=200")
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
 
     ids = [p["id"] for p in data]
     codes = [p["program_code"] for p in data]
 
-    assert len(ids) == 60
-    assert len(set(ids)) == 60
-    assert len(codes) == 60
-    assert len(set(codes)) == 60
+    assert len(ids) == 115
+    assert len(set(ids)) == 115
+    assert len(codes) == 115
+    assert len(set(codes)) == 115
 
 
 def test_all_12_legacy_programs_represented(client: TestClient):
     """Verify all 12 legacy programmes are represented with valid legacy_scheme_id links."""
-    response = client.get("/api/v1/programs?limit=100")
+    response = client.get("/api/v1/programs?limit=200")
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
 
@@ -59,7 +59,7 @@ def test_all_12_legacy_programs_represented(client: TestClient):
 
     # Also verify non-legacy programmes count
     non_legacy_progs = [p for p in data if p.get("legacy_scheme_id") is None]
-    assert len(non_legacy_progs) == 48
+    assert len(non_legacy_progs) == 103
 
 
 def test_program_detail_by_integer_id(client: TestClient):

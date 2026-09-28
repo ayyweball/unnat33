@@ -82,12 +82,17 @@ export default function SchemesPage() {
     setLoading(true);
     setErrorMsg('');
     try {
+      const targetNeed = overrideParams.target_financing_need 
+        ?? overrideParams.requested_loan_amount 
+        ?? financingTarget;
+
       const res = await fetch('/api/advisory/schemes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          target_financing_need: targetNeed,
+          requested_loan_amount: targetNeed,
           ...overrideParams,
-          target_financing_need: financingTarget,
         }),
       });
       const data = await res.json();
@@ -97,8 +102,8 @@ export default function SchemesPage() {
       if (data.schemes) setSchemes(data.schemes);
       if (data.eligibilitySummary) setEligibilitySummary(data.eligibilitySummary);
       if (data.userLocation) {
-        if (data.userLocation.state) setActiveState(data.userLocation.state);
-        if (data.userLocation.district) setActiveDistrict(data.userLocation.district);
+        if (data.userLocation.state && !activeState) setActiveState(data.userLocation.state);
+        if (data.userLocation.district && !activeDistrict) setActiveDistrict(data.userLocation.district);
       }
     } catch (e: any) {
       setErrorMsg(e.message || 'Could not load authoritative recommendations.');
@@ -109,18 +114,51 @@ export default function SchemesPage() {
 
   const handleApplyFilter = () => {
     fetchSchemes({
-      state: activeState || undefined,
-      district: activeDistrict || undefined,
+      state: activeState || user?.state || undefined,
+      district: activeDistrict || user?.district || undefined,
       gender: filterWomen ? 'Female' : (user?.gender || undefined),
+      social_category: user?.socialCategory || undefined,
+      is_rural: user?.isRural,
+      sector: business?.sector || undefined,
+      project_cost: business?.projectCost || business?.estimatedCapital || financingTarget,
+      is_new_business: business?.isNewBusiness,
+      is_traditional_artisan: user?.isTraditionalArtisan,
+      is_street_vendor: user?.isStreetVendor,
       requested_loan_amount: financingTarget,
+      target_financing_need: financingTarget,
     });
   };
+
+  const filteredSchemes = schemes.filter((item) => {
+    if (categoryFilter === 'All Schemes') return true;
+    const s = item.scheme;
+    const type = (s?.primaryType || s?.primary_type || '').toUpperCase();
+    const name = (s?.name || '').toUpperCase();
+    const desc = (s?.description || '').toUpperCase();
+
+    switch (categoryFilter) {
+      case 'Subsidy':
+        return type.includes('SUBSIDY') || name.includes('SUBSIDY') || desc.includes('SUBSIDY');
+      case 'Loan':
+        return type.includes('CREDIT') || type.includes('LOAN') || name.includes('LOAN') || desc.includes('LOAN');
+      case 'Skill Development':
+        return type.includes('TRAINING') || type.includes('SKILL') || type.includes('ENTREPRENEURSHIP') || type.includes('ARTISAN') || name.includes('SKILL') || desc.includes('SKILL');
+      case 'Infrastructure':
+        return type.includes('INFRASTRUCTURE') || type.includes('CLUSTER') || name.includes('INFRASTRUCTURE') || desc.includes('INFRASTRUCTURE');
+      case 'Export':
+        return type.includes('EXPORT') || type.includes('INTERNATIONALIZATION') || name.includes('EXPORT') || desc.includes('EXPORT');
+      case 'State Schemes':
+        return (s?.state && s.state !== 'All India') || name.includes('STATE') || desc.includes('STATE');
+      default:
+        return true;
+    }
+  });
 
   return (
     <div className="min-h-screen bg-[#F7F8F5] flex flex-col">
       <Navbar />
 
-      <div className="flex-1 flex w-full">
+      <div className="flex-1 flex w-full min-w-0">
         <Sidebar />
 
         <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 max-w-[1550px] w-full min-w-0 space-y-6">
@@ -179,7 +217,7 @@ export default function SchemesPage() {
           {/* ========================================================================= */}
           {/* 1B. CATEGORY FILTER TABS (Direct Reference Match - Screen 5)               */}
           {/* ========================================================================= */}
-          <section className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+          <section className="w-full min-w-0 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
             {['All Schemes', 'Subsidy', 'Loan', 'Skill Development', 'Infrastructure', 'Export', 'State Schemes'].map((cat) => (
               <button
                 key={cat}
@@ -333,9 +371,24 @@ export default function SchemesPage() {
                 Review Profile
               </Link>
             </div>
+          ) : filteredSchemes.length === 0 ? (
+            <div className="text-center py-12 bg-white rounded-2xl border border-[#E2E8F0] p-8 space-y-3">
+              <AlertTriangle className="w-8 h-8 text-amber-500 mx-auto mb-1" />
+              <h3 className="text-base font-bold text-[#0B1736]">No programmes found under &ldquo;{categoryFilter}&rdquo;</h3>
+              <p className="text-xs text-[#64748B] max-w-md mx-auto">
+                None of the {schemes.length} evaluated schemes match this specific category filter.
+              </p>
+              <button
+                type="button"
+                onClick={() => setCategoryFilter('All Schemes')}
+                className="mt-2 inline-block px-4 py-2 rounded-xl bg-[#159A68] text-white font-semibold text-xs hover:bg-[#128357] transition-colors cursor-pointer"
+              >
+                Show All {schemes.length} Programmes
+              </button>
+            </div>
           ) : (
             <div className="space-y-4">
-              {schemes.map((item, idx) => {
+              {filteredSchemes.map((item, idx) => {
                 const s = item.scheme;
                 const isExpanded = expandedScheme === (s.id || idx);
                 const fitScore = Math.round(item.recommendationScore ?? item.approvalProbability ?? 80);

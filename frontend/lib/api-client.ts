@@ -844,6 +844,7 @@ class BackendApiClient {
 
     try {
       const response = await fetch(url, {
+        cache: 'no-store',
         ...options,
         headers,
         signal: controller.signal,
@@ -994,6 +995,108 @@ class BackendApiClient {
       body: JSON.stringify(payload),
     });
   }
+
+  /**
+   * Compute deterministic What-If simulation metrics, deltas, and observations
+   * POST /api/v1/simulator/calculate
+   */
+  async calculateSimulation(req: SimulatorCalculateRequest): Promise<SimulatorCalculateResponse> {
+    return this.request<SimulatorCalculateResponse>('/api/v1/simulator/calculate', {
+      method: 'POST',
+      body: JSON.stringify(req),
+    });
+  }
+
+  /**
+   * Fetch official MoSPI HCES 2022-23 State MPCE benchmark
+   * GET /api/v1/research/hces/state/{state_name}
+   */
+  async getStateHcesMpce(stateName: string, estimateType = 'without_imputation'): Promise<HcesStateMpceResponse> {
+    return this.request<HcesStateMpceResponse>(
+      `/api/v1/research/hces/state/${encodeURIComponent(stateName)}?estimate_type=${encodeURIComponent(estimateType)}`,
+      { method: 'GET' }
+    );
+  }
+}
+
+export interface HcesStateMpceResponse {
+  state_id?: number | null;
+  state_name: string;
+  geographic_level: string;
+  survey_year: string;
+  estimate_type: string;
+  rural_mpce: number;
+  urban_mpce: number;
+  rural_urban_difference_pct?: number | null;
+  sample_households_rural?: number | null;
+  sample_households_urban?: number | null;
+  source: string;
+  publisher: string;
+  survey_period: string;
+  methodology_notes?: string | null;
+}
+
+export interface SimulatorAssumptions {
+  monthly_customers: number;
+  average_selling_price: number;
+  variable_cost_per_unit: number;
+  fixed_operating_costs: number;
+  marketing_expense: number;
+  initial_investment: number;
+  loan_amount: number;
+  annual_interest_rate: number;
+  loan_tenure_months: number;
+}
+
+export interface SimulatorFinancialMetrics {
+  monthly_revenue: number;
+  variable_costs: number;
+  fixed_costs: number;
+  marketing_expense: number;
+  total_operating_cost: number;
+  operating_profit: number;
+  operating_margin_pct: number;
+  monthly_loan_emi: number;
+  cash_remaining_after_loan: number;
+  unit_contribution_margin: number;
+  contribution_margin_ratio: number;
+  break_even_customers: number | null;
+  break_even_revenue: number | null;
+  is_break_even_achievable: boolean;
+}
+
+export interface SimulatorMetricDelta {
+  metric_key: string;
+  metric_name: string;
+  baseline_value: number;
+  scenario_value: number;
+  absolute_change: number;
+  percentage_change: number | null;
+  percentage_points_change: number | null;
+}
+
+export interface SimulatorImpactObservation {
+  category: string;
+  message: string;
+  direction: 'positive' | 'negative' | 'neutral';
+}
+
+export interface SimulatorCalculateRequest {
+  baseline: SimulatorAssumptions;
+  scenario: SimulatorAssumptions;
+  sector?: string;
+  sub_type?: string;
+  state_name?: string;
+  district_name?: string;
+  is_rural?: boolean;
+}
+
+export interface SimulatorCalculateResponse {
+  baseline_metrics: SimulatorFinancialMetrics;
+  scenario_metrics: SimulatorFinancialMetrics;
+  deltas: Record<string, SimulatorMetricDelta>;
+  observations: SimulatorImpactObservation[];
+  calculation_metadata: Record<string, string>;
 }
 
 export const backendApiClient = new BackendApiClient();

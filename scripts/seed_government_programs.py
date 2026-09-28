@@ -51,9 +51,11 @@ def seed(custom_engine=None):
     with open(catalogue_path, "r", encoding="utf-8") as f:
         catalogue = json.load(f)
 
-    max_programs = int(os.getenv("MAX_GOVERNMENT_PROGRAMS", "60"))
-    if max_programs and len(catalogue) > max_programs:
-        catalogue = catalogue[:max_programs]
+    max_programs_env = os.getenv("MAX_GOVERNMENT_PROGRAMS")
+    if max_programs_env and max_programs_env.strip():
+        max_programs = int(max_programs_env)
+        if max_programs > 0 and len(catalogue) > max_programs:
+            catalogue = catalogue[:max_programs]
 
     print(f"Loaded {len(catalogue)} programmes from catalogue.")
 

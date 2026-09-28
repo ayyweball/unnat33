@@ -32,9 +32,9 @@ from app.models.master import Sector, SchemeEligibility, SchemeSector
 
 
 def test_government_program_total_count(db_session: Session):
-    """Verify exactly 60 GovernmentProgram records exist (12 legacy + 48 new)."""
+    """Verify exactly 115 GovernmentProgram records exist."""
     count = db_session.query(GovernmentProgram).count()
-    assert count == 60
+    assert count == 115
 
 
 def test_legacy_program_linkage(db_session: Session):
@@ -62,13 +62,13 @@ def test_legacy_program_linkage(db_session: Session):
 
 
 def test_new_programs_count_and_null_legacy_id(db_session: Session):
-    """Verify all 48 new programs have legacy_scheme_id as NULL."""
+    """Verify all 103 new programs have legacy_scheme_id as NULL."""
     new_programs = (
         db_session.query(GovernmentProgram)
         .filter(GovernmentProgram.legacy_scheme_id.is_(None))
         .all()
     )
-    assert len(new_programs) == 48
+    assert len(new_programs) == 103
 
 
 def test_program_credit_details_orm(db_session: Session):
@@ -148,7 +148,7 @@ def test_program_sectors_orm(db_session: Session):
 def test_unified_program_sectors_view(db_session: Session):
     """Verify read-only model UnifiedProgramSector maps to v_unified_program_sectors."""
     total_view_sectors = db_session.query(UnifiedProgramSector).count()
-    assert total_view_sectors == 118
+    assert total_view_sectors == 226
 
     # Query legacy scheme through view
     shishu_sectors = (
@@ -170,7 +170,7 @@ def test_unified_program_sectors_view(db_session: Session):
 def test_unified_program_eligibility_view(db_session: Session):
     """Verify read-only model UnifiedProgramEligibility maps to v_unified_program_eligibility."""
     total_view_eligibility = db_session.query(UnifiedProgramEligibility).count()
-    assert total_view_eligibility == 60
+    assert total_view_eligibility == 115
 
     # Test legacy scheme record in view
     legacy_rec = (

@@ -47,7 +47,7 @@ def test_statutory_hard_gate_ineligible_never_recommended(db_session: Session):
     req = RecommendationRequest(profile=profile, top_k=60)
     response = recommendation_service.generate_recommendations(db_session, req)
 
-    assert response.total_programs_evaluated == 60
+    assert response.total_programs_evaluated == 115
     assert response.total_recommended > 0
 
     # Assert that NO recommended programme is Ineligible
@@ -288,13 +288,13 @@ def test_state_level_fallback_when_district_unknown(db_session: Session):
 
 
 def test_zero_hardcoded_programmes_evaluates_all_from_db(db_session: Session):
-    """Verify recommendation service dynamically evaluates all 60 programmes from PostgreSQL."""
+    """Verify recommendation service dynamically evaluates all 115 programmes from PostgreSQL."""
     profile = UserProfile(age=30, gender="Male", social_category="General")
     resp = recommendation_service.generate_recommendations(
         db_session, RecommendationRequest(profile=profile, top_k=10)
     )
 
-    assert resp.total_programs_evaluated == 60
+    assert resp.total_programs_evaluated == 115
     assert resp.eligible_candidates_count + resp.partially_verified_candidates_count > 0
 
 
@@ -351,7 +351,7 @@ def test_api_recommend_endpoint_success(client: TestClient):
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
 
-    assert data["total_programs_evaluated"] == 60
+    assert data["total_programs_evaluated"] == 115
     assert data["total_recommended"] == 5
     assert len(data["recommendations"]) == 5
     assert data["district_market_context"]["district_name"] == "PUNE"

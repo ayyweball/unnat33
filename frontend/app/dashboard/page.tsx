@@ -75,7 +75,7 @@ export default function DashboardPage() {
       .finally(() => setLoading(false));
 
     // Fetch authoritative programme count from FastAPI
-    fetch('/api/schemes?limit=1')
+    fetch('/api/schemes')
       .then((res) => res.json())
       .then((data) => {
         if (data.count) setProgramCount(data.count);
@@ -217,7 +217,7 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-[#F7F8F5] text-[#0B1736] flex flex-col font-sans selection:bg-[#159A68] selection:text-white">
       <Navbar />
 
-      <div className="flex-1 flex w-full">
+      <div className="flex-1 flex w-full min-w-0">
         <Sidebar />
 
         <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 max-w-[1550px] w-full min-w-0 space-y-6 sm:space-y-7">

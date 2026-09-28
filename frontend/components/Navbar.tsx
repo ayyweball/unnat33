@@ -22,6 +22,7 @@ import {
   ChevronRight,
   Search,
   MapPin,
+  Sliders,
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -40,6 +41,7 @@ export default function Navbar() {
   const navItems = [
     { id: 'how-it-works', href: '#how-it-works', label: t('nav.howItWorks') },
     { id: 'analysis', href: '#analysis', label: t('nav.analysis') },
+    { id: 'simulator', href: '/simulator', label: 'What-If Simulator', icon: Sliders },
     { id: 'entrepreneurs', href: '#entrepreneurs', label: t('nav.forEntrepreneurs') },
     { id: 'about', href: '#about', label: t('nav.aboutUs') },
   ];
@@ -96,7 +98,8 @@ export default function Navbar() {
   const isDashboardOrAdvisory =
     pathname?.startsWith('/dashboard') ||
     pathname?.startsWith('/advisory') ||
-    pathname?.startsWith('/chat');
+    pathname?.startsWith('/chat') ||
+    pathname?.startsWith('/simulator');
 
   return (
     <header className="sticky top-0 z-50 w-full transition-all duration-300">
@@ -298,20 +301,36 @@ export default function Navbar() {
                   <span className="text-[10px] text-[#159A68] font-bold">Active</span>
                 </div>
                 <Link
+                  href="/"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-50 transition"
+                >
+                  <TrendingUp className="w-4 h-4 text-[#159A68]" />
+                  <span>Home</span>
+                </Link>
+                <Link
                   href="/dashboard"
                   onClick={() => setMobileMenuOpen(false)}
                   className="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-50 transition"
                 >
                   <LayoutDashboard className="w-4 h-4 text-[#159A68]" />
-                  <span>Dashboard</span>
+                  <span>Market Intelligence</span>
                 </Link>
                 <Link
-                  href="/dashboard/profile"
+                  href="/simulator"
                   onClick={() => setMobileMenuOpen(false)}
                   className="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-50 transition"
                 >
-                  <Building2 className="w-4 h-4 text-[#159A68]" />
-                  <span>Business Profile</span>
+                  <Sliders className="w-4 h-4 text-[#159A68]" />
+                  <span>What-If Simulator</span>
+                </Link>
+                <Link
+                  href="/advisory/business-plan"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-50 transition"
+                >
+                  <FileSpreadsheet className="w-4 h-4 text-blue-600" />
+                  <span>DPR Builder</span>
                 </Link>
                 <Link
                   href="/advisory/schemes"
@@ -322,12 +341,12 @@ export default function Navbar() {
                   <span>Government Schemes</span>
                 </Link>
                 <Link
-                  href="/advisory/business-plan"
+                  href="/dashboard/profile"
                   onClick={() => setMobileMenuOpen(false)}
                   className="flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-slate-50 transition"
                 >
-                  <FileSpreadsheet className="w-4 h-4 text-blue-600" />
-                  <span>DPR Builder</span>
+                  <Building2 className="w-4 h-4 text-slate-600" />
+                  <span>Business Profile</span>
                 </Link>
                 <Link
                   href="/chat"
@@ -350,32 +369,39 @@ export default function Navbar() {
             ) : (
               <>
                 <Link
-                  href="#how-it-works"
+                  href="/"
                   onClick={() => setMobileMenuOpen(false)}
                   className="block px-3 py-2 rounded-lg hover:bg-slate-50 transition"
                 >
-                  {t('nav.howItWorks')}
+                  Home
                 </Link>
                 <Link
-                  href="#analysis"
+                  href="/dashboard"
                   onClick={() => setMobileMenuOpen(false)}
                   className="block px-3 py-2 rounded-lg hover:bg-slate-50 transition"
                 >
-                  {t('nav.analysis')}
+                  Market Intelligence
                 </Link>
                 <Link
-                  href="#entrepreneurs"
+                  href="/simulator"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-lg hover:bg-slate-50 transition"
+                  className="block px-3 py-2 rounded-lg hover:bg-slate-50 transition font-semibold text-[#159A68]"
                 >
-                  {t('nav.forEntrepreneurs')}
+                  What-If Simulator
                 </Link>
                 <Link
-                  href="#about"
+                  href="/advisory/business-plan"
                   onClick={() => setMobileMenuOpen(false)}
                   className="block px-3 py-2 rounded-lg hover:bg-slate-50 transition"
                 >
-                  {t('nav.aboutUs')}
+                  DPR Builder
+                </Link>
+                <Link
+                  href="/advisory/schemes"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block px-3 py-2 rounded-lg hover:bg-slate-50 transition"
+                >
+                  Government Schemes
                 </Link>
                 <Link
                   href="/dashboard"

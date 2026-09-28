@@ -359,7 +359,7 @@ def test_recommendation_scorer_and_eligibility_invariants(db_session: Session):
     req = RecommendationRequest(profile=profile, top_k=10)
     response = recommendation_service.generate_recommendations(db_session, req)
 
-    assert response.total_programs_evaluated == 60
+    assert response.total_programs_evaluated == 115
     assert response.total_recommended > 0
     assert len(response.recommendations) <= 10
 

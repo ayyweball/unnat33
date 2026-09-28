@@ -203,6 +203,11 @@ export async function POST(req: Request) {
         actionabilityType: structResp.actionability_type,
         isFinancingApplicable: structResp.is_financing_applicable,
         assistanceSummary: structResp.assistance_summary,
+        projectCost: structReq.project_cost,
+        requestedLoanAmount: structReq.requested_loan_amount,
+        monthlyIncome: income,
+        monthlyExpenses: expenses,
+        existingMonthlyEmi: finalExistingEmi,
         debtToIncomeRatio: Number(structResp.debt_health.existing_dti_pct.toFixed(1)),
         affordableEMI: Math.round(structResp.debt_health.affordable_emi_cap),
         uncommittedSurplus: Math.round(structResp.debt_health.uncommitted_surplus),
@@ -219,7 +224,7 @@ export async function POST(req: Request) {
         statutoryConstraints: structResp.financial_constraints,
         warnings: structResp.warnings,
         disclaimer: structResp.disclaimer,
-        source: 'FastAPI Backend Core (Deterministic Financial Structuring)',
+        source: 'Deterministic financial structuring based on income, debt service capacity, and statutory scheme guidelines.',
       };
     } catch (backendError: any) {
       console.warn('FastAPI financial structuring engine unreachable, computing in-process statutory scenarios:', backendError.message || backendError);
