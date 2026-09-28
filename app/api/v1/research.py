@@ -9,12 +9,13 @@ External geography and weather data are research context only.
 They do NOT alter recommendation scores or determine statutory scheme eligibility.
 """
 
-from typing import Optional
+from typing import Optional, List
 from fastapi import APIRouter, Depends, Query, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
-from app.schemas.research_context import DistrictResearchContextResponse
+from app.models.master import District, State
+from app.schemas.research_context import DistrictResearchContextResponse, DistrictListItem
 from app.schemas.market_intelligence import MarketIntelligenceRequest, MarketIntelligenceResponse
 from app.services.research_context_service import research_context_service
 from app.services.market_intelligence_service import market_intelligence_service
@@ -22,6 +23,42 @@ from app.services.weather_business_impact_service import weather_business_impact
 from app.services.market_similarity_service import market_similarity_service
 
 router = APIRouter(prefix="/research", tags=["Research Intelligence"])
+
+
+@router.get(
+    "/districts",
+    response_model=List[DistrictListItem],
+    status_code=status.HTTP_200_OK,
+    summary="List all authoritative districts with state information",
+)
+def list_districts(db: Session = Depends(get_db)) -> List[DistrictListItem]:
+    """
+    List all 785 authoritative districts in the reference database,
+    ordered by state_name and district_name.
+    """
+    rows = (
+        db.query(
+            District.id,
+            District.district_name,
+            District.district_code,
+            District.state_id,
+            State.state_name,
+        )
+        .join(State, District.state_id == State.id)
+        .order_by(State.state_name.asc(), District.district_name.asc())
+        .all()
+    )
+    return [
+        DistrictListItem(
+            id=r.id,
+            district_name=r.district_name,
+            district_code=r.district_code,
+            state_id=r.state_id,
+            state_name=r.state_name,
+        )
+        for r in rows
+    ]
+
 
 
 @router.get(

@@ -20,29 +20,15 @@ export async function POST(req: Request) {
     try {
       let user = await getCurrentUser();
       if (!user) {
-        user = await prisma.user.upsert({
-          where: { phone: '9999999999' },
-          update: {},
-          create: {
-            phone: '9999999999',
-            name: 'Demo Entrepreneur',
-            language: 'en',
-            state: 'Uttar Pradesh',
-            district: 'Lucknow',
-          },
-        });
+        return NextResponse.json({ error: 'Unauthorized. Please sign in to explore schemes.' }, { status: 401 });
       }
 
-      if (user?.id) {
-        [dbUser, dbBusiness] = await Promise.all([
-          prisma.user.findUnique({ where: { id: user.id } }).catch(() => null),
-          resolvePrimaryBusiness(user.id, body.businessId).catch(() => null),
-        ]);
-      }
+      [dbUser, dbBusiness] = await Promise.all([
+        prisma.user.findUnique({ where: { id: user.id } }).catch(() => null),
+        resolvePrimaryBusiness(user.id, body.businessId).catch(() => null),
+      ]);
     } catch (dbErr) {
-      console.warn('Prisma database access warning (using fallback session fixtures):', dbErr);
-      dbUser = FALLBACK_USER;
-      dbBusiness = FALLBACK_BUSINESS;
+      console.warn('Prisma database access warning in schemes route:', dbErr);
     }
 
     if (!dbUser) dbUser = FALLBACK_USER;

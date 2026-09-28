@@ -430,6 +430,15 @@ export interface DistrictResearchContextResponse {
   disclaimer: string;
 }
 
+export interface DistrictListItem {
+  id: number;
+  district_name: string;
+  district_code?: string | null;
+  state_id: number;
+  state_name: string;
+}
+
+
 export interface BusinessProfileContext {
   business_type?: string | null;
   sub_type?: string | null;
@@ -943,6 +952,17 @@ class BackendApiClient {
       { method: 'GET' }
     );
   }
+
+  /**
+   * List all 785 authoritative districts in the reference database
+   * GET /api/v1/research/districts
+   */
+  async listDistricts(): Promise<DistrictListItem[]> {
+    return this.request<DistrictListItem[]>('/api/v1/research/districts', {
+      method: 'GET',
+    });
+  }
+
 
   /**
    * Unified district market intelligence synthesizing ML clustering and qualitative LLM pipelines

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
 import { useLanguage } from '@/lib/i18n/useLanguage';
@@ -29,6 +30,7 @@ import {
 } from 'lucide-react';
 
 export default function SchemesPage() {
+  const router = useRouter();
   const { t } = useLanguage();
   const { user, business, setProfile } = useAppStore();
 
@@ -50,6 +52,10 @@ export default function SchemesPage() {
     fetch('/api/user/profile')
       .then((res) => res.json())
       .then((data) => {
+        if (!data?.user) {
+          router.push('/login?redirect=/advisory/schemes');
+          return;
+        }
         if (data.user) {
           setProfile(data.user, data.business || null);
           setActiveState(data.user.state || '');
@@ -76,7 +82,7 @@ export default function SchemesPage() {
         console.warn('Could not load user profile:', err);
         fetchSchemes({});
       });
-  }, [setProfile]);
+  }, [setProfile, router]);
 
   const fetchSchemes = async (overrideParams: any = {}) => {
     setLoading(true);

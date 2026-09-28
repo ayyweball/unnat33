@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
 import { useLanguage } from '@/lib/i18n/useLanguage';
@@ -71,6 +72,7 @@ const INDIAN_STATES_AND_UTS = [
 ];
 
 export default function ProfilePage() {
+  const router = useRouter();
   const { t, language, setLanguage } = useLanguage();
   const { user, business, setProfile } = useAppStore();
 
@@ -138,6 +140,10 @@ export default function ProfilePage() {
     fetch('/api/user/profile')
       .then((res) => res.json())
       .then((data) => {
+        if (!data?.user) {
+          router.push('/login?redirect=/dashboard/profile');
+          return;
+        }
         if (data.user) {
           setProfile(data.user, data.business || null);
           setForm({
@@ -209,7 +215,7 @@ export default function ProfilePage() {
       })
       .catch((err) => console.warn('Could not load profile:', err))
       .finally(() => setLoading(false));
-  }, [setProfile]);
+  }, [setProfile, router]);
 
   const handleSave = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -223,9 +229,19 @@ export default function ProfilePage() {
       return;
     }
 
+    if (form.phone) {
+      const cleanPhone = form.phone.trim().replace(/\D/g, '');
+      if (!/^\d{10}$/.test(cleanPhone)) {
+        setMsg({ text: 'Please enter a valid 10-digit mobile number.', isError: true });
+        setSaving(false);
+        return;
+      }
+    }
+
     try {
       const payload = {
         name: form.name.trim() || undefined,
+        phone: form.phone.trim() || undefined,
         email: form.email.trim() || null,
         age: form.age ? parseInt(form.age) : null,
         language: form.language,
@@ -539,7 +555,16 @@ export default function ProfilePage() {
                         <p className="text-[11px] text-slate-500">Applicant credentials and personal demographic criteria.</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2.5">
+                      <button
+                        type="button"
+                        onClick={() => handleSave()}
+                        disabled={saving}
+                        className="px-3.5 py-1.5 rounded-xl bg-[#159A68] hover:bg-[#128357] text-white font-bold text-xs shadow-2xs transition-all inline-flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                      >
+                        {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                        <span>Save</span>
+                      </button>
                       <span className="px-2.5 py-0.5 rounded-full bg-[#FEF3C7] text-[#D97706] border border-amber-200/80 text-[11px] font-semibold">
                         Required
                       </span>
@@ -547,7 +572,7 @@ export default function ProfilePage() {
                   </div>
 
                   {/* Form Inputs Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                       <label className="block text-xs font-semibold text-[#0B1736] mb-1.5">Full Legal Name</label>
                       <input
@@ -565,10 +590,12 @@ export default function ProfilePage() {
                       <div className="relative">
                         <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                         <input
-                          type="text"
-                          disabled
+                          type="tel"
+                          maxLength={10}
                           value={form.phone}
-                          className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium bg-slate-50 text-slate-500 cursor-not-allowed"
+                          onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                          className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all bg-white"
+                          placeholder="10-digit mobile number"
                         />
                       </div>
                     </div>
@@ -605,7 +632,7 @@ export default function ProfilePage() {
                       <select
                         value={form.gender}
                         onChange={(e) => setForm({ ...form, gender: e.target.value })}
-                        className="w-full px-3 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] bg-white transition-all"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] bg-white transition-all"
                       >
                         <option value="">-- Select Gender --</option>
                         <option value="Male">Male</option>
@@ -619,7 +646,7 @@ export default function ProfilePage() {
                       <select
                         value={form.socialCategory}
                         onChange={(e) => setForm({ ...form, socialCategory: e.target.value })}
-                        className="w-full px-3 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] bg-white transition-all"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] bg-white transition-all"
                       >
                         <option value="">-- Select Social Category --</option>
                         <option value="General">General</option>
@@ -735,7 +762,16 @@ export default function ProfilePage() {
                         <p className="text-[11px] text-slate-500">Jurisdictional boundaries for state and district scheme matching.</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2.5">
+                      <button
+                        type="button"
+                        onClick={() => handleSave()}
+                        disabled={saving}
+                        className="px-3.5 py-1.5 rounded-xl bg-[#159A68] hover:bg-[#128357] text-white font-bold text-xs shadow-2xs transition-all inline-flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                      >
+                        {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                        <span>Save</span>
+                      </button>
                       <span className="px-2.5 py-0.5 rounded-full bg-[#FEF3C7] text-[#D97706] border border-amber-200/80 text-[11px] font-semibold">
                         Required
                       </span>
@@ -743,13 +779,13 @@ export default function ProfilePage() {
                   </div>
 
                   {/* Form Inputs Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                       <label className="block text-xs font-semibold text-[#0B1736] mb-1.5">State / Union Territory</label>
                       <select
                         value={form.state}
                         onChange={(e) => setForm({ ...form, state: e.target.value })}
-                        className="w-full px-3 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] bg-white transition-all"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] bg-white transition-all"
                       >
                         <option value="">-- Select State / UT --</option>
                         {INDIAN_STATES_AND_UTS.map((st) => (
@@ -768,17 +804,6 @@ export default function ProfilePage() {
                         onChange={(e) => setForm({ ...form, district: e.target.value })}
                         className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all bg-white"
                         placeholder="Enter district (e.g. Pune, Varanasi)"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-[#0B1736] mb-1.5">LGD District Code (Optional)</label>
-                      <input
-                        type="text"
-                        value={form.lgdDistrictCode}
-                        onChange={(e) => setForm({ ...form, lgdDistrictCode: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all bg-white"
-                        placeholder="e.g. 194"
                       />
                     </div>
 
@@ -808,6 +833,17 @@ export default function ProfilePage() {
                           Urban
                         </button>
                       </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-[#0B1736] mb-1.5">LGD District Code (Optional)</label>
+                      <input
+                        type="text"
+                        value={form.lgdDistrictCode}
+                        onChange={(e) => setForm({ ...form, lgdDistrictCode: e.target.value })}
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all bg-white"
+                        placeholder="e.g. 194"
+                      />
                     </div>
                   </div>
 
@@ -849,7 +885,16 @@ export default function ProfilePage() {
                         <p className="text-[11px] text-slate-500">Statutory hard-gate qualifications for specialized central schemes.</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2.5">
+                      <button
+                        type="button"
+                        onClick={() => handleSave()}
+                        disabled={saving}
+                        className="px-3.5 py-1.5 rounded-xl bg-[#159A68] hover:bg-[#128357] text-white font-bold text-xs shadow-2xs transition-all inline-flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                      >
+                        {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                        <span>Save</span>
+                      </button>
                       <span className="px-2.5 py-0.5 rounded-full bg-[#FEF3C7] text-[#D97706] border border-amber-200/80 text-[11px] font-semibold">
                         Required
                       </span>
@@ -993,7 +1038,16 @@ export default function ProfilePage() {
                         <p className="text-[11px] text-slate-500">Commercial operational classification, sector, and venture stage.</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2.5">
+                      <button
+                        type="button"
+                        onClick={() => handleSave()}
+                        disabled={saving}
+                        className="px-3.5 py-1.5 rounded-xl bg-[#159A68] hover:bg-[#128357] text-white font-bold text-xs shadow-2xs transition-all inline-flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                      >
+                        {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                        <span>Save</span>
+                      </button>
                       <span className="px-2.5 py-0.5 rounded-full bg-[#FEF3C7] text-[#D97706] border border-amber-200/80 text-[11px] font-semibold">
                         Required
                       </span>
@@ -1001,13 +1055,13 @@ export default function ProfilePage() {
                   </div>
 
                   {/* Form Inputs Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                       <label className="block text-xs font-semibold text-[#0B1736] mb-1.5">Primary Sector</label>
                       <select
                         value={form.sector}
                         onChange={(e) => setForm({ ...form, sector: e.target.value })}
-                        className="w-full px-3 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] bg-white transition-all"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] bg-white transition-all"
                       >
                         <option value="">-- Select Canonical Sector --</option>
                         <option value="Manufacturing">Manufacturing</option>
@@ -1044,7 +1098,7 @@ export default function ProfilePage() {
                       <select
                         value={form.stage}
                         onChange={(e) => setForm({ ...form, stage: e.target.value })}
-                        className="w-full px-3 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] bg-white transition-all"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] bg-white transition-all"
                       >
                         <option value="">-- Select Stage --</option>
                         <option value="Idea / Pre-Venture">Idea / Pre-Venture</option>
@@ -1123,7 +1177,16 @@ export default function ProfilePage() {
                         <p className="text-[11px] text-slate-500">Total project capital outlay, debt requirements, and repayment capacity.</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2.5">
+                      <button
+                        type="button"
+                        onClick={() => handleSave()}
+                        disabled={saving}
+                        className="px-3.5 py-1.5 rounded-xl bg-[#159A68] hover:bg-[#128357] text-white font-bold text-xs shadow-2xs transition-all inline-flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                      >
+                        {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                        <span>Save</span>
+                      </button>
                       <span className="px-2.5 py-0.5 rounded-full bg-[#FEF3C7] text-[#D97706] border border-amber-200/80 text-[11px] font-semibold">
                         Required
                       </span>
@@ -1131,7 +1194,7 @@ export default function ProfilePage() {
                   </div>
 
                   {/* Financial Inputs Grid */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                       <label className="block text-xs font-semibold text-[#0B1736] mb-1.5">Estimated Total Project Cost (₹)</label>
                       <input
@@ -1171,7 +1234,21 @@ export default function ProfilePage() {
                         className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all bg-white"
                         placeholder="e.g. 250000"
                       />
-                      <span className="text-[10px] text-slate-400 mt-1 block">Personal savings or family equity available</span>
+                      <span className="text-[10px] text-slate-400 mt-1 block">Personal savings or equity available</span>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-[#0B1736] mb-1.5">Annual Business Turnover (₹)</label>
+                      <input
+                        type="number"
+                        min={0}
+                        step="1000"
+                        value={form.annualTurnover}
+                        onChange={(e) => setForm({ ...form, annualTurnover: e.target.value })}
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all bg-white"
+                        placeholder="e.g. 1500000"
+                      />
+                      <span className="text-[10px] text-slate-400 mt-1 block">Projected or existing yearly sales</span>
                     </div>
 
                     <div>
@@ -1217,32 +1294,6 @@ export default function ProfilePage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-[#0B1736] mb-1.5">Annual Household Income (₹)</label>
-                      <input
-                        type="number"
-                        min={0}
-                        step="1000"
-                        value={form.annualIncome}
-                        onChange={(e) => setForm({ ...form, annualIncome: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all bg-white"
-                        placeholder="e.g. 360000"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-[#0B1736] mb-1.5">Annual Business Turnover (₹)</label>
-                      <input
-                        type="number"
-                        min={0}
-                        step="1000"
-                        value={form.annualTurnover}
-                        onChange={(e) => setForm({ ...form, annualTurnover: e.target.value })}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all bg-white"
-                        placeholder="e.g. 1500000"
-                      />
-                    </div>
-
-                    <div>
                       <label className="block text-xs font-semibold text-[#0B1736] mb-1.5">Existing Outstanding Debt (₹)</label>
                       <input
                         type="number"
@@ -1253,6 +1304,21 @@ export default function ProfilePage() {
                         className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all bg-white"
                         placeholder="e.g. 50000"
                       />
+                      <span className="text-[10px] text-slate-400 mt-1 block">Total remaining loan balance</span>
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <label className="block text-xs font-semibold text-[#0B1736] mb-1.5">Annual Household Income (₹)</label>
+                      <input
+                        type="number"
+                        min={0}
+                        step="1000"
+                        value={form.annualIncome}
+                        onChange={(e) => setForm({ ...form, annualIncome: e.target.value })}
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200/90 text-xs font-medium text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all bg-white"
+                        placeholder="e.g. 360000"
+                      />
+                      <span className="text-[10px] text-slate-400 mt-1 block">Combined annual earnings from all household sources</span>
                     </div>
                   </div>
 
@@ -1304,7 +1370,16 @@ export default function ProfilePage() {
                         <p className="text-[11px] text-slate-500">Statutory review, verification readiness, and canonical persistence.</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2.5">
+                      <button
+                        type="button"
+                        onClick={() => handleSave()}
+                        disabled={saving}
+                        className="px-3.5 py-1.5 rounded-xl bg-[#159A68] hover:bg-[#128357] text-white font-bold text-xs shadow-2xs transition-all inline-flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                      >
+                        {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                        <span>Save</span>
+                      </button>
                       <span className="px-2.5 py-0.5 rounded-full bg-[#EAF7F0] text-[#159A68] border border-[#159A68]/20 text-[11px] font-bold">
                         Ready
                       </span>

@@ -67,17 +67,28 @@ export async function GET(req: Request) {
       });
     } catch (backendError: any) {
       console.warn('FastAPI getPrograms failed, serving fallback directory:', backendError);
-      const mappedSchemes = FALLBACK_PROGRAMS.map((p) => ({
+      const mappedPrograms = FALLBACK_PROGRAMS.map((p) => ({
         id: p.id,
+        program_code: p.code,
         programCode: p.code,
+        code: p.code,
+        program_name: p.name,
+        programName: p.name,
         name: p.name,
+        owning_ministry: p.ministry,
         ministry: p.ministry,
+        nodal_agency: p.nodalAgency,
         nodalAgency: p.nodalAgency,
         description: p.description || p.benefitSummary,
+        benefit_summary: p.benefitSummary,
         benefitSummary: p.benefitSummary,
+        benefit_type: p.benefitType,
         benefitType: p.benefitType,
+        primary_type: p.primaryType,
         primaryType: p.primaryType,
+        actionability_type: p.actionabilityType,
         actionabilityType: p.actionabilityType,
+        official_portal_url: p.officialPortalUrl,
         officialPortalUrl: p.officialPortalUrl,
         sectors: p.targetSectors || [],
         status: 'active',
@@ -89,9 +100,9 @@ export async function GET(req: Request) {
       }));
 
       return NextResponse.json({
-        programs: FALLBACK_PROGRAMS,
-        schemes: mappedSchemes,
-        count: mappedSchemes.length,
+        programs: mappedPrograms,
+        schemes: mappedPrograms,
+        count: mappedPrograms.length,
         source: 'Built-in Central Government Statutory Directory',
       });
     }

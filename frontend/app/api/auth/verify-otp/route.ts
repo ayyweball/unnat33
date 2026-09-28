@@ -16,9 +16,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid OTP code. Please enter 123456.' }, { status: 400 });
     }
 
-    const user = await prisma.user.findUnique({ where: { phone } });
+    const cleanPhone = phone.toString().trim().replace(/\D/g, '');
+    const user = await prisma.user.findUnique({ where: { phone: cleanPhone } });
     if (!user) {
-      return NextResponse.json({ error: 'User not found. Please register first.' }, { status: 404 });
+      return NextResponse.json({ error: 'User not found. Please sign in or register first.' }, { status: 404 });
     }
 
     const authToken = signJwtToken({

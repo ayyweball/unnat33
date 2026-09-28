@@ -94,3 +94,15 @@ class DistrictResearchContextResponse(BaseModel):
         ),
         description="Statutory advisory disclaimer",
     )
+
+
+class DistrictListItem(BaseModel):
+    """District reference item for dropdowns and research lookups."""
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int = Field(..., description="PostgreSQL district ID")
+    district_name: str = Field(..., description="Official district name")
+    district_code: Optional[str] = Field(None, description="Official district code or LGD code")
+    state_id: int = Field(..., description="PostgreSQL state ID")
+    state_name: str = Field(..., description="State or UT name")
+

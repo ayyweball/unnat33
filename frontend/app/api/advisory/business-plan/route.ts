@@ -12,21 +12,10 @@ export async function POST(req: Request) {
     try {
       user = await getCurrentUser();
       if (!user) {
-        user = await prisma.user.upsert({
-          where: { phone: '9999999999' },
-          update: {},
-          create: {
-            phone: '9999999999',
-            name: 'Demo Entrepreneur',
-            language: 'en',
-            state: 'Uttar Pradesh',
-            district: 'Lucknow',
-          },
-        });
+        return NextResponse.json({ error: 'Unauthorized. Please sign in.' }, { status: 401 });
       }
     } catch (userErr) {
-      console.warn('Prisma user lookup warning in business-plan route, using fallback user:', userErr);
-      user = FALLBACK_USER;
+      console.warn('Prisma user lookup warning in business-plan route:', userErr);
     }
 
     const body = await req.json().catch(() => ({}));

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
@@ -33,6 +33,8 @@ import {
   ArrowRight,
   ShieldAlert,
   Lightbulb,
+  Clock,
+  Loader2,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -54,7 +56,7 @@ export default function DashboardPage() {
   const [marketIntelligence, setMarketIntelligence] = useState<MarketIntelligenceResponse | null>(null);
   const [researchLoading, setResearchLoading] = useState(false);
   const [researchError, setResearchError] = useState<string | null>(null);
-  const [programCount, setProgramCount] = useState<number>(60);
+  const [programCount, setProgramCount] = useState<number>(115);
 
   useEffect(() => {
     // Fetch profile and user businesses
@@ -148,6 +150,50 @@ export default function DashboardPage() {
   const activeStateName = user?.state || 'Uttar Pradesh';
   const primaryBusiness = businesses && businesses.length > 0 ? businesses[0] : null;
 
+  // Real Profile Completion percentage calculated dynamically
+  const profileCompletion = useMemo(() => {
+    const fields = [
+      user?.name,
+      user?.phone,
+      user?.state,
+      user?.district,
+      user?.category,
+      user?.gender,
+      primaryBusiness?.name,
+      primaryBusiness?.type,
+      primaryBusiness?.estimatedCapital,
+    ];
+    const completed = fields.filter((f) => Boolean(f)).length;
+    return Math.round((completed / fields.length) * 100);
+  }, [user, primaryBusiness]);
+
+  // Real Activity items tracked from actual profile, enterprise, and intelligence state
+  const activities = useMemo(() => {
+    const list: { title: string; detail: string; dotColor: string }[] = [];
+    if (user?.updatedAt || user?.name) {
+      list.push({
+        title: 'Business profile active',
+        detail: user?.updatedAt ? new Date(user.updatedAt).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' }) : 'Current session',
+        dotColor: 'bg-[#159A68]',
+      });
+    }
+    if (primaryBusiness?.name) {
+      list.push({
+        title: `Enterprise tracked: ${primaryBusiness.name}`,
+        detail: primaryBusiness.type || 'Registered unit',
+        dotColor: 'bg-blue-500',
+      });
+    }
+    if (market) {
+      list.push({
+        title: `Udyam intelligence synced: ${activeDistrictName}`,
+        detail: `${market.total_enterprises?.toLocaleString() || ''} MSME records`,
+        dotColor: 'bg-emerald-500',
+      });
+    }
+    return list;
+  }, [user, primaryBusiness, market, activeDistrictName]);
+
   // Real Enterprise Scale Distribution Data for Chart (Micro, Small, Medium)
   const enterpriseScaleChartData = market ? [
     {
@@ -171,11 +217,7 @@ export default function DashboardPage() {
       share: Number(market.medium_share?.toFixed(1) || 0),
       color: '#7c3aed',
     },
-  ] : [
-    { tier: 'Micro', fullName: 'Micro Enterprises', count: 48500, share: 94.2, color: '#159A68' },
-    { tier: 'Small', fullName: 'Small Enterprises', count: 2600, share: 5.1, color: '#2563eb' },
-    { tier: 'Medium', fullName: 'Medium Enterprises', count: 380, share: 0.7, color: '#7c3aed' },
-  ];
+  ] : [];
 
   // Top Canonical Government Schemes List for Compact Display
   const prioritySchemes = [
@@ -259,7 +301,7 @@ export default function DashboardPage() {
               </div>
 
               <h1 className="text-3xl sm:text-4xl lg:text-[40px] font-serif font-black text-[#0B1736] tracking-tight leading-tight">
-                Welcome back, {user?.name || 'Demo Entrepreneur'}!
+                Welcome back, {user?.name || user?.phone || 'Entrepreneur'}!
               </h1>
 
               <p className="text-xs sm:text-sm text-slate-600 max-w-xl leading-relaxed">
@@ -281,14 +323,14 @@ export default function DashboardPage() {
                   className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-white/95 hover:bg-white text-slate-700 hover:text-[#0B1736] text-xs font-semibold border border-slate-200/90 shadow-2xs transition-colors backdrop-blur-xs"
                 >
                   <MapPin className="w-3.5 h-3.5 text-[#159A68]" />
-                  <span>{activeDistrictName}, {activeStateName}</span>
+                  <span>{user?.district ? `${user.district}, ${user.state || 'India'}` : 'Configure Location'}</span>
                 </Link>
               </div>
             </div>
           </section>
 
           {/* ========================================================================= */}
-          {/* 1B. 4 QUICK METRIC OVERVIEW CARDS (Direct Reference Match - Screen 2)      */}
+          {/* 1B. 4 QUICK METRIC OVERVIEW CARDS (Dynamic State)                          */}
           {/* ========================================================================= */}
           <section className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
             {/* Card 1: Business Profile */}
@@ -299,7 +341,10 @@ export default function DashboardPage() {
               <div>
                 <div className="text-[11px] font-semibold text-slate-500">Business Profile</div>
                 <div className="text-xl sm:text-2xl font-black text-[#0B1736] mt-1 group-hover:text-[#159A68] transition-colors">
-                  80%
+                  {profileCompletion}%
+                </div>
+                <div className="text-[11px] text-slate-400 mt-0.5">
+                  {profileCompletion === 100 ? 'Fully Configured' : 'Complete Profile'}
                 </div>
               </div>
               <div className="w-10 h-10 rounded-xl bg-[#EAF7F0] text-[#159A68] flex items-center justify-center shrink-0">
@@ -313,9 +358,12 @@ export default function DashboardPage() {
               className="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-xs hover:border-[#159A68]/40 hover:shadow-sm transition-all group flex items-center justify-between"
             >
               <div>
-                <div className="text-[11px] font-semibold text-slate-500">Market Analysis</div>
-                <div className="text-xl sm:text-2xl font-black text-[#0B1736] mt-1 group-hover:text-[#159A68] transition-colors">
-                  3 Reports
+                <div className="text-[11px] font-semibold text-slate-500">Market Intelligence</div>
+                <div className="text-xl sm:text-2xl font-black text-[#0B1736] mt-1 group-hover:text-[#159A68] transition-colors truncate max-w-[140px]">
+                  {user?.district || 'District Data'}
+                </div>
+                <div className="text-[11px] text-slate-400 mt-0.5">
+                  {market ? `${market.total_enterprises?.toLocaleString() || ''} Enterprises` : 'View Analysis'}
                 </div>
               </div>
               <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
@@ -329,9 +377,12 @@ export default function DashboardPage() {
               className="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-xs hover:border-[#159A68]/40 hover:shadow-sm transition-all group flex items-center justify-between"
             >
               <div>
-                <div className="text-[11px] font-semibold text-slate-500">Schemes Matched</div>
+                <div className="text-[11px] font-semibold text-slate-500">Government Schemes</div>
                 <div className="text-xl sm:text-2xl font-black text-[#0B1736] mt-1 group-hover:text-[#159A68] transition-colors">
-                  12 Schemes
+                  {programCount || 115} Schemes
+                </div>
+                <div className="text-[11px] text-slate-400 mt-0.5">
+                  Central &amp; State Catalogue
                 </div>
               </div>
               <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
@@ -345,9 +396,12 @@ export default function DashboardPage() {
               className="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-xs hover:border-[#159A68]/40 hover:shadow-sm transition-all group flex items-center justify-between"
             >
               <div>
-                <div className="text-[11px] font-semibold text-slate-500">Financial Options</div>
+                <div className="text-[11px] font-semibold text-slate-500">Financial Advisor</div>
                 <div className="text-xl sm:text-2xl font-black text-[#0B1736] mt-1 group-hover:text-[#159A68] transition-colors">
-                  4 Options
+                  3 Scenarios
+                </div>
+                <div className="text-[11px] text-slate-400 mt-0.5">
+                  Balanced, Safe &amp; Growth
                 </div>
               </div>
               <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0">
@@ -422,39 +476,33 @@ export default function DashboardPage() {
             <div className="bg-white rounded-2xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-4">
               <h2 className="text-sm sm:text-base font-bold text-[#0B1736]">Recent Activity</h2>
               
-              <div className="space-y-3">
-                <div className="p-3 rounded-xl border border-slate-100 flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-2.5">
-                    <span className="w-2 h-2 rounded-full bg-[#159A68]" />
-                    <span className="font-semibold text-[#0B1736]">Business profile updated</span>
-                  </div>
-                  <span className="text-[11px] text-slate-400">2 hours ago</span>
+              {activities.length > 0 ? (
+                <div className="space-y-3">
+                  {activities.map((act, idx) => (
+                    <div key={idx} className="p-3 rounded-xl border border-slate-100 flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-2.5">
+                        <span className={`w-2 h-2 rounded-full ${act.dotColor}`} />
+                        <span className="font-semibold text-[#0B1736]">{act.title}</span>
+                      </div>
+                      <span className="text-[11px] text-slate-400">{act.detail}</span>
+                    </div>
+                  ))}
                 </div>
-
-                <div className="p-3 rounded-xl border border-slate-100 flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-2.5">
-                    <span className="w-2 h-2 rounded-full bg-blue-500" />
-                    <span className="font-semibold text-[#0B1736]">Market analysis generated</span>
+              ) : (
+                <div className="py-8 text-center text-slate-400 space-y-2">
+                  <Clock className="w-8 h-8 mx-auto text-slate-300 stroke-[1.5]" />
+                  <p className="text-xs font-semibold text-slate-600">No recent activity recorded yet</p>
+                  <p className="text-[11px] text-slate-400 max-w-xs mx-auto">
+                    Your profile updates, scheme explorations, and market analyses will be tracked here.
+                  </p>
+                  <div className="pt-2">
+                    <Link href="/dashboard/profile" className="inline-flex items-center gap-1 text-xs font-bold text-[#159A68] hover:underline">
+                      <span>Complete your profile</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </Link>
                   </div>
-                  <span className="text-[11px] text-slate-400">5 hours ago</span>
                 </div>
-
-                <div className="p-3 rounded-xl border border-slate-100 flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-2.5">
-                    <span className="w-2 h-2 rounded-full bg-amber-500" />
-                    <span className="font-semibold text-[#0B1736]">Viewed PMEGP scheme</span>
-                  </div>
-                  <span className="text-[11px] text-slate-400">1 day ago</span>
-                </div>
-
-                <div className="p-3 rounded-xl border border-slate-100 flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-2.5">
-                    <span className="w-2 h-2 rounded-full bg-[#159A68]" />
-                    <span className="font-semibold text-[#0B1736]">DPR Builder - Step 1 completed</span>
-                  </div>
-                  <span className="text-[11px] text-slate-400">1 day ago</span>
-                </div>
-              </div>
+              )}
             </div>
           </section>
 
@@ -466,7 +514,7 @@ export default function DashboardPage() {
                 <div>
                   <p className="font-bold text-[#0B1736]">Profile Location Not Fully Configured</p>
                   <p className="text-slate-600 mt-0.5">
-                    Viewing empirical baseline for {activeDistrictName}, {activeStateName}. Set your specific district to refine statutory match gates.
+                    Please specify your district and state in Business Profile to unlock localized MSME market intelligence and statutory scheme eligibility.
                   </p>
                 </div>
               </div>
@@ -522,7 +570,7 @@ export default function DashboardPage() {
                   {t('dashboard.relevantSchemes')}
                 </div>
                 <div className="text-2xl sm:text-3xl font-black text-[#0B1736] tracking-tight mt-1.5">
-                  {programCount > 0 ? `${programCount} Programmes` : '60 Programmes'}
+                  {programCount > 0 ? `${programCount} Programmes` : '115 Programmes'}
                 </div>
                 <p className="text-xs text-slate-500 mt-2 font-normal leading-relaxed">
                   Central Sector &amp; Centrally Sponsored
@@ -576,7 +624,7 @@ export default function DashboardPage() {
                   {weather?.current ? (
                     `Feels ${Math.round(weather.current.apparent_temperature_c)}°C • Rain ${weather.current.precipitation_mm}mm`
                   ) : (
-                    researchError || 'HTTP 500 (Open-Meteo Centroid)'
+                    researchError || 'Weather data unavailable for this location'
                   )}
                 </p>
                 {weather?.current && (
@@ -610,7 +658,9 @@ export default function DashboardPage() {
                   District MSME Enterprise Scale Breakdown
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-500 mt-1 font-normal">
-                  Empirical distribution from official Udyam records for {activeDistrictName}, {activeStateName}.
+                  {user?.district
+                    ? `Empirical distribution from official Udyam records for ${activeDistrictName}, ${activeStateName}.`
+                    : 'Empirical distribution from official Udyam records. Select your district in profile to view local MSME data.'}
                 </p>
               </div>
 
@@ -624,130 +674,154 @@ export default function DashboardPage() {
             </div>
 
             {/* Asymmetrical Analytical Grid: Dominant Chart (70%) + Editorial Key Insights (30%) */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              
-              {/* Dominant Chart Canvas */}
-              <div className="lg:col-span-8 space-y-4">
-                <div className="h-80 sm:h-96 w-full pt-2">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={enterpriseScaleChartData} margin={{ top: 10, right: 15, left: -10, bottom: 5 }}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                      <XAxis dataKey="tier" stroke="#94a3b8" fontSize={12} tickLine={false} />
-                      <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
-                      <Tooltip
-                        formatter={(value: any, name: any, item: any) => [
-                          `${Number(value).toLocaleString()} registered enterprises (${item.payload.share}%)`,
-                          item.payload.fullName
-                        ]}
-                        contentStyle={{ backgroundColor: '#fff', borderRadius: '0.75rem', border: '1px solid #e2e8f0', fontSize: '12px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.05)' }}
-                      />
-                      <Bar dataKey="count" radius={[8, 8, 0, 0]} maxBarSize={64}>
-                        {enterpriseScaleChartData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-                <p className="text-[11px] text-slate-400">
-                  Data source: Ministry of Micro, Small and Medium Enterprises (MoMSME) Udyam national registry datasets.
-                </p>
-              </div>
-
-              {/* Key Insights Editorial Panel */}
-              <div className="lg:col-span-4 space-y-6 lg:border-l lg:border-slate-100 lg:pl-8">
-                <div>
-                  <h3 className="text-xs font-bold text-[#0B1736] uppercase tracking-wider">
-                    Key Insights
-                  </h3>
-                  <p className="text-[11px] text-slate-500 mt-0.5">
-                    Numerical composition by enterprise scale
+            {market ? (
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                {/* Dominant Chart Canvas */}
+                <div className="lg:col-span-8 space-y-4">
+                  <div className="h-80 sm:h-96 w-full pt-2">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={enterpriseScaleChartData} margin={{ top: 10, right: 15, left: -10, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                        <XAxis dataKey="tier" stroke="#94a3b8" fontSize={12} tickLine={false} />
+                        <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`} />
+                        <Tooltip
+                          formatter={(value: any, name: any, item: any) => [
+                            `${Number(value).toLocaleString()} registered enterprises (${item.payload.share}%)`,
+                            item.payload.fullName
+                          ]}
+                          contentStyle={{ backgroundColor: '#fff', borderRadius: '0.75rem', border: '1px solid #e2e8f0', fontSize: '12px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.05)' }}
+                        />
+                        <Bar dataKey="count" radius={[8, 8, 0, 0]} maxBarSize={64}>
+                          {enterpriseScaleChartData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.color} />
+                          ))}
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <p className="text-[11px] text-slate-400">
+                    Data source: Ministry of Micro, Small and Medium Enterprises (MoMSME) Udyam national registry datasets.
                   </p>
                 </div>
 
-                {/* Clean Numerical Stats List */}
-                <div className="space-y-4 text-xs">
-                  <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#159A68] shrink-0" />
-                      <span className="font-semibold text-slate-700">Micro Enterprises</span>
+                {/* Key Insights Editorial Panel */}
+                <div className="lg:col-span-4 space-y-6 lg:border-l lg:border-slate-100 lg:pl-8">
+                  <div>
+                    <h3 className="text-xs font-bold text-[#0B1736] uppercase tracking-wider">
+                      Key Insights
+                    </h3>
+                    <p className="text-[11px] text-slate-500 mt-0.5">
+                      Numerical composition by enterprise scale
+                    </p>
+                  </div>
+
+                  {/* Clean Numerical Stats List */}
+                  <div className="space-y-4 text-xs">
+                    <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#159A68] shrink-0" />
+                        <span className="font-semibold text-slate-700">Micro Enterprises</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="font-black text-[#0B1736]">
+                          {market.micro_enterprises ? market.micro_enterprises.toLocaleString() : '—'}
+                        </span>
+                        <span className="text-slate-400 text-[11px] ml-1.5">
+                          ({market.micro_share !== undefined ? market.micro_share.toFixed(1) : '—'}%)
+                        </span>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <span className="font-black text-[#0B1736]">
-                        {market?.micro_enterprises ? market.micro_enterprises.toLocaleString() : '48,500'}
+
+                    <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#2563eb] shrink-0" />
+                        <span className="font-semibold text-slate-700">Small Enterprises</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="font-black text-[#0B1736]">
+                          {market.small_enterprises ? market.small_enterprises.toLocaleString() : '—'}
+                        </span>
+                        <span className="text-slate-400 text-[11px] ml-1.5">
+                          ({market.small_share !== undefined ? market.small_share.toFixed(1) : '—'}%)
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#7c3aed] shrink-0" />
+                        <span className="font-semibold text-slate-700">Medium Enterprises</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="font-black text-[#0B1736]">
+                          {market.medium_enterprises ? market.medium_enterprises.toLocaleString() : '—'}
+                        </span>
+                        <span className="text-slate-400 text-[11px] ml-1.5">
+                          ({market.medium_share !== undefined ? market.medium_share.toFixed(1) : '—'}%)
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Analytical Takeaways */}
+                  <div className="pt-2 border-t border-slate-100 space-y-2.5 text-xs text-slate-600 leading-relaxed">
+                    <div className="flex items-start gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#159A68] shrink-0 mt-1.5" />
+                      <span>
+                        <strong className="font-bold text-[#0B1736]">{market.micro_share ? `${Math.round(market.micro_share)}%+ Micro Concentration` : 'Micro Concentration'}:</strong> Dense base of self-employed micro manufacturing &amp; trade units.
                       </span>
-                      <span className="text-slate-400 text-[11px] ml-1.5">
-                        ({market?.micro_share !== undefined ? market.micro_share.toFixed(1) : '94.2'}%)
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0 mt-1.5" />
+                      <span>
+                        <strong className="font-bold text-[#0B1736]">Credit Guarantee Gap:</strong> Prime qualifying zone for collateral-free CGTMSE &amp; PMEGP capital expansion.
                       </span>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#2563eb] shrink-0" />
-                      <span className="font-semibold text-slate-700">Small Enterprises</span>
-                    </div>
-                    <div className="text-right">
-                      <span className="font-black text-[#0B1736]">
-                        {market?.small_enterprises ? market.small_enterprises.toLocaleString() : '2,600'}
+                  {/* Editorial Research Observations */}
+                  {observations.length > 0 && (
+                    <div className="space-y-3 pt-2 border-t border-slate-100">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+                        Local Observations
                       </span>
-                      <span className="text-slate-400 text-[11px] ml-1.5">
-                        ({market?.small_share !== undefined ? market.small_share.toFixed(1) : '5.1'}%)
-                      </span>
+                      <div className="space-y-2">
+                        {observations.map((obs: string, idx: number) => (
+                          <div key={idx} className="flex items-start gap-2 text-xs text-slate-600 leading-relaxed font-normal">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-[#159A68] shrink-0 mt-0.5" />
+                            <span>{obs}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-
-                  <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-[#7c3aed] shrink-0" />
-                      <span className="font-semibold text-slate-700">Medium Enterprises</span>
-                    </div>
-                    <div className="text-right">
-                      <span className="font-black text-[#0B1736]">
-                        {market?.medium_enterprises ? market.medium_enterprises.toLocaleString() : '380'}
-                      </span>
-                      <span className="text-slate-400 text-[11px] ml-1.5">
-                        ({market?.medium_share !== undefined ? market.medium_share.toFixed(1) : '0.7'}%)
-                      </span>
-                    </div>
-                  </div>
+                  )}
                 </div>
-
-                {/* Analytical Takeaways */}
-                <div className="pt-2 border-t border-slate-100 space-y-2.5 text-xs text-slate-600 leading-relaxed">
-                  <div className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#159A68] shrink-0 mt-1.5" />
-                    <span>
-                      <strong className="font-bold text-[#0B1736]">94%+ Micro Concentration:</strong> Dense base of self-employed micro manufacturing &amp; trade units.
-                    </span>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0 mt-1.5" />
-                    <span>
-                      <strong className="font-bold text-[#0B1736]">Credit Guarantee Gap:</strong> Prime qualifying zone for collateral-free CGTMSE &amp; PMEGP capital expansion.
-                    </span>
-                  </div>
-                </div>
-
-                {/* Editorial Research Observations */}
-                {observations.length > 0 && (
-                  <div className="space-y-3 pt-2 border-t border-slate-100">
-                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
-                      Local Observations
-                    </span>
-                    <div className="space-y-2">
-                      {observations.map((obs: string, idx: number) => (
-                        <div key={idx} className="flex items-start gap-2 text-xs text-slate-600 leading-relaxed font-normal">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#159A68] shrink-0 mt-0.5" />
-                          <span>{obs}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
-
-            </div>
+            ) : researchLoading ? (
+              <div className="py-16 text-center text-slate-400 space-y-3">
+                <Loader2 className="w-7 h-7 mx-auto animate-spin text-[#159A68]" />
+                <p className="text-xs font-semibold text-slate-600">Retrieving official Udyam MSME registry data...</p>
+              </div>
+            ) : (
+              <div className="py-12 text-center text-slate-400 space-y-3 bg-slate-50/60 rounded-2xl border border-dashed border-slate-200/80 p-8">
+                <BarChart3 className="w-10 h-10 mx-auto text-slate-300 stroke-[1.5]" />
+                <div className="max-w-md mx-auto space-y-1">
+                  <p className="text-sm font-bold text-[#0B1736]">Configure Location to View Enterprise Breakdown</p>
+                  <p className="text-xs text-slate-500 leading-relaxed">
+                    Set your enterprise location in Business Profile to load empirical Udyam registry records, scale distribution, and district state rankings.
+                  </p>
+                </div>
+                <div className="pt-2">
+                  <Link
+                    href="/dashboard/profile"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#0B1736] hover:bg-[#159A68] text-white text-xs font-bold transition-colors shadow-xs"
+                  >
+                    <span>Configure Location in Profile</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              </div>
+            )}
           </section>
 
           {/* ========================================================================= */}
@@ -812,7 +886,7 @@ export default function DashboardPage() {
               </div>
 
               <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                <span>Total 60+ Central and State subsidy schemes indexed.</span>
+                <span>Total {programCount || 115} Central and State subsidy schemes indexed.</span>
                 <Link href="/advisory/schemes" className="font-bold text-[#159A68] hover:underline flex items-center gap-1">
                   <span>Explore full directory</span>
                   <ArrowRight className="w-3 h-3" />
@@ -847,14 +921,14 @@ export default function DashboardPage() {
                       MARKET CLUSTER
                     </span>
                     <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#EAF7F0] text-[#159A68]">
-                      {ml?.cluster_id ? `Cluster #${ml.cluster_id}` : 'Cluster #2'}
+                      {ml?.cluster_id !== undefined ? `Cluster #${ml.cluster_id}` : 'Cluster Pending'}
                     </span>
                   </div>
                   <div className="text-sm sm:text-base font-bold text-[#0B1736]">
-                    {ml?.cluster_label || 'Emerging Growth District'}
+                    {ml?.cluster_label || (user?.district ? 'District Archetype Computing...' : 'District Archetype Pending')}
                   </div>
                   <p className="text-xs text-slate-600 leading-relaxed font-normal">
-                    {ml?.cluster_description || 'High enterprise formation velocity with balanced trade density and emerging manufacturing clusters.'}
+                    {ml?.cluster_description || (user?.district ? 'Evaluating statistical density features against national Udyam clusters.' : 'Configure your enterprise location in profile to compute k-means cluster placement and quantitative indicators.')}
                   </p>
                 </div>
 
@@ -865,13 +939,13 @@ export default function DashboardPage() {
                     <span className="font-black text-[#0B1736]">
                       {ml?.quantitative_indicators?.market_research_indicator 
                         ? ml.quantitative_indicators.market_research_indicator.toFixed(1) 
-                        : '74.2'} <span className="text-[11px] font-normal text-slate-400">/ 100</span>
+                        : '—'} <span className="text-[11px] font-normal text-slate-400">/ 100</span>
                     </span>
                   </div>
                   <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
                     <div
                       className="bg-[#159A68] h-2 rounded-full transition-all"
-                      style={{ width: `${Math.min(100, Math.max(0, ml?.quantitative_indicators?.market_research_indicator || 74.2))}%` }}
+                      style={{ width: `${Math.min(100, Math.max(0, ml?.quantitative_indicators?.market_research_indicator || 0))}%` }}
                     />
                   </div>
                   <div className="flex items-center justify-between text-[10px] text-slate-400 pt-0.5">
@@ -888,7 +962,7 @@ export default function DashboardPage() {
                     <span className="font-bold text-[#0B1736]">
                       {ml?.quantitative_indicators?.national_density_percentile 
                         ? `${ml.quantitative_indicators.national_density_percentile.toFixed(1)}%` 
-                        : '78.5%'}
+                        : '—'}
                     </span>
                   </div>
                   <div className="flex items-center justify-between py-1">
@@ -896,7 +970,7 @@ export default function DashboardPage() {
                     <span className="font-bold text-[#0B1736]">
                       {ml?.quantitative_indicators?.state_density_percentile 
                         ? `${ml.quantitative_indicators.state_density_percentile.toFixed(1)}%` 
-                        : '82.1%'}
+                        : '—'}
                     </span>
                   </div>
                   <div className="flex items-center justify-between py-1">
@@ -904,7 +978,7 @@ export default function DashboardPage() {
                     <span className="font-bold text-[#0B1736]">
                       {ml?.quantitative_indicators?.sme_depth_score 
                         ? `${ml.quantitative_indicators.sme_depth_score.toFixed(1)} / 100` 
-                        : '68.0 / 100'}
+                        : '—'}
                     </span>
                   </div>
                 </div>

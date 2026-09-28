@@ -389,4 +389,20 @@ def test_recommendation_scorer_and_eligibility_invariants(db_session: Session):
         assert abs(comp_sum - item.recommendation_score) < 0.01
 
 
+def test_list_districts_endpoint(client: TestClient):
+    """Verify GET /api/v1/research/districts returns the authoritative 785 districts."""
+    response = client.get("/api/v1/research/districts")
+    assert response.status_code == status.HTTP_200_OK
+    data = response.json()
+    assert isinstance(data, list)
+    assert len(data) == 785
+    # Check structure of first item
+    first = data[0]
+    assert "id" in first
+    assert "district_name" in first
+    assert "state_id" in first
+    assert "state_name" in first
+
+
+
 

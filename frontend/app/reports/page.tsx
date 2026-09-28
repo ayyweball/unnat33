@@ -45,8 +45,8 @@ export default function InsightsAndReportsPage() {
       date: 'Generated on 26 Sep 2026',
       icon: TrendingUp,
       color: 'red',
-      downloadUrl: '/dashboard/market-analysis',
-      viewUrl: '/dashboard/market-analysis',
+      downloadUrl: '/dashboard/market-analysis?report=district',
+      viewUrl: '/dashboard/market-analysis?report=district',
     },
     {
       id: 'sector-analysis',
@@ -56,8 +56,8 @@ export default function InsightsAndReportsPage() {
       date: 'Generated on 26 Sep 2026',
       icon: Layers,
       color: 'red',
-      downloadUrl: '/dashboard/market-analysis',
-      viewUrl: '/dashboard/market-analysis',
+      downloadUrl: '/dashboard/market-analysis?report=sector',
+      viewUrl: '/dashboard/market-analysis?report=sector',
     },
     {
       id: 'schemes-report',

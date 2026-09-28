@@ -8,6 +8,7 @@ import Navbar from '@/components/Navbar';
 import HowItWorksJourney from '@/components/HowItWorksJourney';
 import ScrollRevealDashboard from '@/components/ScrollRevealDashboard';
 import { useLanguage } from '@/lib/i18n/useLanguage';
+import { useAppStore } from '@/lib/store';
 import {
   ArrowRight,
   Sparkles,
@@ -33,6 +34,7 @@ import {
 
 export default function LandingPage() {
   const { t, language } = useLanguage();
+  const { user } = useAppStore();
   const shouldReduceMotion = useReducedMotion();
 
   // Parallax: hero background drifts subtly upward as user scrolls
@@ -144,14 +146,14 @@ export default function LandingPage() {
               {/* CTAs */}
               <div className="flex flex-wrap items-center gap-3 mt-4 sm:mt-5">
                 <Link
-                  href="/dashboard"
+                  href={user ? '/dashboard' : '/login?redirect=/dashboard'}
                   className="h-11 inline-flex items-center justify-center gap-2 px-5 rounded-[10px] bg-[#0B1736] hover:bg-[#159A68] text-white text-xs font-semibold shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer whitespace-nowrap"
                 >
                   <span>{language === 'hi' ? 'प्लेटफ़ॉर्म एक्सप्लोर करें' : 'Explore Your Business'}</span>
                   <ArrowRight className="w-4 h-4 text-white/90" />
                 </Link>
                 <Link
-                  href="#schemes"
+                  href={user ? '/advisory/schemes' : '/login?redirect=/advisory/schemes'}
                   className="h-11 inline-flex items-center justify-center gap-2 px-5 rounded-[10px] bg-white hover:bg-[#F7F8F5] text-[#0B1736] text-xs font-semibold border border-[#D9DEE5] hover:border-slate-300 shadow-sm transition-all duration-200 cursor-pointer whitespace-nowrap"
                 >
                   <Landmark className="w-4 h-4 text-[#159A68]" />
@@ -484,14 +486,14 @@ export default function LandingPage() {
           </p>
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3.5">
             <Link
-              href="/dashboard"
+              href={user ? '/dashboard' : '/login?redirect=/dashboard'}
               className="h-12 w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 rounded-xl bg-[#159A68] hover:bg-[#0E754E] text-white font-bold text-xs shadow-sm hover:shadow-md transition-all duration-200 group cursor-pointer"
             >
               <span>{language === 'hi' ? 'व्यावसायिक विश्लेषण शुरू करें' : 'Start Your Business Analysis'}</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </Link>
             <Link
-              href="/advisory/schemes"
+              href={user ? '/advisory/schemes' : '/login?redirect=/advisory/schemes'}
               className="h-12 w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs border border-white/20 transition-colors duration-200 cursor-pointer"
             >
               <span>{language === 'hi' ? 'सरकारी योजनाएं देखें' : 'Review Government Schemes'}</span>
@@ -631,7 +633,7 @@ export default function LandingPage() {
               <span className="text-sm font-semibold text-white">Ready to build your business?</span>
             </div>
             <Link
-              href="/dashboard"
+              href={user ? '/dashboard' : '/login?redirect=/dashboard'}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#159A68] hover:bg-[#128357] text-white text-xs font-semibold shadow-xs transition-colors duration-150 cursor-pointer"
             >
               <span>Start Your Analysis</span>

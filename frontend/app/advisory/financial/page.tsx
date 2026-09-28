@@ -97,52 +97,53 @@ function FinancialAdvisorForm() {
     fetch('/api/schemes')
       .then((res) => res.json())
       .then((data) => {
-        if (data.programs) {
-          setAvailablePrograms(data.programs);
+        const progs = (data.programs && data.programs.length > 0) ? data.programs : (data.schemes || []);
+        if (progs.length > 0) {
+          setAvailablePrograms(progs);
           // Sync with URL parameters or select best program matching loan target
           if (initialProgramId) {
-            const match = data.programs.find((p: any) => p.id === parseInt(initialProgramId) || p.legacy_scheme_id === parseInt(initialProgramId));
+            const match = progs.find((p: any) => p.id === parseInt(initialProgramId) || p.legacy_scheme_id === parseInt(initialProgramId));
             if (match) {
               setForm((prev) => ({
                 ...prev,
                 programId: match.id,
-                programCode: match.program_code,
+                programCode: match.program_code || match.code || match.programCode,
               }));
               return;
             }
           }
           if (initialProgramCode) {
-            const match = data.programs.find((p: any) => p.program_code === initialProgramCode);
+            const match = progs.find((p: any) => (p.program_code === initialProgramCode || p.code === initialProgramCode || p.programCode === initialProgramCode));
             if (match) {
               setForm((prev) => ({
                 ...prev,
                 programId: match.id,
-                programCode: match.program_code,
+                programCode: match.program_code || match.code || match.programCode,
               }));
               return;
             }
           }
           // If no program selected from URL, choose a matching program based on loan target
-          if (!form.programId && !form.programCode && data.programs.length > 0) {
+          if (!form.programId && !form.programCode && progs.length > 0) {
             const loanTarget = form.loanNeeded || (form.projectCost ? form.projectCost * 0.9 : 0);
             let candidate: any = null;
             if (loanTarget > 0) {
-              candidate = data.programs.find((p: any) => {
-                const max = p.credit_details?.max_loan_amount ?? p.max_loan_amount;
-                const min = p.credit_details?.min_loan_amount ?? p.min_loan_amount ?? 0;
+              candidate = progs.find((p: any) => {
+                const max = p.credit_details?.max_loan_amount ?? p.max_loan_amount ?? p.loanMax;
+                const min = p.credit_details?.min_loan_amount ?? p.min_loan_amount ?? p.loanMin ?? 0;
                 return (max == null || max >= loanTarget) && (min <= loanTarget);
               });
             }
             if (!candidate) {
-              candidate = data.programs.find((p: any) => p.program_code === 'STANDUP_INDIA')
-                || data.programs.find((p: any) => p.program_code === 'PMEGP_NEW')
-                || data.programs.find((p: any) => p.program_code === 'PM_MUDRA_TARUN')
-                || data.programs[0];
+              candidate = progs.find((p: any) => (p.program_code === 'STANDUP_INDIA' || p.code === 'STANDUP_INDIA'))
+                || progs.find((p: any) => (p.program_code === 'PMEGP_NEW' || p.code === 'PMEGP_NEW'))
+                || progs.find((p: any) => (p.program_code === 'PM_MUDRA_TARUN' || p.code === 'PM_MUDRA_TARUN'))
+                || progs[0];
             }
             setForm((prev) => ({
               ...prev,
               programId: candidate.id,
-              programCode: candidate.program_code,
+              programCode: candidate.program_code || candidate.code || candidate.programCode,
             }));
           }
         }
@@ -211,7 +212,7 @@ function FinancialAdvisorForm() {
   };
 
   const selectedProgramObj = availablePrograms.find(
-    (p) => (form.programId && p.id === form.programId) || (form.programCode && p.program_code === form.programCode)
+    (p) => (form.programId && p.id === form.programId) || (form.programCode && (p.program_code === form.programCode || p.code === form.programCode || p.programCode === form.programCode))
   );
 
   // Dynamic Financial Snapshot calculations
@@ -554,7 +555,7 @@ function FinancialAdvisorForm() {
                     setForm({
                       ...form,
                       programId: pid,
-                      programCode: prog ? prog.program_code : '',
+                      programCode: prog ? (prog.program_code || prog.code || prog.programCode || '') : '',
                     });
                   }}
                   className="w-full px-3.5 py-3 rounded-xl border border-slate-200/90 text-xs font-semibold bg-white text-[#0B1736] focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all"
@@ -564,11 +565,16 @@ function FinancialAdvisorForm() {
                       {loadingPrograms ? 'Loading authoritative programmes...' : (form.programCode || 'Target Programme')}
                     </option>
                   ) : (
-                    availablePrograms.map((prog) => (
-                      <option key={prog.id} value={prog.id}>
-                        {prog.program_name} ({prog.program_code}) — {prog.primary_type}
-                      </option>
-                    ))
+                    availablePrograms.map((prog) => {
+                      const name = prog.program_name || prog.programName || prog.name || 'Government Programme';
+                      const code = prog.program_code || prog.programCode || prog.code || '';
+                      const type = prog.primary_type || prog.primaryType || prog.benefit_type || prog.benefitType || '';
+                      return (
+                        <option key={prog.id} value={prog.id}>
+                          {name}{code ? ` (${code})` : ''}{type ? ` — ${type}` : ''}
+                        </option>
+                      );
+                    })
                   )}
                 </select>
 
@@ -585,7 +591,7 @@ function FinancialAdvisorForm() {
                       <div className="mt-2.5 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-start gap-2">
                         <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                         <div>
-                          <span className="font-bold">Statutory Limit Notice:</span> {selectedProgramObj.program_name} has an official loan ceiling of ₹{Number(maxCap).toLocaleString('en-IN')}. For your requested loan of ₹{form.loanNeeded.toLocaleString('en-IN')}, bank debt under this specific scheme will be capped at the ceiling.
+                          <span className="font-bold">Statutory Limit Notice:</span> {selectedProgramObj.program_name || selectedProgramObj.name} has an official loan ceiling of ₹{Number(maxCap).toLocaleString('en-IN')}. For your requested loan of ₹{form.loanNeeded.toLocaleString('en-IN')}, bank debt under this specific scheme will be capped at the ceiling.
                         </div>
                       </div>
                     );

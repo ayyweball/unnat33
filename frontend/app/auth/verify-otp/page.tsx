@@ -1,13 +1,15 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import { useAppStore } from '@/lib/store';
 import { ShieldCheck, ArrowRight, Loader2, RefreshCw } from 'lucide-react';
 
-export default function VerifyOtpPage() {
+function VerifyOtpContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectParam = searchParams.get('redirect') || '/dashboard';
   const { setUser } = useAppStore();
 
   const [phone, setPhone] = useState('');
@@ -62,7 +64,7 @@ export default function VerifyOtpPage() {
       if (!res.ok) throw new Error(data.error || 'Verification failed');
 
       setUser(data.user);
-      router.push('/dashboard');
+      router.push(redirectParam);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -137,5 +139,19 @@ export default function VerifyOtpPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function VerifyOtpPage() {
+  return (
+    <React.Suspense
+      fallback={
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-8">
+          <Loader2 className="w-8 h-8 text-emerald-600 animate-spin" />
+        </div>
+      }
+    >
+      <VerifyOtpContent />
+    </React.Suspense>
   );
 }

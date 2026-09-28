@@ -2,41 +2,25 @@ import { NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { resolvePrimaryBusiness } from '@/lib/business-resolver';
-import { FALLBACK_USER, FALLBACK_BUSINESS } from '@/lib/fallback-data';
 
-async function getOrInitUser() {
-  try {
-    let user = await getCurrentUser();
-    if (!user) {
-      user = await prisma.user.upsert({
-        where: { phone: '9999999999' },
-        update: {},
-        create: {
-          phone: '9999999999',
-          name: 'Demo Entrepreneur',
-          language: 'en',
-          state: 'Uttar Pradesh',
-          district: 'Lucknow',
-        },
-      });
-    }
-    return user;
-  } catch (err) {
-    console.warn('getOrInitUser database warning (using fallback user):', err);
-    return FALLBACK_USER;
-  }
-}
 
 export async function GET(req: Request) {
   try {
-    const user = await getOrInitUser();
+    const user = await getCurrentUser();
+    if (!user) {
+      return NextResponse.json({
+        user: null,
+        business: null,
+      });
+    }
+
     let fullUser: any = null;
     try {
       fullUser = await prisma.user.findUnique({
         where: { id: user.id },
       });
     } catch {
-      fullUser = user || FALLBACK_USER;
+      fullUser = user;
     }
 
     let business: any = null;
@@ -45,18 +29,18 @@ export async function GET(req: Request) {
       const requestedBusinessId = url.searchParams.get('businessId');
       business = await resolvePrimaryBusiness(user.id, requestedBusinessId);
     } catch {
-      business = FALLBACK_BUSINESS;
+      business = null;
     }
 
     return NextResponse.json({
-      user: fullUser || FALLBACK_USER,
-      business: business || FALLBACK_BUSINESS,
+      user: fullUser || user,
+      business: business || null,
     });
   } catch (error: any) {
-    console.warn('GET /api/user/profile serving fallback profile:', error);
+    console.warn('GET /api/user/profile error:', error);
     return NextResponse.json({
-      user: FALLBACK_USER,
-      business: FALLBACK_BUSINESS,
+      user: null,
+      business: null,
     });
   }
 }
@@ -64,7 +48,10 @@ export async function GET(req: Request) {
 export async function PUT(req: Request) {
   let body: any = {};
   try {
-    const user = await getOrInitUser();
+    const user = await getCurrentUser();
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized. Please sign in to update your profile.' }, { status: 401 });
+    }
     body = await req.json().catch(() => ({}));
 
     const {
@@ -241,10 +228,10 @@ export async function PUT(req: Request) {
       business: updatedBusiness,
     });
   } catch (error: any) {
-    console.warn('PUT /api/user/profile database update warning (serving updated session):', error);
-    return NextResponse.json({
-      user: { ...FALLBACK_USER, ...body },
-      business: { ...FALLBACK_BUSINESS, ...body },
-    });
+    console.error('PUT /api/user/profile database update error:', error);
+    return NextResponse.json(
+      { error: error.message || 'Failed to update profile' },
+      { status: 500 }
+    );
   }
 }

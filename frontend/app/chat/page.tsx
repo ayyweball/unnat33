@@ -40,7 +40,7 @@ export default function ChatPage() {
       timestamp: '10:12 AM',
       content: language === 'hi'
         ? `नमस्ते ${user?.name || 'उद्यमी'}! 👋 मैं आपका UnnatE AI व्यावसायिक सलाहकार हूँ। आप मुझसे अपने बिज़नेस प्लान, MUDRA ऋण आवेदन प्रक्रिया, या नया व्यवसाय शुरू करने के बारे में कुछ भी पूछ सकते हैं।`
-        : `Hello ${user?.name || 'Demo Entrepreneur'}! 👋\nI am your UnnatE AI business advisor. Ask me anything about your business feasibility, starting a new business, MUDRA loan application steps, or government scheme eligibility.`
+        : `Hello ${user?.name || 'Entrepreneur'}! 👋\nI am your UnnatE AI business advisor. Ask me anything about your business feasibility, starting a new business, MUDRA loan application steps, or government scheme eligibility.`
     }
   ]);
 

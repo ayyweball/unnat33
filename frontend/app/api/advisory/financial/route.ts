@@ -35,17 +35,7 @@ export async function POST(req: Request) {
     try {
       user = await getCurrentUser();
       if (!user) {
-        user = await prisma.user.upsert({
-          where: { phone: '9999999999' },
-          update: {},
-          create: {
-            phone: '9999999999',
-            name: 'Demo Entrepreneur',
-            language: 'en',
-            state: 'Uttar Pradesh',
-            district: 'Lucknow',
-          },
-        });
+        return NextResponse.json({ error: 'Unauthorized. Please sign in.' }, { status: 401 });
       }
 
       const [foundUser, foundBusiness] = await Promise.all([
@@ -57,10 +47,7 @@ export async function POST(req: Request) {
       dbUser = foundUser;
       dbBusiness = foundBusiness;
     } catch (dbErr) {
-      console.warn('Financial route DB access warning (using fallback fixtures):', dbErr);
-      user = FALLBACK_USER;
-      dbUser = FALLBACK_USER;
-      dbBusiness = FALLBACK_BUSINESS;
+      console.warn('Financial route DB access warning:', dbErr);
     }
 
     if (!user) user = FALLBACK_USER;

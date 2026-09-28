@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
 import {
@@ -20,6 +21,7 @@ import {
   Loader2,
   ShieldAlert,
   ArrowRight,
+  ChevronRight,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -324,8 +326,15 @@ export default function WhatIfSimulatorPage() {
         <Sidebar />
 
         <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 max-w-[1550px] w-full min-w-0 space-y-6 sm:space-y-7">
-        {/* Page Title & Philosophy */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 pb-6">
+          {/* Breadcrumb Navigation */}
+          <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
+            <Link href="/" className="hover:text-[#159A68] transition-colors">Home</Link>
+            <ChevronRight className="w-3 h-3 text-slate-300" />
+            <span className="text-[#0B1736] font-semibold">What-If Simulator</span>
+          </div>
+
+          {/* Page Title & Philosophy */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 pb-6">
           <div>
             <div className="flex items-center gap-2 mb-1.5">
               <span className="text-[10px] font-bold text-[#159A68] bg-[#EAF7F0] px-2.5 py-0.5 rounded-full border border-[#159A68]/20 tracking-wider uppercase">

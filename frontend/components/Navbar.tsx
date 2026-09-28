@@ -27,11 +27,25 @@ import {
 
 export default function Navbar() {
   const { language, setLanguage, t } = useLanguage();
-  const { user, logout } = useAppStore();
+  const { user, logout, setProfile } = useAppStore();
   const pathname = usePathname();
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  // Sync profile on mount if cookie exists
+  useEffect(() => {
+    if (!user) {
+      fetch('/api/user/profile')
+        .then((res) => res.json())
+        .then((data) => {
+          if (data?.user) {
+            setProfile(data.user, data.business || null);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [user, setProfile]);
 
   // Navigation active & hover states
   const [activeId, setActiveId] = useState<string>('how-it-works');
@@ -245,7 +259,7 @@ export default function Navbar() {
                   className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-50 hover:bg-slate-100 text-[#0B1736] font-semibold text-xs transition-colors border border-slate-200"
                 >
                   <UserIcon className="w-3.5 h-3.5 text-[#159A68]" />
-                  <span className="max-w-[120px] truncate">{user.name}</span>
+                  <span className="max-w-[120px] truncate">{user.name || user.phone || 'Profile'}</span>
                 </Link>
                 <button
                   onClick={handleLogout}
@@ -258,18 +272,11 @@ export default function Navbar() {
             ) : (
               <div className="hidden sm:flex items-center gap-2">
                 <Link
-                  href="/dashboard/profile"
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-50 hover:bg-slate-100 text-[#0B1736] font-semibold text-xs transition-colors border border-slate-200"
+                  href="/login"
+                  className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#159A68] hover:bg-[#128357] text-white font-semibold text-xs transition-colors shadow-xs"
                 >
-                  <UserIcon className="w-3.5 h-3.5 text-[#159A68]" />
-                  <span>Demo Entrepreneur</span>
-                </Link>
-                <Link
-                  href="/dashboard"
-                  className="p-1.5 rounded-full text-slate-500 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer border border-transparent hover:border-rose-100"
-                  title="Logout"
-                >
-                  <LogOut className="w-4 h-4" />
+                  <UserIcon className="w-3.5 h-3.5 text-white" />
+                  <span>Sign in / Log in</span>
                 </Link>
               </div>
             )}
@@ -404,11 +411,11 @@ export default function Navbar() {
                   Government Schemes
                 </Link>
                 <Link
-                  href="/dashboard"
+                  href="/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block w-full py-2.5 px-4 rounded-lg bg-[#0B1736] text-white text-center font-bold shadow-xs mt-2"
+                  className="block w-full py-2.5 px-4 rounded-lg bg-[#159A68] text-white text-center font-bold shadow-xs mt-2"
                 >
-                  Explore Platform
+                  Sign in / Log in
                 </Link>
               </>
             )}
