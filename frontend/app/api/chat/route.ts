@@ -7,11 +7,13 @@ export async function POST(req: Request) {
   try {
     const user = await getCurrentUser();
     const body = await req.json();
-    const { message, conversationId, businessId } = body;
+    const { message, conversationId, businessId, district, state, language, businessType } = body;
 
-    if (!message) {
+    if (!message || typeof message !== 'string' || !message.trim()) {
       return NextResponse.json({ error: 'Message content is required' }, { status: 400 });
     }
+
+    const trimmedMessage = message.trim();
 
     let activeUser = user;
     if (!activeUser) {
@@ -60,7 +62,7 @@ export async function POST(req: Request) {
           data: {
             sessionId: session.id,
             role: 'user',
-            content: message
+            content: trimmedMessage
           }
         });
       } catch (err) {
@@ -71,16 +73,36 @@ export async function POST(req: Request) {
     const history = session?.messages
       ? [
           ...session.messages.map((m: any) => ({ role: m.role, content: m.content })),
-          { role: 'user', content: message }
+          { role: 'user', content: trimmedMessage }
         ]
-      : [{ role: 'user', content: message }];
+      : [{ role: 'user', content: trimmedMessage }];
+
+    // Resolve accurate user & business location context:
+    // Prioritize explicit body params (from active user session / store),
+    // then authenticated user profile (excluding the generic guest fallback record),
+    // never defaulting to an unselected city.
+    const isGuestRecord = !user || activeUser?.phone === '0000000000';
+    const effectiveDistrict = (district && typeof district === 'string' && district.trim())
+      ? district.trim()
+      : (!isGuestRecord && activeUser?.district ? activeUser.district : undefined);
+
+    const effectiveState = (state && typeof state === 'string' && state.trim())
+      ? state.trim()
+      : (!isGuestRecord && activeUser?.state ? activeUser.state : undefined);
+
+    const effectiveLanguage = (language && typeof language === 'string' && language.trim())
+      ? language.trim()
+      : (activeUser?.language || 'en');
+
+    const effectiveName = (!isGuestRecord && activeUser?.name) ? activeUser.name : 'Entrepreneur';
 
     // Call AI advisor chat service
     const replyText = await getAdvisorChatResponse(history, {
-      name: activeUser?.name || 'Entrepreneur',
-      language: activeUser?.language || 'en',
-      district: activeUser?.district || 'Lucknow',
-      state: activeUser?.state || 'Uttar Pradesh'
+      name: effectiveName,
+      language: effectiveLanguage,
+      district: effectiveDistrict,
+      state: effectiveState,
+      businessType: (businessType && typeof businessType === 'string' && businessType.trim()) ? businessType.trim() : undefined
     });
 
     if (session) {

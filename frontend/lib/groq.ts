@@ -16,7 +16,7 @@ export function getGroqClient(): Groq | null {
   if (!key || key.trim() === '') {
     return null;
   }
-  return new Groq({ apiKey: key });
+  return new Groq({ apiKey: key, timeout: 5000, maxRetries: 0 });
 }
 
 export const DEFAULT_GROQ_MODEL = process.env.GROQ_MODEL || 'qwen/qwen3.8-27b';

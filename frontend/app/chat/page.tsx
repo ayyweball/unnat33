@@ -28,7 +28,20 @@ interface ChatMessage {
 
 export default function ChatPage() {
   const { t, language } = useLanguage();
-  const { user } = useAppStore();
+  const { user, business, setProfile } = useAppStore();
+
+  useEffect(() => {
+    if (!user) {
+      fetch('/api/user/profile')
+        .then((res) => res.json())
+        .then((data) => {
+          if (data?.user) {
+            setProfile(data.user, data.business || null);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [user, setProfile]);
 
   const getInitialTime = () => {
     return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -76,6 +89,10 @@ export default function ChatPage() {
         body: JSON.stringify({
           message: msg,
           conversationId,
+          district: user?.district || undefined,
+          state: user?.state || undefined,
+          language: language,
+          businessType: user?.businessType || business?.type || (user as any)?.business?.type || undefined,
         }),
       });
 
