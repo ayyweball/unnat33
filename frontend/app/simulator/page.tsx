@@ -475,7 +475,7 @@ function WhatIfSimulatorContent() {
             </div>
 
             <div>
-              <label className="block text-[11px] font-semibold text-slate-700 mb-1">Location Type</label>
+              <label className="block text-[11px] font-semibold text-slate-700 mb-1">Jurisdiction Area</label>
               <div className="flex items-center gap-1.5 pt-0.5">
                 <button
                   type="button"
@@ -497,7 +497,7 @@ function WhatIfSimulatorContent() {
                       : 'bg-white text-slate-600 border-slate-200'
                   }`}
                 >
-                  Urban
+                  Peri-Urban
                 </button>
               </div>
             </div>

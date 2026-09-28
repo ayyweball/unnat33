@@ -32,8 +32,16 @@ export async function GET(req: Request) {
       business = null;
     }
 
+    const userToReturn = fullUser || user;
+    const userWithJurisdiction = userToReturn
+      ? {
+          ...userToReturn,
+          jurisdiction: userToReturn.isRural === true ? 'rural' : userToReturn.isRural === false ? 'peri_urban' : null,
+        }
+      : null;
+
     return NextResponse.json({
-      user: fullUser || user,
+      user: userWithJurisdiction,
       business: business || null,
     });
   } catch (error: any) {
@@ -64,6 +72,7 @@ export async function PUT(req: Request) {
       district,
       lgdDistrictCode,
       isRural,
+      jurisdiction,
       gender,
       socialCategory,
       isDifferentlyAbled,
@@ -136,6 +145,25 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: valErr.message }, { status: 400 });
     }
 
+    if (jurisdiction !== undefined && jurisdiction !== null && jurisdiction !== '') {
+      const cleanJurisdiction = String(jurisdiction).toLowerCase().trim();
+      if (!['rural', 'peri_urban', 'peri-urban', 'urban'].includes(cleanJurisdiction)) {
+        return NextResponse.json({ error: 'Jurisdiction must be either "rural" or "peri_urban"' }, { status: 400 });
+      }
+    }
+
+    let resolvedIsRural = isRural;
+    if (jurisdiction !== undefined) {
+      const clean = jurisdiction === null ? null : String(jurisdiction).toLowerCase().trim();
+      if (clean === 'rural') {
+        resolvedIsRural = true;
+      } else if (clean === 'peri_urban' || clean === 'peri-urban' || clean === 'urban') {
+        resolvedIsRural = false;
+      } else if (clean === null || clean === '') {
+        resolvedIsRural = null;
+      }
+    }
+
     // --- Update User ---
     const updatedUser = await prisma.user.update({
       where: { id: user.id },
@@ -148,7 +176,7 @@ export async function PUT(req: Request) {
         ...(state !== undefined && { state }),
         ...(district !== undefined && { district }),
         ...(lgdDistrictCode !== undefined && { lgdDistrictCode: lgdDistrictCode === '' ? null : lgdDistrictCode }),
-        ...(isRural !== undefined && { isRural: isRural === null ? null : Boolean(isRural) }),
+        ...(resolvedIsRural !== undefined && { isRural: resolvedIsRural === null ? null : Boolean(resolvedIsRural) }),
         ...(gender !== undefined && { gender: gender === '' ? null : gender }),
         ...(socialCategory !== undefined && { socialCategory: socialCategory === '' ? null : socialCategory }),
         ...(isDifferentlyAbled !== undefined && { isDifferentlyAbled: isDifferentlyAbled === null ? null : Boolean(isDifferentlyAbled) }),
@@ -223,8 +251,13 @@ export async function PUT(req: Request) {
       });
     }
 
+    const userWithJurisdiction = {
+      ...updatedUser,
+      jurisdiction: updatedUser.isRural === true ? 'rural' : updatedUser.isRural === false ? 'peri_urban' : null,
+    };
+
     return NextResponse.json({
-      user: updatedUser,
+      user: userWithJurisdiction,
       business: updatedBusiness,
     });
   } catch (error: any) {

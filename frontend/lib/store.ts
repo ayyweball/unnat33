@@ -11,6 +11,7 @@ export interface UserProfileState {
   district: string;
   lgdDistrictCode?: string | null;
   isRural?: boolean | null;
+  jurisdiction?: 'rural' | 'peri_urban' | string | null;
   gender?: string | null;
   socialCategory?: string | null;
   isDifferentlyAbled?: boolean | null;

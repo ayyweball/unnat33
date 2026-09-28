@@ -62,6 +62,67 @@ const flatLookups: Record<Language, Map<string, string>> = {
   gu: buildFlatLookup(en, gu),
 };
 
+// Build dot-separated key-path dictionary lookup: "nav.dashboard" -> value
+function buildKeyPathMap(dict: any, prefix = ''): Map<string, string> {
+  const map = new Map<string, string>();
+  function recurse(obj: any, currentPrefix: string) {
+    if (!obj || typeof obj !== 'object') return;
+    for (const [key, value] of Object.entries(obj)) {
+      const path = currentPrefix ? `${currentPrefix}.${key}` : key;
+      if (typeof value === 'string') {
+        map.set(path, value);
+      } else if (typeof value === 'object') {
+        recurse(value, path);
+      }
+    }
+  }
+  recurse(dict, prefix);
+  return map;
+}
+
+const keyPathMaps: Record<Language, Map<string, string>> = {
+  en: buildKeyPathMap(en),
+  hi: buildKeyPathMap(hi),
+  bn: buildKeyPathMap(bn),
+  te: buildKeyPathMap(te),
+  ta: buildKeyPathMap(ta),
+  gu: buildKeyPathMap(gu),
+};
+
+// Check if a string is or looks like a translation key (e.g. "nav.dashboard", "common.whatIfSimulator")
+function isTranslationKey(text: string): boolean {
+  const trimmed = text.trim();
+  if (keyPathMaps.en.has(trimmed)) return true;
+  return /^[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(trimmed);
+}
+
+// Fallback formatter for unmatched keys: "nav.howItWorks" -> "How It Works"
+function formatKeyFallback(key: string): string {
+  const lastPart = key.split('.').pop() || key;
+  return lastPart
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/[_-]/g, ' ')
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+// Resolve any translation key path to its canonical English value
+function resolveKeyToEnglish(keyOrText: string): string {
+  const trimmed = keyOrText.trim();
+  if (keyPathMaps.en.has(trimmed)) {
+    return keyPathMaps.en.get(trimmed)!;
+  }
+  const lower = trimmed.toLowerCase();
+  for (const [k, v] of keyPathMaps.en.entries()) {
+    if (k.toLowerCase() === lower) {
+      return v;
+    }
+  }
+  if (isTranslationKey(trimmed)) {
+    return formatKeyFallback(trimmed);
+  }
+  return keyOrText;
+}
+
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
@@ -72,7 +133,7 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType>({
   language: 'en',
   setLanguage: () => {},
-  t: (keyPathOrText: string) => keyPathOrText,
+  t: (keyPathOrText: string) => resolveKeyToEnglish(keyPathOrText),
   isTranslating: false,
 });
 
@@ -178,35 +239,47 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   // Synchronous t() translation function
   const t = useCallback((keyPathOrText: string): string => {
     if (!keyPathOrText || typeof keyPathOrText !== 'string') return keyPathOrText;
+    const trimmed = keyPathOrText.trim();
+
+    // 1. Dotted translation key resolution (e.g. 'nav.howItWorks', 'common.whatIfSimulator')
+    if (isTranslationKey(trimmed) || keyPathMaps.en.has(trimmed)) {
+      // If language is English, resolve canonical English immediately
+      if (language === 'en') {
+        return resolveKeyToEnglish(trimmed);
+      }
+
+      // If language is non-English, check target language key dictionary
+      if (keyPathMaps[language]?.has(trimmed)) {
+        return keyPathMaps[language].get(trimmed)!;
+      }
+
+      // Fallback: resolve canonical English, then check phrase map/cache
+      const canonicalEn = resolveKeyToEnglish(trimmed);
+      const flatMap = flatLookups[language];
+      if (flatMap && flatMap.has(canonicalEn.trim().toLowerCase())) {
+        return flatMap.get(canonicalEn.trim().toLowerCase())!;
+      }
+      const cache = clientCache[language];
+      if (cache && cache.has(canonicalEn.trim())) {
+        return cache.get(canonicalEn.trim())!;
+      }
+
+      return canonicalEn;
+    }
+
+    // 2. Direct English phrase: if English, return directly
     if (language === 'en') return keyPathOrText;
 
-    // 1. Check dotted dictionary key
-    const dictionary = dictionaries[language] || en;
-    const keys = keyPathOrText.split('.');
-    let current: any = dictionary;
-    let found = true;
-    for (const key of keys) {
-      if (current && typeof current === 'object' && key in current) {
-        current = current[key];
-      } else {
-        found = false;
-        break;
-      }
-    }
-    if (found && typeof current === 'string') {
-      return current;
-    }
-
-    // 2. Check flat English phrase lookup in static dictionary
+    // 3. For target language != 'en', check static flat map by English phrase
     const flatMap = flatLookups[language];
-    if (flatMap && flatMap.has(keyPathOrText.trim().toLowerCase())) {
-      return flatMap.get(keyPathOrText.trim().toLowerCase())!;
+    if (flatMap && flatMap.has(trimmed.toLowerCase())) {
+      return flatMap.get(trimmed.toLowerCase())!;
     }
 
-    // 3. Check dynamic client cache
+    // 4. Check dynamic client cache
     const cache = clientCache[language];
-    if (cache && cache.has(keyPathOrText.trim())) {
-      return cache.get(keyPathOrText.trim())!;
+    if (cache && cache.has(trimmed)) {
+      return cache.get(trimmed)!;
     }
 
     return keyPathOrText;
@@ -222,11 +295,25 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const textsToFetch: string[] = [];
     const entries = Array.from(queue.entries());
 
-    // Filter out already cached texts
+    // Filter out already cached texts or translation keys
     const cache = getStoredCache(targetLang);
     const flatMap = flatLookups[targetLang];
 
     for (const [text, nodes] of entries) {
+      // Guard: NEVER treat or send raw translation keys to translation API
+      if (isTranslationKey(text) || keyPathMaps.en.has(text)) {
+        const canonical = resolveKeyToEnglish(text);
+        const translated =
+          keyPathMaps[targetLang]?.get(text) ||
+          flatMap?.get(canonical.trim().toLowerCase()) ||
+          canonical;
+        nodes.forEach((n) => {
+          if (n.nodeValue !== translated) n.nodeValue = translated;
+        });
+        queue.delete(text);
+        continue;
+      }
+
       // Check static dictionary first
       const lower = text.trim().toLowerCase();
       if (flatMap && flatMap.has(lower)) {
@@ -296,13 +383,33 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const translateDOM = useCallback(() => {
     if (typeof window === 'undefined' || !document.body) return;
 
-    // If English, restore all canonical original texts
+    // If English, ensure all keys are resolved to canonical English and restored
     if (language === 'en') {
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
       let currentNode: Node | null = walker.nextNode();
       while (currentNode) {
-        if (originalTextMap.current.has(currentNode)) {
-          const original = originalTextMap.current.get(currentNode)!;
+        const val = currentNode.nodeValue || '';
+        const trimmed = val.trim();
+
+        // 1. If text node has a raw translation key, resolve it to canonical English immediately
+        if (isTranslationKey(trimmed) || keyPathMaps.en.has(trimmed)) {
+          const canonical = resolveKeyToEnglish(trimmed);
+          const leadingWs = val.match(/^\s*/)?.[0] || '';
+          const trailingWs = val.match(/\s*$/)?.[0] || '';
+          const resolved = `${leadingWs}${canonical}${trailingWs}`;
+          if (currentNode.nodeValue !== resolved) {
+            currentNode.nodeValue = resolved;
+          }
+          originalTextMap.current.set(currentNode, canonical);
+        }
+        // 2. Otherwise restore original canonical English if previously translated
+        else if (originalTextMap.current.has(currentNode)) {
+          let original = originalTextMap.current.get(currentNode)!;
+          // If recorded original was inadvertently a key, resolve it
+          if (isTranslationKey(original.trim()) || keyPathMaps.en.has(original.trim())) {
+            original = resolveKeyToEnglish(original.trim());
+            originalTextMap.current.set(currentNode, original);
+          }
           if (currentNode.nodeValue !== original) {
             currentNode.nodeValue = original;
           }
@@ -328,38 +435,61 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     let node: Node | null = walker.nextNode();
     while (node) {
+      const currentVal = node.nodeValue || '';
+      const currentTrimmed = currentVal.trim();
+      const isKey = isTranslationKey(currentTrimmed) || keyPathMaps.en.has(currentTrimmed);
+
       // Record canonical English source text once
-      if (!originalTextMap.current.has(node)) {
-        originalTextMap.current.set(node, node.nodeValue || '');
+      if (!originalTextMap.current.has(node) || isKey) {
+        if (isKey) {
+          const canonical = resolveKeyToEnglish(currentTrimmed);
+          originalTextMap.current.set(node, canonical);
+        } else {
+          originalTextMap.current.set(node, currentVal);
+        }
       }
 
-      const originalText = originalTextMap.current.get(node) || node.nodeValue || '';
-      const trimmed = originalText.trim();
+      let sourceEnglish = originalTextMap.current.get(node) || currentVal;
+      // If recorded original was a translation key, resolve to canonical English
+      if (isTranslationKey(sourceEnglish.trim()) || keyPathMaps.en.has(sourceEnglish.trim())) {
+        sourceEnglish = resolveKeyToEnglish(sourceEnglish.trim());
+        originalTextMap.current.set(node, sourceEnglish);
+      }
 
-      if (!isNonTranslatable(trimmed)) {
-        const lower = trimmed.toLowerCase();
+      const trimmedEn = sourceEnglish.trim();
+      const leadingWs = currentVal.match(/^\s*/)?.[0] || '';
+      const trailingWs = currentVal.match(/\s*$/)?.[0] || '';
 
-        // 1. Static dictionary check
-        if (flatMap && flatMap.has(lower)) {
-          const trans = flatMap.get(lower)!;
-          // Retain surrounding whitespace
-          const leadingWs = originalText.match(/^\s*/)?.[0] || '';
-          const trailingWs = originalText.match(/\s*$/)?.[0] || '';
-          node.nodeValue = `${leadingWs}${trans}${trailingWs}`;
-        }
-        // 2. Client cache check
-        else if (cache.has(trimmed)) {
-          const trans = cache.get(trimmed)!;
-          const leadingWs = originalText.match(/^\s*/)?.[0] || '';
-          const trailingWs = originalText.match(/\s*$/)?.[0] || '';
-          node.nodeValue = `${leadingWs}${trans}${trailingWs}`;
-        }
-        // 3. Queue for translation
-        else {
-          if (!pendingNodes.current.has(trimmed)) {
-            pendingNodes.current.set(trimmed, []);
+      if (!isNonTranslatable(trimmedEn)) {
+        const lower = trimmedEn.toLowerCase();
+
+        // 1. Direct key-path lookup in target dictionary
+        if (isKey && keyPathMaps[language]?.has(currentTrimmed)) {
+          const trans = keyPathMaps[language].get(currentTrimmed)!;
+          if (node.nodeValue !== `${leadingWs}${trans}${trailingWs}`) {
+            node.nodeValue = `${leadingWs}${trans}${trailingWs}`;
           }
-          pendingNodes.current.get(trimmed)!.push(node);
+        }
+        // 2. Static dictionary phrase check using canonical English
+        else if (flatMap && flatMap.has(lower)) {
+          const trans = flatMap.get(lower)!;
+          if (node.nodeValue !== `${leadingWs}${trans}${trailingWs}`) {
+            node.nodeValue = `${leadingWs}${trans}${trailingWs}`;
+          }
+        }
+        // 3. Client cache check using canonical English
+        else if (cache.has(trimmedEn)) {
+          const trans = cache.get(trimmedEn)!;
+          if (node.nodeValue !== `${leadingWs}${trans}${trailingWs}`) {
+            node.nodeValue = `${leadingWs}${trans}${trailingWs}`;
+          }
+        }
+        // 4. Queue canonical English (NEVER the raw key!) for translation
+        else {
+          if (!pendingNodes.current.has(trimmedEn)) {
+            pendingNodes.current.set(trimmedEn, []);
+          }
+          pendingNodes.current.get(trimmedEn)!.push(node);
         }
       }
 
@@ -379,12 +509,10 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     // Set up MutationObserver to translate dynamic page content
     const observer = new MutationObserver(() => {
-      if (language !== 'en') {
-        if (debounceTimer.current) clearTimeout(debounceTimer.current);
-        debounceTimer.current = setTimeout(() => {
-          translateDOM();
-        }, 200);
-      }
+      if (debounceTimer.current) clearTimeout(debounceTimer.current);
+      debounceTimer.current = setTimeout(() => {
+        translateDOM();
+      }, language === 'en' ? 60 : 200);
     });
 
     observer.observe(document.body, {

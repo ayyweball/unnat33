@@ -324,6 +324,7 @@ export default function RebuiltDPRBuilderPage() {
     existingDebt: 0,
     districtName: '',
     stateName: '',
+    jurisdiction: null as 'rural' | 'peri_urban' | null,
     locationType: 'RURAL',
     category: 'GENERAL',
     gender: 'MALE',
@@ -348,6 +349,11 @@ export default function RebuiltDPRBuilderPage() {
           if (data.user || data.business) {
             const u = data.user || {};
             const b = data.business || {};
+            const isRuralVal = b.isRural !== undefined && b.isRural !== null ? b.isRural : u.isRural;
+            const resolvedJurisdiction = u.jurisdiction
+              ? (u.jurisdiction === 'urban' ? 'peri_urban' : u.jurisdiction)
+              : (isRuralVal === true ? 'rural' : isRuralVal === false ? 'peri_urban' : null);
+
             setForm((prev) => ({
               ...prev,
               businessId: b.id || '',
@@ -357,7 +363,8 @@ export default function RebuiltDPRBuilderPage() {
               subType: b.description || b.activity || prev.subType,
               districtName: b.district || u.district || prev.districtName,
               stateName: b.state || u.state || prev.stateName,
-              locationType: b.isRural !== undefined ? (b.isRural ? 'RURAL' : 'URBAN') : prev.locationType,
+              jurisdiction: resolvedJurisdiction,
+              locationType: resolvedJurisdiction === 'rural' ? 'RURAL' : (resolvedJurisdiction === 'peri_urban' ? 'PERI_URBAN' : (b.isRural !== undefined ? (b.isRural ? 'RURAL' : 'PERI_URBAN') : prev.locationType)),
               category: u.category ? u.category.toUpperCase() : prev.category,
               gender: u.gender ? u.gender.toUpperCase() : prev.gender,
               estimatedCapital: b.projectCost || b.estimatedCapital || prev.estimatedCapital,
@@ -1011,6 +1018,79 @@ export default function RebuiltDPRBuilderPage() {
                         className="w-full text-xs p-3 border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-[#159A68]/20 focus:border-[#159A68] transition-all"
                       />
                     </div>
+
+                    {/* Contextual Peri-Urban Operational Advantages & Considerations */}
+                    {(form.jurisdiction === 'peri_urban' || form.locationType === 'PERI_URBAN') && (
+                      <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-indigo-50/70 via-blue-50/50 to-slate-50 border border-blue-200/80 space-y-3.5 shadow-2xs">
+                        <div className="flex items-center gap-2.5 pb-2.5 border-b border-blue-200/60">
+                          <div className="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center shrink-0">
+                            <Building2 className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <h3 className="text-xs font-bold text-[#0B1736] uppercase tracking-wider">
+                              Peri-Urban Operational Dynamics &amp; Market Proximity
+                            </h3>
+                            <p className="text-[11px] text-slate-500">
+                              Strategic advantages and considerations for operating adjacent to major urban markets.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                          {/* Business Advantages */}
+                          <div className="p-3.5 rounded-xl bg-white/95 border border-blue-100 space-y-2">
+                            <div className="text-[11px] font-bold text-[#159A68] uppercase tracking-wide flex items-center gap-1.5">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-[#159A68]" />
+                              <span>Operational Advantages</span>
+                            </div>
+                            <ul className="space-y-1.5 text-slate-600 text-[11px] leading-relaxed">
+                              <li className="flex items-start gap-1.5">
+                                <span className="text-blue-500 font-bold">•</span>
+                                <span><strong>Urban Market Proximity:</strong> Direct access to larger, high-volume consumer bases and commercial clients in nearby cities.</span>
+                              </li>
+                              <li className="flex items-start gap-1.5">
+                                <span className="text-blue-500 font-bold">•</span>
+                                <span><strong>Supplier &amp; Freight Corridors:</strong> Convenient connectivity to wholesale suppliers, distributors, logistics partners, and regional transit hubs.</span>
+                              </li>
+                              <li className="flex items-start gap-1.5">
+                                <span className="text-blue-500 font-bold">•</span>
+                                <span><strong>Rapid Order Fulfilment:</strong> Shorter delivery dispatch and turnaround cycles for urban client consignments.</span>
+                              </li>
+                              <li className="flex items-start gap-1.5">
+                                <span className="text-blue-500 font-bold">•</span>
+                                <span><strong>Cost-Demand Efficiency:</strong> Captures premium city demand while enjoying lower real estate, industrial shed, and facility overheads than metropolitan cores.</span>
+                              </li>
+                              <li className="flex items-start gap-1.5">
+                                <span className="text-blue-500 font-bold">•</span>
+                                <span><strong>Dual-Market Serving:</strong> Unique flexibility to service local peri-urban/rural customer needs alongside urban off-take demand.</span>
+                              </li>
+                            </ul>
+                          </div>
+
+                          {/* Operational Considerations */}
+                          <div className="p-3.5 rounded-xl bg-white/95 border border-amber-100 space-y-2">
+                            <div className="text-[11px] font-bold text-amber-700 uppercase tracking-wide flex items-center gap-1.5">
+                              <AlertCircle className="w-3.5 h-3.5 text-amber-600" />
+                              <span>Operational Considerations</span>
+                            </div>
+                            <ul className="space-y-1.5 text-slate-600 text-[11px] leading-relaxed">
+                              <li className="flex items-start gap-1.5">
+                                <span className="text-amber-500 font-bold">•</span>
+                                <span><strong>Traffic &amp; Transport Bottlenecks:</strong> Peak-hour metropolitan transit congestion can impact timed dispatch windows and vehicle routing.</span>
+                              </li>
+                              <li className="flex items-start gap-1.5">
+                                <span className="text-amber-500 font-bold">•</span>
+                                <span><strong>Zoning &amp; Land-Use Restrictions:</strong> Evolving peri-urban municipal master plans require vigilance with commercial licensing and environmental clearances.</span>
+                              </li>
+                              <li className="flex items-start gap-1.5">
+                                <span className="text-amber-500 font-bold">•</span>
+                                <span><strong>Rising Factor Costs &amp; Competition:</strong> Encroaching city development leads to rising rent trends and competition from urban employers for skilled workforce.</span>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
                     <div className="space-y-3">
                       <h3 className="text-xs font-bold text-[#0B1736] uppercase tracking-wider">

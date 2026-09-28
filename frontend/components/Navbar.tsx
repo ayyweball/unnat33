@@ -71,7 +71,7 @@ export default function Navbar() {
   const navItems = [
     { id: 'how-it-works', href: '#how-it-works', label: t('nav.howItWorks') },
     { id: 'analysis', href: '#analysis', label: t('nav.analysis') },
-    { id: 'simulator', href: '/simulator', label: 'What-If Simulator', icon: Sliders },
+    { id: 'simulator', href: '/simulator', label: t('common.whatIfSimulator') || 'What-If Simulator', icon: Sliders },
     { id: 'entrepreneurs', href: '#entrepreneurs', label: t('nav.forEntrepreneurs') },
     { id: 'about', href: '#about', label: t('nav.aboutUs') },
   ];

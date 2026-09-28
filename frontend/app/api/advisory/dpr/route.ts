@@ -69,7 +69,7 @@ export async function POST(req: Request) {
       district_name: resolvedDistrict,
       state_name: resolvedState,
       lg_dt_code: body.lg_dt_code,
-      location_type: body.location_type || (body.is_rural ? 'RURAL' : 'URBAN'),
+      location_type: body.location_type || (body.is_rural ? 'RURAL' : 'PERI_URBAN'),
       category: body.category || body.social_category || anyUser?.category || 'GENERAL',
       gender: body.gender || anyUser?.gender || 'MALE',
       education_level: body.education_level || 'GRADUATE',

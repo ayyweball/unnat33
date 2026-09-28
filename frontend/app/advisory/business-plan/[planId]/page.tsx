@@ -108,6 +108,7 @@ export default function BusinessPlanResultsPage({ params }: { params: { planId: 
   const { t } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const storeUser = useAppStore((state) => state.user);
 
   const [dpr, setDpr] = useState<DPRResponse | null>(null);
   const [advisoryMeta, setAdvisoryMeta] = useState<any>(null);
@@ -1210,6 +1211,101 @@ export default function BusinessPlanResultsPage({ params }: { params: { planId: 
               <span className="font-bold text-emerald-950 uppercase text-[10px] block mb-1">Quality Assurance & Compliance</span>
               <p className="text-emerald-900">{dpr.operations_plan.quality_assurance}</p>
             </div>
+
+            {/* Peri-Urban Strategic Operational Context */}
+            {(() => {
+              const rawDpr = dpr as any;
+              const isRural =
+                (rawDpr?.location_type && String(rawDpr.location_type).toUpperCase() === 'RURAL') ||
+                (rawDpr?.location_analysis?.location_type && String(rawDpr.location_analysis.location_type).toUpperCase() === 'RURAL') ||
+                rawDpr?.is_rural === true ||
+                rawDpr?.location_analysis?.is_rural === true ||
+                userProfile?.user?.jurisdiction === 'rural' ||
+                userProfile?.user?.isRural === true ||
+                storeUser?.jurisdiction === 'rural' ||
+                storeUser?.isRural === true;
+
+              const isPeriUrban = !isRural && (
+                (rawDpr?.location_type && ['PERI_URBAN', 'PERI-URBAN', 'URBAN'].includes(String(rawDpr.location_type).toUpperCase())) ||
+                (rawDpr?.location_analysis?.location_type && ['PERI_URBAN', 'PERI-URBAN', 'URBAN'].includes(String(rawDpr.location_analysis.location_type).toUpperCase())) ||
+                rawDpr?.is_rural === false ||
+                rawDpr?.location_analysis?.is_rural === false ||
+                userProfile?.user?.jurisdiction === 'peri_urban' ||
+                userProfile?.user?.isRural === false ||
+                storeUser?.jurisdiction === 'peri_urban' ||
+                storeUser?.isRural === false
+              );
+
+              if (!isPeriUrban) return null;
+
+              return (
+                <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-indigo-50/70 via-blue-50/50 to-slate-50 border border-blue-200/80 space-y-3.5 shadow-2xs">
+                  <div className="flex items-center gap-2.5 pb-2.5 border-b border-blue-200/60">
+                    <div className="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center shrink-0">
+                      <Building2 className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h3 className="text-xs font-bold text-[#0B1736] uppercase tracking-wider">
+                        Peri-Urban Operational Dynamics &amp; Market Proximity
+                      </h3>
+                      <p className="text-[11px] text-slate-500">
+                        Strategic advantages and operational considerations for enterprises situated adjacent to metropolitan centers.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                    {/* Operational Advantages */}
+                    <div className="p-3.5 rounded-xl bg-white/95 border border-blue-100 space-y-2">
+                      <div className="text-[11px] font-bold text-[#159A68] uppercase tracking-wide flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#159A68]" />
+                        <span>Operational Advantages</span>
+                      </div>
+                      <ul className="space-y-1.5 text-slate-600 text-[11px] leading-relaxed">
+                        <li className="flex items-start gap-1.5">
+                          <span className="text-blue-500 font-bold">•</span>
+                          <span><strong>Proximity to Urban Demand:</strong> Immediate reach into high-volume consumer and retail buyer segments across adjacent municipal centers.</span>
+                        </li>
+                        <li className="flex items-start gap-1.5">
+                          <span className="text-blue-500 font-bold">•</span>
+                          <span><strong>Supplier &amp; Freight Corridors:</strong> Enhanced connectivity to wholesale raw material depots, transit arteries, and courier hubs with reduced fulfillment cycles.</span>
+                        </li>
+                        <li className="flex items-start gap-1.5">
+                          <span className="text-blue-500 font-bold">•</span>
+                          <span><strong>Cost-Demand Arbitrage:</strong> Captures metropolitan consumer pricing while maintaining lower land, facility lease, and warehousing overheads.</span>
+                        </li>
+                        <li className="flex items-start gap-1.5">
+                          <span className="text-blue-500 font-bold">•</span>
+                          <span><strong>Dual-Market Scope:</strong> Balanced operational footprint serving both local peri-urban/rural retail channels and urban off-take orders.</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    {/* Operational Considerations */}
+                    <div className="p-3.5 rounded-xl bg-white/95 border border-amber-100 space-y-2">
+                      <div className="text-[11px] font-bold text-amber-700 uppercase tracking-wide flex items-center gap-1.5">
+                        <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
+                        <span>Key Operational Considerations</span>
+                      </div>
+                      <ul className="space-y-1.5 text-slate-600 text-[11px] leading-relaxed">
+                        <li className="flex items-start gap-1.5">
+                          <span className="text-amber-500 font-bold">•</span>
+                          <span><strong>Peak Traffic Bottlenecks:</strong> Metropolitan commute congestion requires structured scheduling for morning and evening vehicle dispatches.</span>
+                        </li>
+                        <li className="flex items-start gap-1.5">
+                          <span className="text-amber-500 font-bold">•</span>
+                          <span><strong>Zoning &amp; Land Constraints:</strong> Urban expansion zones necessitate strict compliance with regional town planning and commercial licensing mandates.</span>
+                        </li>
+                        <li className="flex items-start gap-1.5">
+                          <span className="text-amber-500 font-bold">•</span>
+                          <span><strong>Rising Overheads &amp; Competition:</strong> Proximity to urban wage markets requires competitive talent retention structures amidst escalating commercial rentals.</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
           </section>
 
           {/* ============================================================= */}

@@ -39,7 +39,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
         state_name: userBusiness?.state || user?.state || undefined,
         estimated_capital: userBusiness?.projectCost || userBusiness?.estimatedCapital || undefined,
         current_income: userBusiness?.monthlyIncome ? Number(userBusiness.monthlyIncome) * 12 : undefined,
-        location_type: userBusiness?.isRural ? 'RURAL' : 'URBAN',
+        location_type: userBusiness?.isRural ? 'RURAL' : 'PERI_URBAN',
         category: (user as any)?.category || undefined,
         gender: (user as any)?.gender || undefined,
       });

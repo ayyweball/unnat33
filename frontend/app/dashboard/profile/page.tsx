@@ -109,6 +109,7 @@ export default function ProfilePage() {
     state: '',
     district: '',
     lgdDistrictCode: '',
+    jurisdiction: null as 'rural' | 'peri_urban' | null,
     isRural: null as boolean | null,
 
     // 3. Special Beneficiary Status
@@ -160,6 +161,9 @@ export default function ProfilePage() {
             state: data.user.state || '',
             district: data.user.district || '',
             lgdDistrictCode: data.user.lgdDistrictCode || '',
+            jurisdiction: data.user.jurisdiction
+              ? (data.user.jurisdiction === 'urban' ? 'peri_urban' : data.user.jurisdiction)
+              : (data.user.isRural === true ? 'rural' : data.user.isRural === false ? 'peri_urban' : null),
             isRural: data.user.isRural != null ? data.user.isRural : null,
 
             isTraditionalArtisan: Boolean(data.user.isTraditionalArtisan),
@@ -248,7 +252,8 @@ export default function ProfilePage() {
         state: form.state.trim() || undefined,
         district: form.district.trim() || undefined,
         lgdDistrictCode: form.lgdDistrictCode.trim() || null,
-        isRural: form.isRural,
+        jurisdiction: form.jurisdiction || (form.isRural === true ? 'rural' : form.isRural === false ? 'peri_urban' : null),
+        isRural: form.jurisdiction === 'rural' ? true : form.jurisdiction === 'peri_urban' ? false : form.isRural,
         gender: form.gender || null,
         socialCategory: form.socialCategory || null,
         isDifferentlyAbled: form.isDifferentlyAbled,
@@ -812,9 +817,16 @@ export default function ProfilePage() {
                       <div className="flex gap-2">
                         <button
                           type="button"
-                          onClick={() => setForm({ ...form, isRural: form.isRural === true ? null : true })}
+                          onClick={() => {
+                            const next = form.jurisdiction === 'rural' || form.isRural === true ? null : 'rural';
+                            setForm({
+                              ...form,
+                              jurisdiction: next,
+                              isRural: next === 'rural' ? true : null,
+                            });
+                          }}
                           className={`flex-1 py-2.5 rounded-xl text-xs font-semibold border transition-colors ${
-                            form.isRural === true
+                            form.jurisdiction === 'rural' || form.isRural === true
                               ? 'bg-[#159A68] text-white border-[#159A68] shadow-xs'
                               : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
                           }`}
@@ -823,14 +835,21 @@ export default function ProfilePage() {
                         </button>
                         <button
                           type="button"
-                          onClick={() => setForm({ ...form, isRural: form.isRural === false ? null : false })}
+                          onClick={() => {
+                            const next = form.jurisdiction === 'peri_urban' || (form.isRural === false && form.jurisdiction !== 'rural') ? null : 'peri_urban';
+                            setForm({
+                              ...form,
+                              jurisdiction: next,
+                              isRural: next === 'peri_urban' ? false : null,
+                            });
+                          }}
                           className={`flex-1 py-2.5 rounded-xl text-xs font-semibold border transition-colors ${
-                            form.isRural === false
+                            form.jurisdiction === 'peri_urban' || (form.isRural === false && form.jurisdiction !== 'rural')
                               ? 'bg-[#159A68] text-white border-[#159A68] shadow-xs'
                               : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
                           }`}
                         >
-                          Urban
+                          Peri-Urban
                         </button>
                       </div>
                     </div>
@@ -1397,7 +1416,13 @@ export default function ProfilePage() {
                     <div className="p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/70 space-y-1">
                       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">LOCATION</span>
                       <div className="text-xs font-bold text-[#0B1736] truncate">{form.district ? `${form.district}, ${form.state}` : 'Not set'}</div>
-                      <div className="text-[11px] text-slate-500">{form.isRural === true ? 'Rural Jurisdiction' : form.isRural === false ? 'Urban Jurisdiction' : 'Area unselected'}</div>
+                      <div className="text-[11px] text-slate-500">
+                        {form.jurisdiction === 'rural' || form.isRural === true
+                          ? 'Rural Jurisdiction'
+                          : form.jurisdiction === 'peri_urban' || form.isRural === false
+                          ? 'Peri-Urban Jurisdiction'
+                          : 'Area unselected'}
+                      </div>
                     </div>
 
                     <div className="p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/70 space-y-1">
