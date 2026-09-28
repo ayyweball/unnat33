@@ -14,8 +14,8 @@ export default function RegisterPage() {
     name: '',
     phone: '',
     language: language || 'en',
-    state: 'Uttar Pradesh',
-    district: 'Lucknow',
+    state: '',
+    district: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -108,6 +108,7 @@ export default function RegisterPage() {
                   onChange={(e) => setForm({ ...form, state: e.target.value })}
                   className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
                 >
+                  <option value="">Select State</option>
                   <option value="Uttar Pradesh">Uttar Pradesh</option>
                   <option value="Bihar">Bihar</option>
                   <option value="Rajasthan">Rajasthan</option>

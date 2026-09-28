@@ -1,9 +1,11 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
+import { useAppStore } from '@/lib/store';
 import {
   Sliders,
   RotateCcw,
@@ -79,16 +81,21 @@ const INDIAN_STATES = [
   'West Bengal',
 ];
 
-export default function WhatIfSimulatorPage() {
+function WhatIfSimulatorContent() {
+  const searchParams = useSearchParams();
+  const urlState = searchParams?.get('state') || '';
+  const urlDistrict = searchParams?.get('district') || '';
+  const { user: storeUser, business: storeBusiness } = useAppStore();
+
   // 1. Business Profile Context
   const [profileLoading, setProfileLoading] = useState(true);
   const [enterpriseMeta, setEnterpriseMeta] = useState({
-    businessName: 'My Enterprise',
-    sector: 'Food',
-    subType: 'Bakery & Confectionery',
-    state: 'Uttar Pradesh',
-    district: 'Varanasi',
-    isRural: true,
+    businessName: storeBusiness?.name || (storeUser?.name ? `${storeUser.name}'s Enterprise` : 'My Enterprise'),
+    sector: storeBusiness?.sector || storeBusiness?.type || 'Food',
+    subType: storeBusiness?.description || 'Micro Enterprise',
+    state: urlState || storeBusiness?.state || storeUser?.state || '',
+    district: urlDistrict || storeBusiness?.district || storeUser?.district || '',
+    isRural: storeBusiness?.isRural !== undefined && storeBusiness?.isRural !== null ? storeBusiness.isRural : true,
   });
 
   // 2. Baseline Assumptions
@@ -139,14 +146,14 @@ export default function WhatIfSimulatorPage() {
           const u = data.user || {};
           const b = data.business || {};
 
-          const resolvedState = b.state || u.state || 'Uttar Pradesh';
-          const resolvedDistrict = b.district || u.district || 'Varanasi';
-          const resolvedSector = b.sector || b.type || 'Food';
-          const resolvedSubType = b.description || 'Micro Enterprise';
-          const resolvedIsRural = b.isRural !== undefined && b.isRural !== null ? b.isRural : true;
+          const resolvedState = urlState || b.state || u.state || storeBusiness?.state || storeUser?.state || '';
+          const resolvedDistrict = urlDistrict || b.district || u.district || storeBusiness?.district || storeUser?.district || '';
+          const resolvedSector = b.sector || b.type || storeBusiness?.sector || storeBusiness?.type || 'Food';
+          const resolvedSubType = b.description || storeBusiness?.description || 'Micro Enterprise';
+          const resolvedIsRural = b.isRural !== undefined && b.isRural !== null ? b.isRural : (storeBusiness?.isRural ?? true);
 
           setEnterpriseMeta({
-            businessName: b.name || `${resolvedSector} Enterprise`,
+            businessName: b.name || storeBusiness?.name || `${resolvedSector} Enterprise`,
             sector: resolvedSector,
             subType: resolvedSubType,
             state: resolvedState,
@@ -447,6 +454,7 @@ export default function WhatIfSimulatorPage() {
                 onChange={(e) => setEnterpriseMeta({ ...enterpriseMeta, state: e.target.value })}
                 className="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg focus:ring-1 focus:ring-[#159A68] focus:border-[#159A68] bg-white cursor-pointer"
               >
+                <option value="">Select State</option>
                 {INDIAN_STATES.map((st) => (
                   <option key={st} value={st}>
                     {st}
@@ -460,6 +468,7 @@ export default function WhatIfSimulatorPage() {
               <input
                 type="text"
                 value={enterpriseMeta.district}
+                placeholder="e.g. Pune, Mumbai..."
                 onChange={(e) => setEnterpriseMeta({ ...enterpriseMeta, district: e.target.value })}
                 className="w-full px-2.5 py-1.5 text-xs border border-slate-300 rounded-lg focus:ring-1 focus:ring-[#159A68] focus:border-[#159A68] bg-white"
               />
@@ -1167,5 +1176,19 @@ function renderDeltaCell(delta: any, isIncomeMetric: boolean) {
       {sign}₹{Math.round(diff).toLocaleString()}{' '}
       {pct !== null && <span className="text-[10px] opacity-80">({sign}{pct.toFixed(1)}%)</span>}
     </span>
+  );
+}
+
+export default function WhatIfSimulatorPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex h-screen bg-[#FDFBF7] items-center justify-center">
+          <Loader2 className="w-8 h-8 text-[#159A68] animate-spin" />
+        </div>
+      }
+    >
+      <WhatIfSimulatorContent />
+    </Suspense>
   );
 }

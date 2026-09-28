@@ -146,9 +146,9 @@ export default function DashboardPage() {
   const weatherImpact = marketIntelligence?.weather_activity_impact;
   const observations = marketIntelligence?.research_observations || [];
   const cautions = marketIntelligence?.operational_cautions || [];
-  const activeDistrictName = marketIntelligence?.district_name || user?.district || 'Lucknow';
-  const activeStateName = user?.state || 'Uttar Pradesh';
   const primaryBusiness = businesses && businesses.length > 0 ? businesses[0] : null;
+  const activeDistrictName = marketIntelligence?.district_name || user?.district || primaryBusiness?.district || '';
+  const activeStateName = marketIntelligence?.state_name || user?.state || primaryBusiness?.state || '';
 
   // Real Profile Completion percentage calculated dynamically
   const profileCompletion = useMemo(() => {

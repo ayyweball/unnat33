@@ -238,7 +238,13 @@ export default function Navbar() {
                 title="View or Change Geographic Location"
               >
                 <MapPin className="w-3 h-3 text-[#159A68]" />
-                <span>{user?.district ? `${user.district}, ${user.state || 'India'}` : 'Lucknow, Uttar Pradesh'}</span>
+                <span>
+                  {user?.district
+                    ? `${user.district}${user?.state ? `, ${user.state}` : ''}`
+                    : user?.state
+                    ? user.state
+                    : 'Set Location'}
+                </span>
               </Link>
             )}
 

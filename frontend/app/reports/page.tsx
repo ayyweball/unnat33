@@ -24,9 +24,9 @@ export default function InsightsAndReportsPage() {
   const { user, business } = useAppStore();
   const [selectedTab, setSelectedTab] = useState('All Reports');
 
-  const activeDistrict = user?.district || 'Lucknow';
-  const activeState = user?.state || 'Uttar Pradesh';
-  const activeSector = business?.sector || 'Services';
+  const activeDistrict = user?.district || business?.district || '';
+  const activeState = user?.state || business?.state || '';
+  const activeSector = business?.sector || business?.type || 'Manufacturing';
 
   const filterTabs = [
     'All Reports',
@@ -41,23 +41,23 @@ export default function InsightsAndReportsPage() {
       id: 'market-potential',
       category: 'Market Reports',
       title: 'District Market Potential Report',
-      description: `${activeDistrict}, ${activeState}`,
+      description: activeDistrict && activeState ? `${activeDistrict}, ${activeState}` : 'Official Census MSME Benchmark',
       date: 'Generated on 26 Sep 2026',
       icon: TrendingUp,
       color: 'red',
-      downloadUrl: '/dashboard/market-analysis?report=district',
-      viewUrl: '/dashboard/market-analysis?report=district',
+      downloadUrl: `/dashboard/market-analysis?report=district${activeState ? `&state=${encodeURIComponent(activeState)}` : ''}${activeDistrict ? `&district=${encodeURIComponent(activeDistrict)}` : ''}&domain=${encodeURIComponent(activeSector)}`,
+      viewUrl: `/dashboard/market-analysis?report=district${activeState ? `&state=${encodeURIComponent(activeState)}` : ''}${activeDistrict ? `&district=${encodeURIComponent(activeDistrict)}` : ''}&domain=${encodeURIComponent(activeSector)}`,
     },
     {
       id: 'sector-analysis',
       category: 'Market Reports',
       title: 'Sector Analysis Report',
-      description: `${activeSector} Enterprise`,
+      description: `${activeSector} Enterprise${activeDistrict ? ` (${activeDistrict})` : ''}`,
       date: 'Generated on 26 Sep 2026',
       icon: Layers,
       color: 'red',
-      downloadUrl: '/dashboard/market-analysis?report=sector',
-      viewUrl: '/dashboard/market-analysis?report=sector',
+      downloadUrl: `/dashboard/market-analysis?report=sector${activeState ? `&state=${encodeURIComponent(activeState)}` : ''}${activeDistrict ? `&district=${encodeURIComponent(activeDistrict)}` : ''}&domain=${encodeURIComponent(activeSector)}`,
+      viewUrl: `/dashboard/market-analysis?report=sector${activeState ? `&state=${encodeURIComponent(activeState)}` : ''}${activeDistrict ? `&district=${encodeURIComponent(activeDistrict)}` : ''}&domain=${encodeURIComponent(activeSector)}`,
     },
     {
       id: 'schemes-report',

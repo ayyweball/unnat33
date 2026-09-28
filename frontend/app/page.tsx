@@ -30,6 +30,7 @@ import {
   Layers,
   Activity,
   FileCheck2,
+  Sliders,
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -158,6 +159,13 @@ export default function LandingPage() {
                 >
                   <Landmark className="w-4 h-4 text-[#159A68]" />
                   <span>{language === 'hi' ? 'सरकारी योजनाएं' : 'Explore Schemes'}</span>
+                </Link>
+                <Link
+                  href="/simulator"
+                  className="h-11 inline-flex items-center justify-center gap-2 px-5 rounded-[10px] bg-white hover:bg-[#F7F8F5] text-[#0B1736] text-xs font-semibold border border-[#D9DEE5] hover:border-slate-300 shadow-sm transition-all duration-200 cursor-pointer whitespace-nowrap"
+                >
+                  <Sliders className="w-4 h-4 text-[#159A68]" />
+                  <span>{language === 'hi' ? 'व्हाट-इफ सिम्युलेटर' : 'What-If Simulator'}</span>
                 </Link>
               </div>
 
@@ -590,6 +598,11 @@ export default function LandingPage() {
                 <li>
                   <Link href="/reports" className="hover:text-[#159A68] transition-colors duration-150">
                     Insights &amp; Reports
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/simulator" className="hover:text-[#159A68] transition-colors duration-150">
+                    What-If Simulator
                   </Link>
                 </li>
               </ul>

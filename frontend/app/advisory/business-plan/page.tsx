@@ -42,12 +42,7 @@ const PROVENANCE_STYLES: Record<string, string> = {
 };
 
 function ProvenanceBadge({ tag }: { tag: string }) {
-  const style = PROVENANCE_STYLES[tag] || 'bg-slate-100 text-slate-700 border-slate-200';
-  return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded text-[10px] font-semibold border ${style}`}>
-      {tag}
-    </span>
-  );
+  return null;
 }
 
 const STEPS = [
@@ -393,7 +388,19 @@ export default function RebuiltDPRBuilderPage() {
       }
 
       const data: DPRResponse = await res.json();
-      setDprResult(normalizeDPR(data));
+      const normalized = normalizeDPR(data);
+      setDprResult(normalized);
+
+      if (typeof window !== 'undefined' && normalized) {
+        try {
+          sessionStorage.setItem('current_dpr', JSON.stringify(normalized));
+          if (normalized.report_id) {
+            sessionStorage.setItem('latest_dpr_' + normalized.report_id, JSON.stringify(normalized));
+          }
+        } catch (e) {
+          console.warn('Could not cache DPR in sessionStorage:', e);
+        }
+      }
     } catch (err: any) {
       console.error('DPR generation error:', err);
       setError(err.message || 'Error communicating with DPR engine');

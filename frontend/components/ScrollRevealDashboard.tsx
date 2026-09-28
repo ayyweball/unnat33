@@ -12,6 +12,7 @@ import {
   ArrowRight,
   CheckCircle2,
   Sparkles,
+  Sliders,
 } from 'lucide-react';
 
 interface ModuleData {
@@ -151,6 +152,35 @@ const MODULES: ModuleData[] = [
     ctaHi: 'बैंक डीपीआर तैयार करें',
     icon: FileSpreadsheet,
   },
+  {
+    id: 'simulator',
+    badge: '05 • SENSITIVITY & STRESS-TESTING',
+    titleEn: 'What-If Business & Sensitivity Simulator',
+    titleHi: 'व्हाट-इफ संवेदनशीलता एवं व्यापार सिम्युलेटर',
+    subtitleEn: 'Single-Source Financial Modeling',
+    subtitleHi: 'गतिशील वित्तीय परिदृश्य मॉडलिंग',
+    descEn:
+      'Explore how variations in footfall, pricing elasticity, variable costs, and loan financing impact operating margins and break-even points in real time.',
+    descHi:
+      'ग्राहक संख्या, मूल्य निर्धारण, परिवर्तनीय लागत और ऋण वित्तपोषण में बदलाव के प्रभाव का वास्तविक समय में मूल्यांकन करें।',
+    pointsEn: [
+      'Single source of truth deterministic financial simulation engine',
+      'Instant break-even analysis under fluctuating cost and pricing assumptions',
+      'Prudent operating profit delta and margin impact observations',
+    ],
+    pointsHi: [
+      'एकल स्रोत सत्य संविधिक वित्तीय सिमुलेशन इंजन',
+      'बदलती लागत और मूल्य निर्धारण मान्यताओं के तहत त्वरित ब्रेक-इवन विश्लेषण',
+      'ऑपरेटिंग लाभ डेल्टा और मार्जिन प्रभाव का निष्पक्ष अवलोकन',
+    ],
+    image: '/financial-banner.jpg',
+    imageAlt: 'What-If Simulator interface',
+    statBadge: 'Real-Time Scenarios',
+    href: '/simulator',
+    ctaEn: 'Launch What-If Simulator',
+    ctaHi: 'व्हाट-इफ सिम्युलेटर शुरू करें',
+    icon: Sliders,
+  },
 ];
 
 export default function ScrollRevealDashboard() {
@@ -201,6 +231,7 @@ export default function ScrollRevealDashboard() {
                   {m.id === 'schemes' && (language === 'hi' ? 'सरकारी योजनाएं' : 'Government Schemes')}
                   {m.id === 'finance' && (language === 'hi' ? 'ऋण संरचना' : 'Finance')}
                   {m.id === 'dpr' && (language === 'hi' ? 'डीपीआर बिल्डर' : 'DPR Builder')}
+                  {m.id === 'simulator' && (language === 'hi' ? 'व्हाट-इफ सिम्युलेटर' : 'What-If Simulator')}
                 </span>
                 {isActive && (
                   <span className="w-1.5 h-1.5 rounded-full bg-[#159A68]" />

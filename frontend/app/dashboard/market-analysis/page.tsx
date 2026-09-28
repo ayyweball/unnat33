@@ -87,7 +87,7 @@ export default function MarketAnalysisPage() {
 
 function MarketAnalysisContent() {
   const { t } = useLanguage();
-  const { user, setUser, business } = useAppStore();
+  const { user, setUser, business, setBusiness } = useAppStore();
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -104,13 +104,37 @@ function MarketAnalysisContent() {
   // Geographic and Domain selections - initialized with Maharashtra + Pune
   const [districts, setDistricts] = useState<DistrictListItem[]>(INITIAL_DISTRICTS);
   const [districtsLoading, setDistrictsLoading] = useState(false);
-  const [selectedState, setSelectedState] = useState<string>(urlState || 'Maharashtra');
-  const [selectedDistrict, setSelectedDistrict] = useState<string>(urlDistrict || 'Pune');
-  const [selectedDomain, setSelectedDomain] = useState<string>(urlDomain || 'Manufacturing');
+  const [selectedState, setSelectedState] = useState<string>(urlState || business?.state || user?.state || 'Maharashtra');
+  const [selectedDistrict, setSelectedDistrict] = useState<string>(urlDistrict || business?.district || user?.district || 'Pune');
+  const [selectedDomain, setSelectedDomain] = useState<string>(urlDomain || business?.sector || business?.type || 'Manufacturing');
   const [geoSubTab, setGeoSubTab] = useState<'comparable' | 'state' | 'national'>('comparable');
+
+  // Synchronize state with URL parameters whenever URL parameters change
+  useEffect(() => {
+    if (urlState && urlState.toLowerCase() !== selectedState.toLowerCase()) {
+      setSelectedState(urlState);
+    }
+    if (urlDistrict && urlDistrict.toLowerCase() !== selectedDistrict.toLowerCase()) {
+      setSelectedDistrict(urlDistrict);
+    }
+    if (urlDomain && urlDomain.toLowerCase() !== selectedDomain.toLowerCase()) {
+      setSelectedDomain(urlDomain);
+    }
+  }, [urlState, urlDistrict, urlDomain]);
 
   // Check if active business domain is manufacturing (for BCG/CII strategic context)
   const isManufacturing = selectedDomain.toLowerCase().includes('manufactur');
+
+  // Authoritative district MSME census record for the selected district (immediate offline fallback)
+  const activeDistrictRecord = useMemo(() => {
+    return (districtList as any[]).find(
+      (d) =>
+        d.district_name?.toLowerCase() === selectedDistrict.toLowerCase() &&
+        d.state_name?.toLowerCase() === selectedState.toLowerCase()
+    ) || (districtList as any[]).find(
+      (d) => d.district_name?.toLowerCase() === selectedDistrict.toLowerCase()
+    );
+  }, [selectedDistrict, selectedState]);
 
   // Research data states
   const [marketIntelligence, setMarketIntelligence] = useState<MarketIntelligenceResponse | null>(null);
@@ -176,22 +200,35 @@ function MarketAnalysisContent() {
     const inState = districts.filter(
       (d) => d.state_name.toLowerCase() === newState.toLowerCase()
     );
+    const nextDistrict = inState.length > 0 ? inState[0].district_name : selectedDistrict;
     if (inState.length > 0) {
-      const nextDistrict = inState[0].district_name;
       setSelectedDistrict(nextDistrict);
-      triggerResearch(newState, nextDistrict, selectedDomain);
-    } else {
-      triggerResearch(newState, selectedDistrict, selectedDomain);
     }
+    if (setUser && user) {
+      setUser({ ...user, state: newState, district: nextDistrict });
+    }
+    if (setBusiness && business) {
+      setBusiness({ ...business, state: newState, district: nextDistrict });
+    }
+    triggerResearch(newState, nextDistrict, selectedDomain);
   };
 
   const handleDistrictChange = (newDistrict: string) => {
     setSelectedDistrict(newDistrict);
+    if (setUser && user) {
+      setUser({ ...user, district: newDistrict });
+    }
+    if (setBusiness && business) {
+      setBusiness({ ...business, district: newDistrict });
+    }
     triggerResearch(selectedState, newDistrict, selectedDomain);
   };
 
   const handleDomainChange = (newDomain: string) => {
     setSelectedDomain(newDomain);
+    if (setBusiness && business) {
+      setBusiness({ ...business, sector: newDomain, type: newDomain });
+    }
     triggerResearch(selectedState, selectedDistrict, newDomain);
   };
 
@@ -233,10 +270,10 @@ function MarketAnalysisContent() {
       .catch((err) => console.warn('HCES state MPCE fetch notice:', err));
   };
 
-  // Initial load
+  // Automatically update research whenever state, district, or domain changes
   useEffect(() => {
     triggerResearch(selectedState, selectedDistrict, selectedDomain);
-  }, []);
+  }, [selectedState, selectedDistrict, selectedDomain]);
 
   // Derived metrics from authoritative backend intelligence
   const marketContext = marketIntelligence?.market_context;
@@ -376,15 +413,15 @@ function MarketAnalysisContent() {
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs">
                   <div>
                     <span className="text-slate-400 block text-[10px] uppercase font-bold">District Name</span>
-                    <span className="font-bold text-[#0B1736]">{marketIntelligence?.district_name || selectedDistrict}</span>
+                    <span className="font-bold text-[#0B1736]">{selectedDistrict}</span>
                   </div>
                   <div>
                     <span className="text-slate-400 block text-[10px] uppercase font-bold">State / UT</span>
-                    <span className="font-bold text-[#0B1736]">{marketIntelligence?.state_name || selectedState}</span>
+                    <span className="font-bold text-[#0B1736]">{selectedState}</span>
                   </div>
                   <div>
                     <span className="text-slate-400 block text-[10px] uppercase font-bold">LGD Code</span>
-                    <span className="font-bold text-[#0B1736]">{marketIntelligence?.lg_dt_code || 'Official Census'}</span>
+                    <span className="font-bold text-[#0B1736]">{marketIntelligence?.lg_dt_code || activeDistrictRecord?.district_code || 'Official Census'}</span>
                   </div>
                   <div>
                     <span className="text-slate-400 block text-[10px] uppercase font-bold">ML Market Archetype</span>
@@ -403,21 +440,21 @@ function MarketAnalysisContent() {
                   <div className="p-4 rounded-xl border border-slate-200 bg-white">
                     <span className="text-[10px] font-bold text-slate-400 uppercase block">Total Registered MSMEs</span>
                     <div className="text-xl font-black text-[#0B1736] mt-1">
-                      {marketContext?.total_msmes ? marketContext.total_msmes.toLocaleString('en-IN') : 'N/A'}
+                      {marketContext?.total_msmes ? marketContext.total_msmes.toLocaleString('en-IN') : (activeDistrictRecord?.total ? activeDistrictRecord.total.toLocaleString('en-IN') : 'N/A')}
                     </div>
                     <span className="text-[11px] text-slate-500">Official census total</span>
                   </div>
                   <div className="p-4 rounded-xl border border-slate-200 bg-white">
                     <span className="text-[10px] font-bold text-slate-400 uppercase block">State Rank</span>
                     <div className="text-xl font-black text-[#159A68] mt-1">
-                      #{marketContext?.state_rank || 'N/A'} <span className="text-xs text-slate-400 font-normal">/ {marketContext?.total_districts_in_state || stateDistricts.length || 36}</span>
+                      #{marketContext?.state_rank || activeDistrictRecord?.state_rank || 'N/A'} <span className="text-xs text-slate-400 font-normal">/ {marketContext?.total_districts_in_state || activeDistrictRecord?.total_districts_in_state || stateDistricts.length || 36}</span>
                     </div>
                     <span className="text-[11px] text-slate-500">Enterprise density in state</span>
                   </div>
                   <div className="p-4 rounded-xl border border-slate-200 bg-white">
                     <span className="text-[10px] font-bold text-slate-400 uppercase block">National Rank</span>
                     <div className="text-xl font-black text-[#159A68] mt-1">
-                      #{marketContext?.national_rank || 'N/A'} <span className="text-xs text-slate-400 font-normal">/ 785</span>
+                      #{marketContext?.national_rank || activeDistrictRecord?.national_rank || 'N/A'} <span className="text-xs text-slate-400 font-normal">/ 785</span>
                     </div>
                     <span className="text-[11px] text-slate-500">Rank out of all 785 districts</span>
                   </div>
@@ -438,28 +475,28 @@ function MarketAnalysisContent() {
                     <div className="p-3 bg-white rounded-lg border border-slate-200">
                       <span className="text-slate-400 block text-[10px] font-bold">Micro Enterprises</span>
                       <span className="font-black text-sm text-[#0B1736]">
-                        {marketContext?.micro_enterprises ? marketContext.micro_enterprises.toLocaleString('en-IN') : 'N/A'}
+                        {marketContext?.micro_enterprises ? marketContext.micro_enterprises.toLocaleString('en-IN') : (activeDistrictRecord?.micro ? activeDistrictRecord.micro.toLocaleString('en-IN') : 'N/A')}
                       </span>
                       <span className="text-[#159A68] font-bold block text-[11px]">
-                        {marketContext?.micro_share?.toFixed(1)}% of total
+                        {(marketContext?.micro_share ?? activeDistrictRecord?.micro_share ?? 94).toFixed(1)}% of total
                       </span>
                     </div>
                     <div className="p-3 bg-white rounded-lg border border-slate-200">
                       <span className="text-slate-400 block text-[10px] font-bold">Small Enterprises</span>
                       <span className="font-black text-sm text-[#0B1736]">
-                        {marketContext?.small_enterprises ? marketContext.small_enterprises.toLocaleString('en-IN') : 'N/A'}
+                        {marketContext?.small_enterprises ? marketContext.small_enterprises.toLocaleString('en-IN') : (activeDistrictRecord?.small ? activeDistrictRecord.small.toLocaleString('en-IN') : 'N/A')}
                       </span>
                       <span className="text-blue-600 font-bold block text-[11px]">
-                        {marketContext?.small_share?.toFixed(1)}% of total
+                        {(marketContext?.small_share ?? activeDistrictRecord?.small_share ?? 5).toFixed(1)}% of total
                       </span>
                     </div>
                     <div className="p-3 bg-white rounded-lg border border-slate-200">
                       <span className="text-slate-400 block text-[10px] font-bold">Medium Enterprises</span>
                       <span className="font-black text-sm text-[#0B1736]">
-                        {marketContext?.medium_enterprises ? marketContext.medium_enterprises.toLocaleString('en-IN') : 'N/A'}
+                        {marketContext?.medium_enterprises ? marketContext.medium_enterprises.toLocaleString('en-IN') : (activeDistrictRecord?.med ? activeDistrictRecord.med.toLocaleString('en-IN') : 'N/A')}
                       </span>
                       <span className="text-amber-600 font-bold block text-[11px]">
-                        {marketContext?.medium_share?.toFixed(1)}% of total
+                        {(marketContext?.medium_share ?? activeDistrictRecord?.med_share ?? 1).toFixed(1)}% of total
                       </span>
                     </div>
                   </div>

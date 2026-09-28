@@ -22,20 +22,38 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     }
 
     if (!advisory) {
+      let userBusiness: any = null;
+      if (user?.id) {
+        userBusiness = await prisma.business.findFirst({
+          where: { userId: user.id }
+        }).catch(() => null);
+      }
+
       const fallbackDpr = generateFallbackDPR({
         report_id: params.id,
+        project_name: userBusiness?.name || (user?.name ? `${user.name}'s Enterprise` : undefined),
+        promoter_name: user?.name || undefined,
+        business_type: userBusiness?.sector || userBusiness?.type || undefined,
+        sub_type: userBusiness?.description || undefined,
+        district_name: userBusiness?.district || user?.district || undefined,
+        state_name: userBusiness?.state || user?.state || undefined,
+        estimated_capital: userBusiness?.projectCost || userBusiness?.estimatedCapital || undefined,
+        current_income: userBusiness?.monthlyIncome ? Number(userBusiness.monthlyIncome) * 12 : undefined,
+        location_type: userBusiness?.isRural ? 'RURAL' : 'URBAN',
+        category: (user as any)?.category || undefined,
+        gender: (user as any)?.gender || undefined,
       });
       return NextResponse.json({
         advisory: {
           id: params.id,
-          businessId: 'demo-business-id',
-          userId: user?.id || 'demo-user',
+          businessId: userBusiness?.id || 'enterprise-id',
+          userId: user?.id || 'user-id',
           type: 'business_plan',
           planJson: fallbackDpr,
           financialJson: null,
           status: 'active',
           business: {
-            id: 'demo-business-id',
+            id: userBusiness?.id || 'enterprise-id',
             name: fallbackDpr.project_name,
             sector: fallbackDpr.business_type,
             district: fallbackDpr.district_name,

@@ -7,6 +7,7 @@ import Navbar from '@/components/Navbar';
 import Sidebar from '@/components/Sidebar';
 import ShareModal from '@/components/ShareModal';
 import { useLanguage } from '@/lib/i18n/useLanguage';
+import { useAppStore } from '@/lib/store';
 import {
   TrendingUp,
   Calendar,
@@ -77,12 +78,7 @@ const PROVENANCE_STYLES: Record<string, string> = {
 };
 
 function ProvenanceBadge({ tag }: { tag: string }) {
-  const style = PROVENANCE_STYLES[tag] || 'bg-slate-100 text-slate-700 border-slate-200';
-  return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold border ${style} shrink-0`}>
-      {tag}
-    </span>
-  );
+  return null;
 }
 
 // Section navigation links
@@ -124,6 +120,28 @@ export default function BusinessPlanResultsPage({ params }: { params: { planId: 
     setLoading(true);
     setError(null);
     try {
+      let canonicalDPR: DPRResponse | null = null;
+
+      // Priority 1: Check sessionStorage cache from the interactive generator
+      if (typeof window !== 'undefined') {
+        try {
+          const cachedStr = sessionStorage.getItem(`latest_dpr_${params.planId}`) || sessionStorage.getItem('current_dpr');
+          if (cachedStr) {
+            const parsed = JSON.parse(cachedStr);
+            if (parsed && (parsed.executive_summary || parsed.capital_structure)) {
+              canonicalDPR = parsed as DPRResponse;
+              setAdvisoryMeta({
+                id: params.planId,
+                planJson: parsed,
+                business: parsed.executive_summary || {},
+              });
+            }
+          }
+        } catch (e) {
+          console.warn('Failed parsing sessionStorage cached DPR:', e);
+        }
+      }
+
       const [advRes, profRes] = await Promise.all([
         fetch(`/api/advisory/${params.planId}`).then((r) => r.json()).catch(() => ({ advisory: null })),
         fetch('/api/user/profile').then((r) => r.json()).catch(() => ({ user: null, business: null })),
@@ -131,33 +149,32 @@ export default function BusinessPlanResultsPage({ params }: { params: { planId: 
 
       if (profRes) setUserProfile(profRes);
 
-      let canonicalDPR: DPRResponse | null = null;
-
-      // Case A: advisory already contains the canonical 13-section DPRResponse
-      if (advRes?.advisory?.planJson?.executive_summary && advRes?.advisory?.planJson?.capital_structure) {
+      // Case A: advisory already contains the canonical 13-section DPRResponse from DB
+      if (!canonicalDPR && advRes?.advisory?.planJson?.executive_summary && advRes?.advisory?.planJson?.capital_structure) {
         canonicalDPR = advRes.advisory.planJson as DPRResponse;
         setAdvisoryMeta(advRes.advisory);
       }
 
-      // Case B: If missing or directly requesting a DPR- prefix, call /api/advisory/dpr to synthesize
+      // Case B: If missing from both cache and DB, synthesize via backend with real user profile
       if (!canonicalDPR) {
         const u = profRes?.user || {};
         const b = profRes?.business || {};
+        const { user: storeUser, business: storeBusiness } = useAppStore.getState();
         const targetProgram = searchParams.get('programCode') || advRes?.advisory?.selectedProgramCode || 'PMEGP_NEW';
 
         const dprRes = await fetch('/api/advisory/dpr', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            district_name: b.district || u.district || 'Varanasi',
-            state_name: b.state || u.state || 'Uttar Pradesh',
-            business_type: b.sector || b.type || 'Handloom & Textiles',
-            sub_type: b.description || 'Artisanal Manufacturing',
-            estimated_capital: b.projectCost || b.estimatedCapital || 1200000,
-            current_income: b.monthlyIncome ? b.monthlyIncome * 12 : 360000,
+            district_name: b.district || u.district || storeBusiness?.district || storeUser?.district || '',
+            state_name: b.state || u.state || storeBusiness?.state || storeUser?.state || '',
+            business_type: b.sector || b.type || storeBusiness?.sector || storeBusiness?.type || 'Manufacturing',
+            sub_type: b.description || storeBusiness?.description || 'Micro Enterprise',
+            estimated_capital: Number(b.projectCost || b.estimatedCapital || storeBusiness?.projectCost || storeBusiness?.estimatedCapital) || 1200000,
+            current_income: b.monthlyIncome ? Number(b.monthlyIncome) * 12 : (storeBusiness?.monthlyIncome ? Number(storeBusiness.monthlyIncome) * 12 : 360000),
             selected_program_code: targetProgram,
-            category: u.category || 'GENERAL',
-            gender: u.gender || 'MALE',
+            category: u.category || storeUser?.category || 'GENERAL',
+            gender: u.gender || storeUser?.gender || 'MALE',
           }),
         });
 
@@ -193,27 +210,34 @@ export default function BusinessPlanResultsPage({ params }: { params: { planId: 
     try {
       const u = userProfile?.user || {};
       const b = userProfile?.business || {};
+      const { user: storeUser, business: storeBusiness } = useAppStore.getState();
       const targetProgram = dpr?.government_support?.program_code || searchParams.get('programCode') || 'PMEGP_NEW';
 
       const dprRes = await fetch('/api/advisory/dpr', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          district_name: dpr?.district_name || b.district || u.district || 'Varanasi',
-          state_name: dpr?.state_name || b.state || u.state || 'Uttar Pradesh',
-          business_type: dpr?.business_type || b.sector || b.type || 'Handloom & Textiles',
-          sub_type: dpr?.sub_type || b.description,
-          estimated_capital: dpr?.capital_structure?.total_project_cost || b.projectCost || 1200000,
-          current_income: b.monthlyIncome ? b.monthlyIncome * 12 : 360000,
+          district_name: dpr?.district_name || dpr?.location_analysis?.district_name || b.district || u.district || storeBusiness?.district || storeUser?.district || '',
+          state_name: dpr?.state_name || dpr?.location_analysis?.state_name || b.state || u.state || storeBusiness?.state || storeUser?.state || '',
+          business_type: dpr?.business_type || (dpr?.executive_summary as any)?.sector || b.sector || b.type || storeBusiness?.sector || 'Manufacturing',
+          sub_type: dpr?.sub_type || b.description || storeBusiness?.description,
+          estimated_capital: dpr?.capital_structure?.total_project_cost || Number(b.projectCost || b.estimatedCapital || storeBusiness?.projectCost) || 1200000,
+          current_income: b.monthlyIncome ? Number(b.monthlyIncome) * 12 : (storeBusiness?.monthlyIncome ? Number(storeBusiness.monthlyIncome) * 12 : 360000),
           selected_program_code: targetProgram,
-          category: u.category || 'GENERAL',
-          gender: u.gender || 'MALE',
+          category: u.category || storeUser?.category || 'GENERAL',
+          gender: u.gender || storeUser?.gender || 'MALE',
         }),
       });
 
       if (dprRes.ok) {
         const freshDPR = await dprRes.json();
         setDpr(freshDPR);
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem('current_dpr', JSON.stringify(freshDPR));
+          if (freshDPR.report_id) {
+            sessionStorage.setItem(`latest_dpr_${freshDPR.report_id}`, JSON.stringify(freshDPR));
+          }
+        }
       }
     } catch (err) {
       console.warn('Regeneration failed:', err);
