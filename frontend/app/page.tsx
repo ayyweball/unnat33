@@ -245,7 +245,7 @@ export default function LandingPage() {
               </div>
               <div>
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">100% Deterministic</span>
-                <span className="text-xs font-bold text-[#0B1736] block mt-0.5 leading-snug">Zero AI Hallucination in Grants</span>
+                <span className="text-xs font-bold text-[#0B1736] block mt-0.5 leading-snug">Negligible AI Hallucinations in Grants</span>
               </div>
             </motion.div>
 
@@ -255,7 +255,7 @@ export default function LandingPage() {
               </div>
               <div>
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">&lt; 60 Sec DPR</span>
-                <span className="text-xs font-bold text-[#0B1736] block mt-0.5 leading-snug">13-Section Canonical PDF Export</span>
+                <span className="text-xs font-bold text-[#0B1736] block mt-0.5 leading-snug">11-Section Canonical PDF Export</span>
               </div>
             </motion.div>
 

@@ -70,7 +70,7 @@ const MODULES: ModuleData[] = [
     badge: '02 • STATUTORY ELIGIBILITY GATE',
     titleEn: 'Deterministic Statutory Eligibility Matcher',
     titleHi: '60+ सरकारी योजनाओं का सटीक मिलान',
-    subtitleEn: 'Zero AI Hallucination in Grants',
+    subtitleEn: 'Negligible AI Hallucinations in Grants',
     subtitleHi: 'पारदर्शी एवं नियम-आधारित पात्रता',
     descEn:
       'Rule-based evaluation matching your promoter profile, trade category, and investment scale directly against 60+ Central and State assistance programs.',
