@@ -1,324 +1,949 @@
-# India Government & MSME Scheme Recommendation Platform — Backend Foundation
+# UnnatE
 
-A production-ready FastAPI backend and deterministic rule-based eligibility engine for Indian Government and MSME schemes. This service connects to a local PostgreSQL database (`goi_schemes`), exposes versioned RESTful APIs with multi-criteria filtering, manages database migrations via Alembic, provides secure User and BusinessProfile management with Argon2 password hashing, and establishes clean architectural boundaries for future Machine Learning (ranking) and LLM (explanation & guidance) integration.
+## AI-Driven Hyper-Local Business Advisory & Financial Structuring Platform
 
----
+> **From a business idea to an informed business decision.**
 
-## 1. Project Purpose & Architecture
+UnnatE is a technology platform designed to help **rural micro-entrepreneurs, MSMEs, artisans and emerging businesses** make informed decisions about starting, operating and expanding a business.
 
-The overarching platform helps Indian MSMEs, artisans, street vendors, and entrepreneurs discover and evaluate their eligibility for Central and State government schemes (such as PMMY MUDRA, PMEGP, PM Vishwakarma, PM SVANidhi, and NSFDC schemes).
+Instead of forcing entrepreneurs to navigate disconnected government portals, market information, financial calculations and business-planning tools, UnnatE brings these capabilities together into a single decision-support platform.
 
-### Conceptual Pipeline
+The platform combines:
 
-```
-                    ┌──────────────────────────────┐
-                    │      User / MSME Profile     │
-                    └──────────────┬───────────────┘
-                                   │
-                                   ▼
-                    ┌──────────────────────────────┐
-                    │  Rule-Based Eligibility      │
-                    │  (Deterministic Engine)      │
-                    └──────────────┬───────────────┘
-                                   │
-                                   ▼
-                    ┌──────────────────────────────┐
-                    │   Eligible Schemes Subset    │
-                    └──────────────┬───────────────┘
-                                   │
-                                   ▼
-                    ┌──────────────────────────────┐
-                    │   Future: ML Recommendation  │
-                    │   (scikit-learn Ranking)     │
-                    └──────────────┬───────────────┘
-                                   │
-                                   ▼
-                    ┌──────────────────────────────┐
-                    │   Future: LLM Explanation   │
-                    │   & Conversational Guidance  │
-                    └──────────────────────────────┘
-```
+- 🏛️ Government scheme discovery and eligibility evaluation
+- 📍 Hyper-local market intelligence
+- 📊 MSME and economic data
+- 💰 Financial analysis and structuring
+- 📄 Detailed Project Report (DPR) generation
+- 🔄 What-If business simulation
+- 🤖 AI-assisted business advisory
+- 📚 Research-backed market evidence
 
-> **Design Principle**: Statutory and legal eligibility is strictly deterministic (`app/services/eligibility_service.py`) and never outsourced to an ML model or LLM.
+The core design principle is simple:
+
+> **Use deterministic systems where accuracy and rules matter, and AI where interpretation and contextual guidance add value.**
 
 ---
 
-## 2. Layer Responsibilities & Structure
+# 🎯 Problem
 
-The codebase is structured under `app/`:
+For a first-time entrepreneur, starting a business involves much more than having a business idea.
 
+They need to answer questions such as:
+
+- Is there sufficient market potential in my location?
+- What government schemes are relevant to me?
+- Am I actually eligible for those schemes?
+- How much capital will I need?
+- What will my operating costs look like?
+- At what point will the business break even?
+- What happens if my sales are lower than expected?
+- What happens if I increase my selling price?
+- How should I structure my business proposal or DPR?
+
+Today, these answers are often spread across:
+
+- Government portals
+- Scheme documents
+- Statistical datasets
+- Financial calculators
+- Market reports
+- Separate business-planning tools
+
+This creates an **information and decision-making gap**, particularly for small entrepreneurs who may not have access to professional business consulting.
+
+---
+
+# 💡 The UnnatE Solution
+
+UnnatE acts as a **digital business advisory layer** connecting an entrepreneur's profile with structured data, business rules, financial models and analytical intelligence.
+
+```text
+                         ENTREPRENEUR
+                              │
+                              ▼
+                      BUSINESS PROFILE
+                              │
+          ┌───────────────────┼───────────────────┐
+          │                   │                   │
+          ▼                   ▼                   ▼
+   MARKET INTELLIGENCE   GOVERNMENT SCHEMES   FINANCIAL ANALYSIS
+          │                   │                   │
+          │            DETERMINISTIC             │
+          │            ELIGIBILITY               │
+          │                   │                   │
+          └───────────────────┼───────────────────┘
+                              ▼
+                         DPR BUILDER
+                              │
+                              ▼
+                       WHAT-IF SIMULATOR
+                              │
+                              ▼
+                    INFORMED BUSINESS DECISION
 ```
+
+The platform therefore moves beyond simple information retrieval.
+
+It helps answer:
+
+> **"Given my business, my location and my financial assumptions, what should I understand before I make this decision?"**
+
+---
+
+# 🚀 Core Product Modules
+
+## 1. Business Dashboard
+
+The dashboard acts as the entrepreneur's central workspace.
+
+It provides access to the major intelligence and planning modules:
+
+- Business overview
+- Market intelligence
+- Government schemes
+- Financial analysis
+- DPR Builder
+- What-If Simulator
+
+The dashboard connects the different stages of the entrepreneurial workflow rather than treating them as isolated tools.
+
+---
+
+# 📍 2. Hyper-Local Market Intelligence
+
+One of UnnatE's core differentiators is its focus on **location-aware business intelligence**.
+
+Instead of relying exclusively on national-level information, the analytical layer can incorporate:
+
+- State-level information
+- District-level MSME data
+- Business activity information
+- Sector context
+- Consumer expenditure benchmarks
+- Research-backed market evidence
+
+### Example
+
+Consider an entrepreneur planning to open a bakery in:
+
+**Varanasi, Uttar Pradesh**
+
+The platform can use the entrepreneur's business activity and location to provide market context relevant to that specific environment.
+
+This is fundamentally different from providing the same generic recommendation to every bakery in India.
+
+---
+
+# 🏛️ 3. Government Scheme Discovery & Eligibility
+
+UnnatE maintains a structured database of Central and State government schemes relevant to entrepreneurs and MSMEs.
+
+Examples include schemes such as:
+
+- PMMY / MUDRA
+- PMEGP
+- PM Vishwakarma
+- PM SVANidhi
+- NSFDC programs
+- Other Central and State programs
+
+The system supports multi-criteria scheme filtering across dimensions such as:
+
+- State
+- Sector
+- Business activity
+- Scheme type
+- Category
+- Target group
+- Gender
+- Rural applicability
+- Geography
+
+---
+
+## Deterministic Eligibility Engine
+
+A critical architectural decision in UnnatE is that **statutory and rule-based eligibility is not delegated to an LLM.**
+
+The eligibility engine evaluates structured rules against the entrepreneur's profile.
+
+```text
+              BUSINESS / USER PROFILE
+                        │
+                        ▼
+             ┌─────────────────────┐
+             │ Eligibility Engine  │
+             │                     │
+             │ Location            │
+             │ Business Activity   │
+             │ Sector              │
+             │ Project Cost        │
+             │ Applicant Rules     │
+             │ Scheme Conditions   │
+             └──────────┬──────────┘
+                        │
+                        ▼
+               ELIGIBLE SCHEMES
+                        │
+                        ▼
+              RELEVANCE / SCORING
+```
+
+This ensures that eligibility decisions remain:
+
+- Reproducible
+- Explainable
+- Rule-based
+- Independent of probabilistic generation
+
+The backend implements this through a dedicated eligibility service rather than embedding eligibility logic directly into API routes.
+
+---
+
+# 📊 4. Transparent Recommendation Engine
+
+After eligibility is established, UnnatE can rank relevant programs using a **100-point transparent recommendation framework**.
+
+The scoring framework evaluates multiple dimensions such as:
+
+- Eligibility relevance
+- Business and sector alignment
+- Geographic relevance
+- Financial suitability
+- Entrepreneur profile
+- Program relevance
+
+This creates a two-stage decision process:
+
+```text
+DISCOVER
+   ↓
+CHECK ELIGIBILITY
+   ↓
+SCORE RELEVANCE
+   ↓
+PRESENT RECOMMENDATIONS
+```
+
+This distinction is important:
+
+> **A scheme being relevant to a business does not automatically mean the entrepreneur is eligible for it.**
+
+---
+
+# 💰 5. Financial Analysis
+
+UnnatE provides financial structuring capabilities to help entrepreneurs understand the economics of their proposed business.
+
+The financial workflow can incorporate:
+
+- Initial investment
+- Operating expenses
+- Revenue assumptions
+- Profitability
+- Break-even analysis
+- Funding requirements
+- Financial projections
+
+The purpose is to transform:
+
+```text
+Business Idea
+      ↓
+Financial Assumptions
+      ↓
+Structured Model
+      ↓
+Business Economics
+```
+
+This provides the foundation for both DPR generation and scenario analysis.
+
+---
+
+# 📄 6. DPR Builder
+
+The **Detailed Project Report Builder** converts business and financial information into a structured project-planning workflow.
+
+The DPR is organized around four major areas:
+
+### Business
+
+- Business concept
+- Objectives
+- Business activity
+- Overall business structure
+
+### Customers
+
+- Target customers
+- Customer context
+- Market considerations
+
+### Operations
+
+- Infrastructure
+- Resources
+- Operational requirements
+
+### Marketing
+
+- Customer acquisition
+- Market positioning
+- Go-to-market considerations
+
+These sections are connected with the financial analysis to produce a structured business report.
+
+---
+
+# 🔄 7. What-If Simulator
+
+The What-If Simulator allows an entrepreneur to test different business assumptions before committing capital.
+
+Instead of giving the entrepreneur one static financial projection, UnnatE allows scenarios to be explored interactively.
+
+For example:
+
+```text
+Increase Selling Price
+        ↓
+Revenue Changes
+        ↓
+Profitability Changes
+        ↓
+Break-even Changes
+```
+
+The simulator can be used to explore changes in variables such as:
+
+- Selling price
+- Sales volume
+- Costs
+- Investment
+- Operating assumptions
+
+This turns financial planning from a static calculation into a **decision-support exercise**.
+
+The entrepreneur can therefore ask:
+
+> "What happens to my business if this assumption changes?"
+
+rather than:
+
+> "What is my projected profit?"
+
+---
+
+# 🤖 AI + Deterministic Intelligence
+
+UnnatE deliberately avoids treating AI as a replacement for structured business logic.
+
+The platform follows a **hybrid intelligence architecture**.
+
+## Deterministic Layer
+
+Used where correctness, consistency and explicit rules are required.
+
+Examples:
+
+- Government scheme eligibility
+- Location constraints
+- Project-cost limits
+- Business activity mapping
+- Financial calculations
+- Structured recommendation scoring
+- Database-driven filtering
+
+## AI / Analytical Layer
+
+Used where interpretation and contextual reasoning add value.
+
+Examples:
+
+- Business analysis
+- Market interpretation
+- Contextual insights
+- Natural-language explanations
+- Advisory interactions
+
+This architecture prevents a generative model from becoming the source of truth for rules that can be represented explicitly.
+
+---
+
+# 🧠 Data & Research Layer
+
+UnnatE is built around a structured data layer rather than relying exclusively on generated information.
+
+## Government Scheme Data
+
+The backend maintains structured entities for:
+
+- Schemes
+- Eligibility rules
+- States
+- Districts
+- Sectors
+- NIC activities
+- MSME information
+
+---
+
+## UDYAM MSME Data
+
+The platform incorporates UDYAM MSME information at state and district levels.
+
+Current processed coverage includes:
+
+- **36 States / Union Territories**
+- **785 districts**
+- **27.9 million+ MSMEs**
+
+with classification across:
+
+- Micro
+- Small
+- Medium enterprises
+
+This provides the geographical foundation for localized business analysis.
+
+---
+
+# 📚 Research Evidence
+
+UnnatE also incorporates research datasets into its analytical layer.
+
+## HCES 2022–23
+
+Household Consumption Expenditure Survey information is used as an empirical consumption benchmark.
+
+The analytical layer maintains distinctions such as:
+
+- Rural consumption
+- Urban consumption
+- State-level benchmarks
+- National-level benchmarks
+
+## PwC Voice of the Consumer 2025
+
+Consumer-market evidence is incorporated into the research layer to provide additional context around consumer behaviour and market trends.
+
+These datasets provide **evidence and context** for analysis rather than being treated as a replacement for on-ground business validation.
+
+---
+
+# 🏗️ System Architecture
+
+UnnatE follows a layered architecture separating the user interface, API layer, business logic and data infrastructure.
+
+```text
+┌───────────────────────────────────────────────────────────────┐
+│                        FRONTEND                              │
+│                                                               │
+│       Next.js + React + TypeScript + Tailwind CSS            │
+│       Zustand + React Query + Recharts                       │
+└─────────────────────────────┬─────────────────────────────────┘
+                              │
+                              ▼
+┌───────────────────────────────────────────────────────────────┐
+│                         API LAYER                             │
+│                                                               │
+│                    FastAPI + REST APIs                       │
+│                       API Versioning                          │
+└─────────────────────────────┬─────────────────────────────────┘
+                              │
+             ┌────────────────┼────────────────┐
+             │                │                │
+             ▼                ▼                ▼
+┌────────────────────┐ ┌───────────────┐ ┌────────────────────┐
+│ Eligibility Engine │ │ Recommendation│ │ Financial /        │
+│                    │ │ Engine        │ │ Research Services  │
+│ Deterministic      │ │ Transparent   │ │                    │
+│ Rule Evaluation    │ │ Scoring       │ │ Analysis           │
+└─────────┬──────────┘ └───────┬───────┘ └──────────┬─────────┘
+          │                    │                    │
+          └────────────────────┼────────────────────┘
+                               ▼
+┌───────────────────────────────────────────────────────────────┐
+│                      DATA ACCESS LAYER                        │
+│                                                               │
+│     Repositories → Services → SQLAlchemy ORM → PostgreSQL    │
+└─────────────────────────────┬─────────────────────────────────┘
+                              │
+                              ▼
+┌───────────────────────────────────────────────────────────────┐
+│                         DATA LAYER                            │
+│                                                               │
+│ Government Schemes │ MSME │ Geography │ Research │ Profiles  │
+└───────────────────────────────────────────────────────────────┘
+```
+
+---
+
+# 🧱 Backend Architecture
+
+The backend is organized around clear architectural boundaries.
+
+```text
 backend/
-├── alembic/                            # Alembic database migration scripts
-│   ├── versions/                       # Versioned migration revisions
-│   └── env.py                          # Migration environment wired to DATABASE_URL
-├── alembic.ini                         # Alembic configuration
+├── alembic/                 # Database migrations
+│
 ├── app/
-│   ├── main.py                         # FastAPI app setup, CORS, error handling
-│   │
-│   ├── core/
-│   │   ├── config.py                   # Environment settings & config loading
-│   │   ├── security.py                 # CORS middleware & Argon2 password hashing
-│   │   └── exceptions.py               # Custom exceptions and sanitized error handlers
-│   │
-│   ├── db/
-│   │   ├── database.py                 # SQLAlchemy engine (pre-ping pool) & Base
-│   │   └── session.py                  # SessionLocal & get_db dependency
-│   │
-│   ├── models/
-│   │   ├── scheme.py                   # Scheme model mapped to live 'schemes' table
-│   │   ├── master.py                   # State, District, Sector, MSME macro models
-│   │   ├── user.py                     # User account model
-│   │   ├── business_profile.py         # MSME Business Profile model
-│   │   └── research.py                 # ResearchRequest, ResearchReport, DataSource models
-│   │
-│   ├── schemas/
-│   │   ├── scheme.py                   # Pydantic v2 schemas for Scheme requests & responses
-│   │   ├── eligibility.py              # UserProfile & EligibilityResult schemas
-│   │   ├── user.py                     # Pydantic v2 schemas for User CRUD
-│   │   ├── business_profile.py         # Pydantic v2 schemas for BusinessProfile CRUD
-│   │   └── research.py                 # Pydantic v2 schemas for Research & DataSources
-│   │
-│   ├── repositories/
-│   │   ├── scheme_repository.py        # Database queries & SQL filtering for schemes
-│   │   ├── user_repository.py          # Database operations for User
-│   │   └── business_profile_repository.py # Database operations for BusinessProfile
-│   │
-│   ├── services/
-│   │   ├── scheme_service.py           # Scheme business operations
-│   │   ├── eligibility_service.py      # Deterministic rule evaluation engine
-│   │   ├── user_service.py             # User registration & verification logic
-│   │   └── business_profile_service.py # BusinessProfile management logic
-│   │
-│   ├── api/
-│   │   └── v1/
-│   │       ├── health.py               # Health check and DB status endpoints
-│   │       ├── schemes.py              # Scheme listing, details, & eligibility endpoints
-│   │       ├── users.py                # User registration & profile management
-│   │       └── business_profiles.py    # Business profile lookup & updates
-│   │
-│   ├── ml/
-│   │   └── README.md                   # ML architecture documentation & future roadmap
-│   │
-│   └── utils/
+│   ├── core/                # Configuration, security, exceptions
+│   ├── db/                  # Database engine and sessions
+│   ├── models/              # SQLAlchemy data models
+│   ├── schemas/             # Pydantic request/response schemas
+│   ├── repositories/        # Database access layer
+│   ├── services/            # Business logic
+│   ├── api/v1/              # Versioned REST endpoints
+│   ├── ml/                  # Analytical / ML components
+│   └── utils/               # Supporting utilities
 │
-├── tests/
-│   ├── conftest.py                     # TestClient and read-only DB session fixtures
-│   ├── test_health.py                  # Root, health, and DB connectivity tests
-│   ├── test_schemes.py                 # Scheme listing, detail, filtering, & eligibility tests
-│   └── test_users_and_profiles.py      # User and BusinessProfile CRUD & security tests
-│
-├── main.py                             # Root compatibility wrapper
-├── database.py                         # Root compatibility wrapper
-├── models.py                           # Root compatibility wrapper
-├── schemes.py                          # Root compatibility wrapper
-├── requirements.txt                    # Project dependencies
-├── .env.example                        # Configuration template (placeholders only)
-└── README.md                           # Documentation
+├── tests/                   # Automated backend tests
+├── requirements.txt
+└── README.md
+```
+
+This separation keeps:
+
+**API → Business Logic → Data Access → Database**
+
+independent from one another.
+
+---
+
+# 🛠️ Technology Stack
+
+## Frontend
+
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- TanStack React Query
+- Zustand
+- Recharts
+
+## Backend
+
+- Python 3.11+
+- FastAPI
+- Uvicorn
+- SQLAlchemy 2.x
+- Pydantic v2
+- Psycopg
+
+## Database
+
+- PostgreSQL
+- Alembic migrations
+
+## Intelligence & Analytics
+
+- Deterministic eligibility engine
+- Transparent recommendation scoring
+- Financial modelling
+- Market intelligence
+- Scikit-learn analytical components
+- AI-assisted advisory
+
+## Security
+
+- Argon2 password hashing
+- Environment-based configuration
+- CORS controls
+- Sanitized API error handling
+- Structured user and business-profile management
+
+---
+
+# 🔌 REST API
+
+The backend exposes versioned REST APIs.
+
+## System & Health
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| GET | `/` | Root status and metadata |
+| GET | `/health` | Health check |
+| GET | `/api/v1/health` | Versioned health check |
+
+## Government Schemes
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| GET | `/api/v1/schemes` | List and filter schemes |
+| GET | `/api/v1/schemes/{scheme_id}` | Retrieve scheme details |
+| POST | `/api/v1/schemes/evaluate-eligibility` | Evaluate profile against schemes |
+
+## Users & Business Profiles
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| POST | `/api/v1/users` | Create user |
+| GET | `/api/v1/users` | List users |
+| GET | `/api/v1/users/{user_id}` | Retrieve user |
+| PUT | `/api/v1/users/{user_id}` | Update user |
+| POST | `/api/v1/users/{user_id}/business-profiles` | Create business profile |
+| GET | `/api/v1/users/{user_id}/business-profiles` | Retrieve user's profiles |
+| GET | `/api/v1/business-profiles/{profile_id}` | Retrieve business profile |
+| PUT | `/api/v1/business-profiles/{profile_id}` | Update business profile |
+
+The scheme API supports multi-criteria filtering across state, sector, scheme type, category, target group, business activity, gender and rural applicability.
+
+---
+
+# 🔐 Security & Configuration
+
+User credentials are protected using **Argon2id password hashing**.
+
+The application uses environment-based configuration rather than embedding credentials and deployment-specific values directly into the source code.
+
+Sensitive values such as:
+
+- Database credentials
+- API keys
+- JWT secrets
+- Backend URLs
+
+are configured through environment variables.
+
+> **Never commit `.env` files or production credentials to the repository.**
+
+---
+
+# 🧪 Testing & Validation
+
+UnnatE includes automated backend testing using:
+
+- pytest
+- FastAPI TestClient
+- HTTPX
+- Database test fixtures
+
+Testing covers:
+
+- API health
+- Database connectivity
+- Scheme listing
+- Scheme filtering
+- Scheme retrieval
+- Eligibility evaluation
+- Multi-filter combinations
+- User creation
+- User updates
+- Business-profile creation
+- Business-profile updates
+- Validation and duplicate handling
+- Error handling
+
+The project also includes API-level validation of the research and market-intelligence workflow.
+
+Example validation scenario:
+
+**Business:** Bakery  
+**Location:** Varanasi, Uttar Pradesh
+
+```text
+GET  /api/v1/research/district-market-context
+POST /api/v1/research/market-intelligence
+```
+
+Both endpoints were successfully validated during development.
+
+---
+
+# 🌐 Deployment
+
+UnnatE uses a cloud-deployed architecture consisting of:
+
+```text
+                 Vercel
+                   │
+                   │
+             Next.js Frontend
+                   │
+                   ▼
+                Render
+                   │
+                   │
+             FastAPI Backend
+                   │
+                   ▼
+              PostgreSQL
+```
+
+The frontend is deployed through **Vercel**, while the FastAPI backend is deployed through **Render**.
+
+---
+
+## ⚠️ Deployment / Cold-Start Note
+
+> **The FastAPI backend is hosted on Render. Depending on the hosting state, the service may require a short initialization period after inactivity. If the application initially appears unresponsive or a request takes longer than expected, please wait a few moments and refresh the page to allow the backend service to initialize.**
+
+This behaviour is related to the cloud hosting environment and does not require any action beyond waiting briefly and refreshing the application.
+
+---
+
+# ▶️ Running Locally
+
+## Prerequisites
+
+- Node.js
+- Python 3.11+
+- PostgreSQL
+- Git
+
+## Clone
+
+```bash
+git clone https://github.com/theakcodes/unnat33.git
+cd unnat33
 ```
 
 ---
 
-## 3. Technology Stack
+## Backend
 
-- **Backend**: Python 3.11+, FastAPI, Uvicorn
-- **Database & ORM**: PostgreSQL, SQLAlchemy 2.x, psycopg3 (`psycopg[binary]`)
-- **Database Migrations**: Alembic
-- **Security & Cryptography**: Argon2id (`pwdlib[argon2]`)
-- **Data Validation & Schemas**: Pydantic v2
-- **Configuration**: python-dotenv, environment variables
-- **Testing**: pytest, FastAPI TestClient (httpx)
-- **Future ML Engine**: scikit-learn, pandas, NumPy, joblib (see `app/ml/README.md`)
+```bash
+cd backend
 
----
-
-## 4. PostgreSQL Setup & Configuration
-
-The application connects to a local PostgreSQL database (`goi_schemes`) running on `localhost:5432`.
-
-### Environment Configuration
-
-1. Copy `.env.example` to `.env`:
-   ```bash
-   cp .env.example .env
-   ```
-2. Set your local database credentials in `.env`:
-   ```ini
-   DATABASE_URL=postgresql+psycopg://postgres:YOUR_PASSWORD@localhost:5432/goi_schemes
-   ENVIRONMENT=development
-   CORS_ORIGINS=http://localhost:3000,http://localhost:5173
-   ```
-> **Security Note**: Never commit `.env` or hard-code credentials. The `.gitignore` file already excludes `.env`.
-
----
-
-## 5. Getting Started
-
-### 1. Create and Activate Virtual Environment
-
-**On Windows (PowerShell):**
-```powershell
 python -m venv venv
+```
+
+### Windows
+
+```powershell
 .\venv\Scripts\Activate.ps1
 ```
 
-**On Linux/macOS:**
+### Linux / macOS
+
 ```bash
-python3 -m venv venv
 source venv/bin/activate
 ```
 
-### 2. Install Dependencies
+Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Run Database Migrations
+Configure the database connection in `.env`.
 
-Apply Alembic migrations to create the application domain tables:
+Run migrations:
 
 ```bash
 alembic upgrade head
 ```
 
-### 4. Run the Backend
-
-Start the development server with auto-reload:
+Start the API:
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-*Note: Backward-compatible root execution `uvicorn main:app --reload` is also fully supported.*
+Backend:
 
-The server will start at: `http://127.0.0.1:8000`
-- Interactive Swagger UI: `http://127.0.0.1:8000/docs`
-- ReDoc UI: `http://127.0.0.1:8000/redoc`
-
----
-
-## 6. API Endpoints
-
-### System & Health
-
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/` | Root status message and metadata |
-| `GET` | `/health` | Root health check and active scheme count |
-| `GET` | `/api/v1/health` | Versioned health check endpoint |
-
-### Government Schemes
-
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/api/v1/schemes` | List schemes with optional filters & pagination |
-| `GET` | `/api/v1/schemes/{scheme_id}` | Retrieve detailed information for a scheme |
-| `POST` | `/api/v1/schemes/evaluate-eligibility` | Evaluate a user profile against all schemes |
-| `GET` | `/api/schemes` | Legacy backwards-compatible scheme listing |
-
-### Users & Business Profiles
-
-| Method | Endpoint | Description |
-|---|---|---|
-| `POST` | `/api/v1/users` | Register a new user (Argon2 password hashing) |
-| `GET` | `/api/v1/users` | List registered users with pagination |
-| `GET` | `/api/v1/users/{user_id}` | Retrieve user profile by ID |
-| `PUT` | `/api/v1/users/{user_id}` | Update user profile details |
-| `POST` | `/api/v1/users/{user_id}/business-profiles` | Create a business profile for user |
-| `GET` | `/api/v1/users/{user_id}/business-profiles` | List business profiles for user |
-| `GET` | `/api/v1/business-profiles` | List all business profiles |
-| `GET` | `/api/v1/business-profiles/{profile_id}` | Get business profile details |
-| `PUT` | `/api/v1/business-profiles/{profile_id}` | Update business profile details |
-
-### Query Filter Parameters (`GET /api/v1/schemes`)
-
-- `state` (string): Filter by state name (e.g., `Rajasthan`, `Maharashtra`, `All India`)
-- `sector` (string): Filter by sector (e.g., `Manufacturing`, `Micro Enterprise`, `Artisan Enterprise`)
-- `scheme_type` (string): Filter by scheme type (e.g., `loan`, `Credit`, `concessional loan`)
-- `category` (string): Filter by category (e.g., `Direct Financing`, `NSFDC Financing`)
-- `target_group` (string): Target group (e.g., `Scheduled Caste entrepreneurs`, `Micro entrepreneurs`)
-- `business_type` (string): Business activity filter
-- `target_gender` (string): Gender target (e.g., `Female`, `All`)
-- `rural_only` (boolean): `true` or `false`
-- `include_all_india` (boolean, default: `true`): When filtering by a specific state, also includes nationwide Central schemes
-- `skip` (integer, default: `0`): Pagination offset
-- `limit` (integer, default: `50`): Maximum records to return (up to 100)
-
----
-
-## 7. Running Tests
-
-Execute the automated test suite with pytest:
-
-```bash
-pytest tests/ -v
+```text
+http://127.0.0.1:8000
 ```
 
-The test suite validates:
-1. Root endpoint (`GET /`)
-2. Health check (`GET /health`)
-3. Versioned health check (`GET /api/v1/health`)
-4. Direct database connectivity & scheme count validation (verifying 12 schemes)
-5. Scheme listing (`GET /api/v1/schemes`)
-6. Scheme detail by ID (`GET /api/v1/schemes/1`)
-7. 404 response for nonexistent scheme
-8. State filtering (nationwide vs. strict state)
-9. Sector filtering (primary sector & business activity matching)
-10. Multi-filter combinations
-11. Backwards compatibility wrapper routes
-12. Deterministic rule-based eligibility evaluation engine
-13. User creation with Argon2 password hashing
-14. Duplicate email validation (400 Bad Request)
-15. User retrieval and listing
-16. User update
-17. Business profile creation for user
-18. Duplicate UDYAM number validation (400 Bad Request)
-19. Business profile listing for user
-20. Single business profile retrieval
-21. Business profile updates
-22. 404 handling for nonexistent user and profile
+Swagger API documentation:
 
----
-
-## 8. Production Code Quality & Judge Readiness (SIH26091)
-
-This project strictly enforces **enterprise-level code quality standards**:
-- **Zero Hard-coded Values**: All API URLs, timeouts, secret keys, theme options, and model identifiers are driven strictly from environment variables (`.env.example`) and centralized constants (`frontend/src/config/constants.ts` & `app/core/config.py`).
-- **Containerized Stack**: Single-command startup with Docker Compose for PostgreSQL, Redis, FastAPI Backend, and Next.js Frontend.
-- **Automated CI/CD**: Full GitHub Actions test and build verification workflow in `.github/workflows/deploy.yml`.
-
-### Docker Startup Command
-
-```bash
-docker-compose up -d --build
+```text
+http://127.0.0.1:8000/docs
 ```
 
-- **Next.js Frontend**: http://localhost:3000
-- **FastAPI Core Engine**: http://localhost:8000
-- **API Documentation**: http://localhost:8000/docs
+ReDoc:
+
+```text
+http://127.0.0.1:8000/redoc
+```
 
 ---
 
-## 9. Vercel Production Deployment Guide
+## Frontend
 
-Deploying UnnatE to Vercel is streamlined and requires only connecting the repository:
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-### Step 1: Import Project into Vercel
-1. In your Vercel Dashboard, click **Add New...** → **Project**.
-2. Select your imported GitHub repository (`unnat33`).
-3. Vercel will automatically detect Next.js. You can deploy from Root (`.`) or set the **Root Directory** to `frontend`.
+The frontend will then be available through the local development server.
 
-### Step 2: Configure Environment Variables in Vercel
-Add the following environment variables in the Vercel project settings:
+---
 
-| Variable | Description | Example / Note |
-|---|---|---|
-| `BACKEND_URL` | URL of your production FastAPI backend | `https://your-fastapi-backend.onrender.com` |
-| `DATABASE_URL` | Neon PostgreSQL connection string (client session store) | `postgresql://user:pass@ep-xyz-pooler.region.aws.neon.tech/neondb?schema=unnate_app&sslmode=require` |
-| `JWT_SECRET` | Secret key for client sessions and JWT signing | Any 32+ character random secret string |
-| `GROQ_API_KEY` | Groq AI API Key for ultra-fast conversational advisory | `gsk_...` |
-| `ANTHROPIC_API_KEY` | (Optional) Anthropic Claude API Key for secondary advisory | `sk-ant-...` |
+# 🧭 Recommended SIH Evaluation Flow
 
-> **Note on Same-Origin Routing**: Next.js automatically rewrites all browser requests from `/api/v1/:path*` server-side to `BACKEND_URL`, eliminating CORS configuration barriers in production.
+For judges evaluating the deployed product, the following workflow demonstrates the major capabilities of UnnatE:
 
+```text
+                     LANDING PAGE
+                          │
+                          ▼
+                   BUSINESS PROFILE
+                          │
+                          ▼
+                      DASHBOARD
+                          │
+             ┌────────────┼────────────┐
+             ▼            ▼            ▼
+           MARKET      SCHEMES      FINANCE
+        INTELLIGENCE
+             │            │            │
+             └────────────┼────────────┘
+                          ▼
+                      DPR BUILDER
+                          │
+                          ▼
+                   WHAT-IF SIMULATOR
+                          │
+                          ▼
+                 BUSINESS DECISION
+```
+
+### Suggested Demo Scenario
+
+A simple rural business such as a **bakery in Varanasi, Uttar Pradesh** can be used to demonstrate the complete workflow.
+
+The evaluator can observe:
+
+1. Business context being established
+2. Location-aware market analysis
+3. Relevant government schemes being identified
+4. Eligibility being evaluated using deterministic rules
+5. Financial assumptions being structured
+6. A DPR being generated
+7. Business assumptions being modified through the What-If Simulator
+
+This demonstrates how the individual modules connect into a single decision-support workflow.
+
+---
+
+# 🏆 What Makes UnnatE Different?
+
+### 1. It is not just an AI chatbot
+
+AI is used where natural-language reasoning adds value.
+
+Critical eligibility and structured calculations remain deterministic.
+
+### 2. It is not just a government scheme search engine
+
+UnnatE goes beyond discovery into **eligibility evaluation and relevance scoring**.
+
+### 3. It is not just a financial calculator
+
+The financial layer connects with the entrepreneur's business profile, DPR and scenario analysis.
+
+### 4. It is hyper-local
+
+The platform incorporates state and district-level information instead of relying entirely on national averages.
+
+### 5. It connects the complete workflow
+
+```text
+Business Idea
+     ↓
+Market Context
+     ↓
+Government Support
+     ↓
+Eligibility
+     ↓
+Financial Viability
+     ↓
+DPR
+     ↓
+Scenario Testing
+     ↓
+Decision
+```
+
+The value comes from connecting these components rather than treating each as an isolated feature.
+
+---
+
+# 🌱 Expected Impact
+
+UnnatE is designed to reduce the information and decision-making gap faced by rural entrepreneurs and MSMEs.
+
+### Accessibility
+
+Multiple business-advisory capabilities are brought into one platform.
+
+### Localization
+
+District and state-level information provides greater context for business decisions.
+
+### Transparency
+
+Eligibility is evaluated through explicit rules rather than opaque AI outputs.
+
+### Financial Awareness
+
+Entrepreneurs can understand investment, revenue, costs, profitability and break-even.
+
+### Better Planning
+
+The DPR workflow helps structure a business idea into a formal project plan.
+
+### Decision Support
+
+The What-If Simulator allows entrepreneurs to explore different scenarios before making financial commitments.
+
+---
+
+# 🔮 Future Scope
+
+The platform can be extended through:
+
+- Additional government data and APIs
+- Automated scheme updates
+- More granular district-level economic indicators
+- Additional sector-specific financial models
+- Expanded multilingual and voice interaction
+- Integration with lending and financial institutions
+- Real-time local market signals
+- Entrepreneur progress tracking
+- Expanded business benchmarking
+- Additional analytical and machine-learning models
+
+---
+
+# 📌 Project Philosophy
+
+UnnatE is built around one fundamental principle:
+
+> **Technology should not simply tell an entrepreneur what to do. It should give them the information, evidence and tools required to make a better-informed decision themselves.**
+
+The platform therefore combines:
+
+**Government Data**  
++  
+**MSME Data**  
++  
+**Hyper-Local Intelligence**  
++  
+**Deterministic Eligibility**  
++  
+**Financial Modelling**  
++  
+**Research Evidence**  
++  
+**AI-Assisted Analysis**
+
+into one unified entrepreneurial decision-support platform.
+
+---
+
+# 🚀 UnnatE
+
+### **From a business idea to an informed business decision.**
+
+**Repository:** `theakcodes/unnat33`
+
+---
