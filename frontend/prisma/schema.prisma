@@ -1,10 +1,12 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  schemas  = ["unnate_app"]
 }
 
 model User {
@@ -32,6 +34,8 @@ model User {
   advisories   Advisory[]
   chatSessions ChatSession[]
   progressLogs ProgressLog[]
+
+  @@schema("unnate_app")
 }
 
 model Business {
@@ -60,6 +64,8 @@ model Business {
 
   advisories   Advisory[]
   progressLogs ProgressLog[]
+
+  @@schema("unnate_app")
 }
 
 model Advisory {
@@ -77,6 +83,8 @@ model Advisory {
   user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   schemeMatches SchemeMatch[]
   reports       Report[]
+
+  @@schema("unnate_app")
 }
 
 model SchemeMatch {
@@ -88,6 +96,8 @@ model SchemeMatch {
   eligibilityScore  Float    // 0 to 1
   recommendedAmount Float
   createdAt         DateTime @default(now())
+
+  @@schema("unnate_app")
 }
 
 model Scheme {
@@ -104,6 +114,8 @@ model Scheme {
   keywords     String   // Comma-separated keywords
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  @@schema("unnate_app")
 }
 
 model ChatSession {
@@ -115,6 +127,8 @@ model ChatSession {
 
   user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   messages ChatMessage[]
+
+  @@schema("unnate_app")
 }
 
 model ChatMessage {
@@ -124,6 +138,8 @@ model ChatMessage {
   role      String      // "user" or "assistant"
   content   String
   createdAt DateTime    @default(now())
+
+  @@schema("unnate_app")
 }
 
 model ProgressLog {
@@ -138,6 +154,8 @@ model ProgressLog {
 
   business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
   user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@schema("unnate_app")
 }
 
 model Report {
@@ -152,6 +170,8 @@ model Report {
 
   advisory Advisory?    @relation(fields: [advisoryId], references: [id], onDelete: SetNull)
   shares   SharedLink[]
+
+  @@schema("unnate_app")
 }
 
 model SharedLink {
@@ -163,5 +183,6 @@ model SharedLink {
   viewCount    Int       @default(0)
   lastViewedAt DateTime?
   createdAt    DateTime  @default(now())
-}
 
+  @@schema("unnate_app")
+}
