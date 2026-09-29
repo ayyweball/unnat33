@@ -15,21 +15,34 @@ logger = logging.getLogger("app.db")
 db_url = settings.DATABASE_URL
 Base = declarative_base()
 
+# Normalize PostgreSQL scheme to postgresql+psycopg for psycopg3 driver compatibility
+if db_url.startswith("postgres://"):
+    db_url = db_url.replace("postgres://", "postgresql+psycopg://", 1)
+elif db_url.startswith("postgresql://") and not db_url.startswith("postgresql+"):
+    db_url = db_url.replace("postgresql://", "postgresql+psycopg://", 1)
+
+is_production = settings.ENVIRONMENT.lower() == "production"
+
 if "sqlite" in db_url:
+    if is_production:
+        raise RuntimeError("Production requires PostgreSQL / Neon. SQLite is disabled in production to protect authoritative government scheme data.")
     engine = create_engine(
         db_url,
         connect_args={"check_same_thread": False},
         pool_pre_ping=True,
     )
 else:
-    connect_args = {}
-    if "postgresql" in db_url:
-        connect_args["connect_timeout"] = 3
+    connect_args = {
+        "connect_timeout": 10,
+    }
+    if getattr(settings, "DATABASE_SSL", False) or ("neon.tech" in db_url and "sslmode" not in db_url):
+        connect_args["sslmode"] = "require"
 
     temp_engine = create_engine(
         db_url,
         connect_args=connect_args,
         pool_pre_ping=True,
+        pool_recycle=300,
         pool_size=getattr(settings, "DATABASE_POOL_SIZE", 10),
         max_overflow=20,
     )
@@ -38,7 +51,9 @@ else:
             pass
         engine = temp_engine
     except Exception as e:
-        logger.warning(f"PostgreSQL unreachable ({e}), falling back to SQLite database goi_schemes.db.")
+        if is_production:
+            raise RuntimeError(f"FATAL: Production PostgreSQL / Neon connection failed ({e}). SQLite fallback is strictly disabled in production.") from e
+        logger.warning(f"PostgreSQL unreachable ({e}), falling back to SQLite database goi_schemes.db for local development.")
         sqlite_url = "sqlite:///./goi_schemes.db"
         engine = create_engine(
             sqlite_url,

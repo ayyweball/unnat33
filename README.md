@@ -297,4 +297,28 @@ docker-compose up -d --build
 - **Next.js Frontend**: http://localhost:3000
 - **FastAPI Core Engine**: http://localhost:8000
 - **API Documentation**: http://localhost:8000/docs
-# unnat33
+
+---
+
+## 9. Vercel Production Deployment Guide
+
+Deploying UnnatE to Vercel is streamlined and requires only connecting the repository:
+
+### Step 1: Import Project into Vercel
+1. In your Vercel Dashboard, click **Add New...** → **Project**.
+2. Select your imported GitHub repository (`unnat33`).
+3. Vercel will automatically detect Next.js. You can deploy from Root (`.`) or set the **Root Directory** to `frontend`.
+
+### Step 2: Configure Environment Variables in Vercel
+Add the following environment variables in the Vercel project settings:
+
+| Variable | Description | Example / Note |
+|---|---|---|
+| `BACKEND_URL` | URL of your production FastAPI backend | `https://your-fastapi-backend.onrender.com` |
+| `DATABASE_URL` | Neon PostgreSQL connection string (client session store) | `postgresql://user:pass@ep-xyz-pooler.region.aws.neon.tech/neondb?schema=unnate_app&sslmode=require` |
+| `JWT_SECRET` | Secret key for client sessions and JWT signing | Any 32+ character random secret string |
+| `GROQ_API_KEY` | Groq AI API Key for ultra-fast conversational advisory | `gsk_...` |
+| `ANTHROPIC_API_KEY` | (Optional) Anthropic Claude API Key for secondary advisory | `sk-ant-...` |
+
+> **Note on Same-Origin Routing**: Next.js automatically rewrites all browser requests from `/api/v1/:path*` server-side to `BACKEND_URL`, eliminating CORS configuration barriers in production.
+

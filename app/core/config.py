@@ -45,6 +45,7 @@ class Settings:
         "CORS_ORIGINS",
         "http://localhost:3000,http://localhost:5173,http://127.0.0.1:3000,http://127.0.0.1:5173",
     )
+    CORS_ORIGIN_REGEX: str = os.getenv("CORS_ORIGIN_REGEX", r"^https:\/\/.*\.vercel\.app$")
 
     # Server-Side Groq AI & Anthropic Claude API Key for Qualitative Market Intelligence & DPR
     GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")

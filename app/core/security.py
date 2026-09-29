@@ -60,9 +60,11 @@ def decode_access_token(token: str) -> Dict[str, Any]:
 
 def setup_cors(app: FastAPI) -> None:
     """Configure Cross-Origin Resource Sharing (CORS) for the application."""
+    origin_regex = getattr(settings, "CORS_ORIGIN_REGEX", r"^https:\/\/.*\.vercel\.app$")
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.CORS_ORIGINS,
+        allow_origin_regex=origin_regex,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
