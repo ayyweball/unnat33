@@ -92,3 +92,14 @@ def register_sqlite_functions(dbapi_connection, connection_record):
             dbapi_connection.create_function("REGEXP_REPLACE", 4, regexp_replace_4)
         except Exception:
             pass
+
+
+@event.listens_for(engine, "checkout")
+def set_search_path_on_checkout(dbapi_connection, connection_record, connection_proxy):
+    """Enforce search_path on every checkout to prevent contamination in pooled environments."""
+    if engine.dialect.name == "postgresql":
+        cursor = dbapi_connection.cursor()
+        try:
+            cursor.execute("SET search_path TO public, unnate_app;")
+        finally:
+            cursor.close()
